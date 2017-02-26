@@ -8,12 +8,6 @@ using System.Web;
 
 partial class Functions
 {
-
-    public string ProductName => "Resource Genereter";
-    public string ProductVersion => "2.1.2";
-
-
-
     private void Init()
     {
         Properties.ProjectAssemblyName = GetProjectAssemblyName();

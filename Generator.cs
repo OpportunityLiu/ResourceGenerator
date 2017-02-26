@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApplication1
+namespace ResourceGenerator
 {
     class Generator
     {
@@ -18,7 +19,7 @@ namespace ConsoleApplication1
 
         public void Generate()
         {
-            sw.WriteLine(
+            WriteBlock(
 @"<#@ template debug=""false"" hostspecific=""true"" language=""C#"" #>
 <#@ assembly name=""System"" #>
 <#@ assembly name=""System.Core"" #>
@@ -36,14 +37,38 @@ namespace ConsoleApplication1
 <#@ output extension="".tt.cs"" #>");
 
             WriteCodeBegin();
-            var sc = ReadLines(@"C:\Users\liuzh\Documents\Visual Studio 2015\Projects\ConsoleApplication1\Scripts.cs").ToArray();
+            var sc = ReadLines(@"../../Scripts.cs").ToArray();
             WriteLines(sc.Skip(10).Take(sc.Length - 10 - 2));
             WriteCodeEnd();
+
             WriteBlockBegin();
-            var fc = ReadLines(@"C:\Users\liuzh\Documents\Visual Studio 2015\Projects\ConsoleApplication1\Functions.cs").ToArray();
+            WriteLine();
+            WriteLine($"public string ProductName => \"{Helper.ProductName}\";");
+            WriteLine($"public string ProductVersion => \"{Helper.ProductVersion}\";");
+            WriteLine();
+            WriteBlockEnd();
+
+            WriteBlockBegin();
+            var fc = ReadLines(@"../../Functions.cs").ToArray();
             WriteLines(fc.Skip(10).Take(fc.Length - 10 - 1));
             WriteBlockEnd();
 
+        }
+
+        private void WriteBlock(string value)
+        {
+            sw.WriteLine(value);
+        }
+
+        private void WriteLine(string value)
+        {
+            sw.Write("    ");
+            sw.WriteLine(value);
+        }
+
+        private void WriteLine()
+        {
+            sw.WriteLine();
         }
 
         private void WriteCodeBegin()

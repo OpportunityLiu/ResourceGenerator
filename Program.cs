@@ -6,19 +6,22 @@ using System.Runtime.Serialization.Json;
 using System.Linq;
 using System.Web;
 
-namespace ConsoleApplication1
+namespace ResourceGenerator
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            using(var w = new StreamWriter(@"C:\Users\liuzh\Documents\Visual Studio 2015\Projects\ConsoleApplication1\Strings\TextTemplate1.tt"))
+            Directory.CreateDirectory(@"../../Output/");
+            using(var w = new StreamWriter(@"../../Output/ResourceGenerator.tt"))
             {
                 new Generator(w).Generate();
+                Console.WriteLine("T4 template generated at /Output/ResourceGenerator.tt");
             }
-            using(var w = new StreamWriter(@"C:\Users\liuzh\Documents\Visual Studio 2015\Projects\ConsoleApplication1\Strings\TextTemplate1.tt.cs"))
+            using(var w = new StreamWriter(@"../../Output/ResourceGenerator.tt.cs"))
             {
                 new Functions(w).Run();
+                Console.WriteLine("T4 template output generated at /Output/ResourceGenerator.tt.cs");
             }
         }
 

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 
 partial class Functions
 {
+    public string ProductName => ResourceGenerator.Helper.ProductName;
+    public string ProductVersion => ResourceGenerator.Helper.ProductVersion;
+
     public host Host { get; private set; } = new host();
 
     public Functions(TextWriter sw)
@@ -15,6 +19,18 @@ partial class Functions
     public void WriteLine(string value)
     {
         sw.WriteLine(value);
+    }
+}
+
+namespace ResourceGenerator
+{
+    public static class Helper
+    {
+        public static Assembly Assembly { get; } = typeof(Helper).Assembly;
+        public static AssemblyName AssemblyName { get; } = new AssemblyName(Assembly.FullName);
+
+        public static string ProductName => Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
+        public static string ProductVersion => AssemblyName.Version.ToString();
     }
 }
 
@@ -76,6 +92,6 @@ class host : IServiceProvider
 
     internal string ResolveAssemblyReference(string v)
     {
-        return @"C:\Users\liuzh\Documents\Visual Studio 2015\Projects\ResourceGenerator\";
+        return Path.Combine(Environment.CurrentDirectory, "../..");
     }
 }
