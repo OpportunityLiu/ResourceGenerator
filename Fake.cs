@@ -20,6 +20,11 @@ partial class Functions
     {
         sw.WriteLine(value);
     }
+
+    public void Write(string value)
+    {
+        sw.Write(value);
+    }
 }
 
 namespace ResourceGenerator
@@ -36,31 +41,31 @@ namespace ResourceGenerator
 
 namespace EnvDTE
 {
-    class DTE
+    public class DTE
     {
         public Solu Solution { get; internal set; } = new Solu();
 
         public class Solu
         {
-            internal pi FindProjectItem(object templateFile)
+            public pi FindProjectItem(object templateFile)
             {
                 return new pi();
             }
 
-            internal class pi
+            public class pi
             {
-                internal object ContainingProject = new Project();
+                public object ContainingProject = new Project();
             }
         }
     }
 
-    class Project
+    public class Project
     {
         public dict Properties { get; internal set; } = new dict();
 
         public class dict
         {
-            internal item Item(string v)
+            public item Item(string v)
             {
                 switch(v)
                 {
@@ -73,7 +78,7 @@ namespace EnvDTE
                 }
             }
 
-            internal class item
+            public class item
             {
                 internal object Value;
             }
@@ -81,16 +86,16 @@ namespace EnvDTE
     }
 }
 
-class host : IServiceProvider
+public class host : IServiceProvider
 {
-    internal object TemplateFile = null;
+    public object TemplateFile = null;
 
     public object GetService(Type serviceType)
     {
         return Activator.CreateInstance(serviceType);
     }
 
-    internal string ResolveAssemblyReference(string v)
+    public string ResolveAssemblyReference(string v)
     {
         return Path.Combine(Environment.CurrentDirectory, "../..");
     }

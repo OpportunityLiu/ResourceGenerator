@@ -38,19 +38,19 @@ namespace ResourceGenerator
 
             WriteCodeBegin();
             var sc = ReadLines(@"../../Scripts.cs").ToArray();
-            WriteLines(sc.Skip(10).Take(sc.Length - 10 - 2));
+            WriteLines(sc.Skip(10).Take(sc.Length - 10 - 2), -1);
             WriteCodeEnd();
 
             WriteBlockBegin();
             WriteLine();
-            WriteLine($"public string ProductName => \"{Helper.ProductName}\";");
-            WriteLine($"public string ProductVersion => \"{Helper.ProductVersion}\";");
+            WriteLine($"public string ProductName => \"{Helper.ProductName}\";", 1);
+            WriteLine($"public string ProductVersion => \"{Helper.ProductVersion}\";", 1);
             WriteLine();
             WriteBlockEnd();
 
             WriteBlockBegin();
             var fc = ReadLines(@"../../Functions.cs").ToArray();
-            WriteLines(fc.Skip(10).Take(fc.Length - 10 - 1));
+            WriteLines(fc.Skip(10).Take(fc.Length - 10 - 1), 0);
             WriteBlockEnd();
 
         }
@@ -60,10 +60,24 @@ namespace ResourceGenerator
             sw.WriteLine(value);
         }
 
-        private void WriteLine(string value)
+        private void WriteLine(string value, int indent)
         {
-            sw.Write("    ");
-            sw.WriteLine(value);
+            if(indent >= 0)
+            {
+                for(int i = 0; i < indent; i++)
+                {
+                    sw.Write("    ");
+                }
+                sw.WriteLine(value);
+            }
+            else
+            {
+                var empty = new string(' ', -indent * 4);
+                if(value.StartsWith(empty))
+                    sw.WriteLine(value.Substring(-indent * 4));
+                else
+                    sw.WriteLine(value.TrimStart());
+            }
         }
 
         private void WriteLine()
@@ -91,11 +105,11 @@ namespace ResourceGenerator
             sw.WriteLine("#>");
         }
 
-        private void WriteLines(IEnumerable<string> value)
+        private void WriteLines(IEnumerable<string> value, int indent)
         {
             foreach(var item in value)
             {
-                sw.WriteLine(item);
+                WriteLine(item, indent);
             }
         }
 
