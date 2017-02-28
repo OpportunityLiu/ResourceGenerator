@@ -23,6 +23,8 @@ namespace ResourceGenerator
                 new Functions(w).Run();
                 Console.WriteLine("T4 template output generated at /Output/ResourceGenerator.tt.cs");
             }
+
+            
         }
 
     }

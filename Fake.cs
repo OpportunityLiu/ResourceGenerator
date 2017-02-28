@@ -100,3 +100,22 @@ public class host : IServiceProvider
         return Path.Combine(Environment.CurrentDirectory, "../..");
     }
 }
+namespace Windows.ApplicationModel.Resources
+{
+    public class ResourceLoader
+    {
+        private string name;
+
+        public ResourceLoader(string name) => this.name = name;
+
+        public string GetValue(string key)
+        {
+            return $"{name}/{key}";
+        }
+
+        public static ResourceLoader GetForViewIndependentUse(string name)
+        {
+            return new ResourceLoader(name);
+        }
+    }
+}
