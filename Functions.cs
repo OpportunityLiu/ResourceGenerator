@@ -128,6 +128,16 @@ public partial class Functions
             names[names.Length - 1] = "I" + names[names.Length - 1];
             return $"global::{InterfacesNamespace}.{string.Join(".", names)}";
         }
+
+        public string IRPName => "IResourceProvider";
+        public string IRRPName => "IRootResourceProvider";
+        public string IGRPName => "IGeneratedResourceProvider";
+        public string GRPName => "GeneratedResourceProvider";
+
+        public string IRPFullName => InterfaceFullName(IRPName, null);
+        public string IRRPFullName => InterfaceFullName(IRRPName, null);
+        public string IGRPFullName => InterfaceFullName(IGRPName, null);
+        public string GRPFullName => InterfaceFullName(GRPName, null);
     }
 
     private void Check(string resourceName, string propertyName)
@@ -185,46 +195,46 @@ public partial class Functions
         WriteLine($"namespace {Properties.InterfacesNamespace}");
         WriteLine($"{{");
         WriteAttributsForInterface(indent);
-        WriteLine(indent, $@"{Properties.Modifier}interface IResourceProvider");
+        WriteLine(indent, $@"{Properties.Modifier}interface {Properties.IRPName}");
         WriteLine(indent, $"{{");
-        WriteLine(indent, $"    {Properties.InterfaceFullName("GeneratedResourceProvider", null)} this[string resourceKey] {{ get; }}");
+        WriteLine(indent, $"    {Properties.GRPFullName} this[string resourceKey] {{ get; }}");
         WriteLine(indent, $"    string GetValue(string resourceKey);");
         WriteLine(indent, $"}}");
         WriteLine();
         WriteAttributsForInterface(indent);
-        WriteLine(indent, $"{Properties.Modifier}interface IRootResourceProvider : {Properties.InterfaceFullName("IResourceProvider", null)}");
+        WriteLine(indent, $"{Properties.Modifier}interface {Properties.IRRPName} : {Properties.IRPFullName}");
         WriteLine(indent, $"{{");
         WriteLine(indent, $"    void Reset();");
         WriteLine(indent, $"}}");
         WriteLine();
         WriteAttributsForInterface(indent);
-        WriteLine(indent, $"{Properties.Modifier}interface IGeneratedResourceProvider : {Properties.InterfaceFullName("IResourceProvider", null)}");
+        WriteLine(indent, $"{Properties.Modifier}interface {Properties.IGRPName} : {Properties.IRPFullName}");
         WriteLine(indent, $"{{");
         WriteLine(indent, $"    string Value {{ get; }}");
         WriteLine(indent, $"}}");
         WriteLine();
         WriteAttributsForClass(indent);
         WriteLine(indent, $@"[System.Diagnostics.DebuggerDisplay(""\\{{{{Value}}\\}}"")]");
-        WriteLine(indent, $"{Properties.Modifier}struct GeneratedResourceProvider : {Properties.InterfaceFullName("IGeneratedResourceProvider", null)}");
+        WriteLine(indent, $"{Properties.Modifier}struct {Properties.GRPName} : {Properties.IGRPFullName}");
         WriteLine(indent, $"{{");
-        WriteLine(indent, $"    internal GeneratedResourceProvider({Properties.InterfaceFullName("IResourceProvider", null)} parent, string key)");
+        WriteLine(indent, $"    internal {Properties.GRPName}({Properties.IRPFullName} parent, string key)");
         WriteLine(indent, $"    {{");
         WriteLine(indent, $"        this.key = key;");
         WriteLine(indent, $"        this.parent = parent;");
         WriteLine(indent, $"    }}");
         WriteLine();
         WriteLine(indent, $"    private readonly string key;");
-        WriteLine(indent, $"    private readonly {Properties.InterfaceFullName("IResourceProvider", null)} parent;");
+        WriteLine(indent, $"    private readonly {Properties.IRPFullName} parent;");
         WriteLine();
         WriteLine(indent, $"    public string Value => this.parent.GetValue(key);");
         WriteLine();
-        WriteLine(indent, $"    public GeneratedResourceProvider this[string resourceKey]");
+        WriteLine(indent, $"    public {Properties.GRPName} this[string resourceKey]");
         WriteLine(indent, $"    {{");
         WriteLine(indent, $"        get");
         WriteLine(indent, $"        {{");
         WriteLine(indent, $"            if(resourceKey == null)");
-        WriteLine(indent, $"                return this;");
-        WriteLine(indent, $"            return new GeneratedResourceProvider(this.parent, $\"{{key}}/{{resourceKey}}\");");
+        WriteLine(indent, $"                throw new global::System.ArgumentNullException();");
+        WriteLine(indent, $"            return new {Properties.GRPFullName}(this.parent, $\"{{key}}/{{resourceKey}}\");");
         WriteLine(indent, $"        }}");
         WriteLine(indent, $"    }}");
         WriteLine();
@@ -243,65 +253,60 @@ public partial class Functions
         }
     }
 
-    public void WriteInterface(int indent, string ns, string interfaceName, string inhertFrom, Dictionary<string, object> names)
+    public void WriteInterface(int indent, string iNs, string iStemName, string inhertFrom, Dictionary<string, object> names)
     {
         WriteLine();
-        WriteLine(indent, $"namespace {ns}");
+        WriteLine(indent, $"namespace {iNs}");
         WriteLine(indent, $"{{");
         WriteAttributsForInterface(indent + 1);
-        WriteLine(indent, $"    {Properties.Modifier}interface I{interfaceName} : {inhertFrom}");
+        WriteLine(indent, $"    {Properties.Modifier}interface I{iStemName} : {inhertFrom}");
         WriteLine(indent, $"    {{");
         foreach(var item in names)
         {
             if(item.Value is string v)
                 WriteInterfaceProperty(indent + 2, item.Key, v);
             else
-                WriteInterfaceIProperty(indent + 2, item.Key, $"{ns}.{interfaceName}");
+                WriteInterfaceIProperty(indent + 2, item.Key, $"{iNs}.{iStemName}");
         }
         WriteLine(indent, $"    }}");
         WriteLine(indent, $"}}");
         foreach(var item in names)
         {
             if(item.Value is Dictionary<string, object> v)
-                WriteInnerInterface(indent, $"{ns}.{interfaceName}", Helper.Refine(item.Key), v);
+                WriteInnerInterface(indent, $"{iNs}.{iStemName}", Helper.Refine(item.Key), v);
         }
     }
 
-    public void WriteRootInterface(int indent, string ns, string interfaceName, Dictionary<string, object> names)
+    public void WriteRootInterface(int indent, string ns, string iStemName, Dictionary<string, object> names)
     {
-        WriteInterface(indent, ns, interfaceName, Properties.InterfaceFullName("IRootResourceProvider", ""), names);
+        WriteInterface(indent, ns, iStemName, Properties.IRRPFullName, names);
     }
 
-    public void WriteInnerInterface(int indent, string ns, string interfaceName, Dictionary<string, object> names)
+    public void WriteInnerInterface(int indent, string ns, string iStemName, Dictionary<string, object> names)
     {
-        WriteInterface(indent, ns, interfaceName, Properties.InterfaceFullName("IResourceProvider", ""), names);
+        WriteInterface(indent, ns, iStemName, Properties.IRPFullName, names);
     }
 
     public void WriteInterfaceProperty(int indent, string key, string value)
     {
-        WriteLine();
         WriteComment(indent, value);
         var pName = Helper.Refine(key);
         Check(key, pName);
-        this.WriteLine(indent, $@"string {pName} {{ get; }}");
+        this.WriteLine(indent, $@"{Helper.IPropModifier(pName)}string {pName} {{ get; }}");
     }
 
     public void WriteInterfaceIProperty(int indent, string key, string ins)
     {
-        var p = Helper.Refine(key);
-        WriteLine();
-        Check(key, p);
-        WriteLine(indent, $@"{Properties.InterfaceFullName("I" + p, ins)} {p} {{ get; }}");
+        var pName = Helper.Refine(key);
+        Check(key, pName);
+        WriteLine(indent, $@"{Helper.IPropModifier(pName)}{Properties.InterfaceFullName("I" + pName, ins)} {pName} {{ get; }}");
     }
 
     public void WriteResources(Dictionary<string, Dictionary<string, object>> names)
     {
         var indent = 1;
-        if(Properties.LocalizedStringsNamespace != null)
-        {
-            WriteLine($"namespace {Properties.LocalizedStringsNamespace}");
-            WriteLine($"{{");
-        }
+        WriteLine($"namespace {Properties.LocalizedStringsNamespace}");
+        WriteLine($"{{");
         WriteAttributsForClass(indent);
         WriteLine(indent, $"{Properties.Modifier}static class {Properties.LocalizedStringsClassName}");
         WriteLine(indent, $"{{");
@@ -310,44 +315,41 @@ public partial class Functions
             WriteRootResource(indent + 1, item.Key, item.Value);
         }
         WriteLine(indent, $"}}");
-        if(Properties.LocalizedStringsNamespace != null)
-        {
-            WriteLine($"}}");
-        }
+        WriteLine($"}}");
     }
 
-    public void WriteRootResource(int indent, string resourceName, Dictionary<string, object> names)
+    public void WriteRootResource(int indent, string rName, Dictionary<string, object> names)
     {
-        var resourcePath = (Properties.IsDefaultProject ? "" : GetProjectAssemblyName()) + "/" + resourceName;
+        var rPath = (Properties.IsDefaultProject ? "" : GetProjectAssemblyName()) + "/" + rName;
         var cache = Helper.GetRandomName("_cache");
         var loader = Helper.GetRandomName("_loader");
 
-        var propertyName = Helper.Refine(resourceName);
-        var propertyFullName = $"{Properties.LocalizedStringsFullName}.{propertyName}";
-        var className = Helper.GetRandomName(propertyName);
-        var interfaceName = "I" + propertyName;
-        var interfaceFullName = Properties.InterfaceFullName(propertyFullName);
-        var classFullName = $"{Properties.LocalizedStringsFullName}.{className}";
+        var pName = Helper.Refine(rName);
+        var fullPName = $"{Properties.LocalizedStringsFullName}.{pName}";
+        var cName = Helper.GetRandomName(pName);
+        var iName = "I" + pName;
+        var fullIName = Properties.InterfaceFullName(fullPName);
+        var fullCName = $"{Properties.LocalizedStringsFullName}.{cName}";
         WriteLine();
-        WriteLine(indent, $"{Properties.Modifier}static {interfaceFullName} {propertyName} {{ get; }} = new {classFullName}();");
+        WriteLine(indent, $"{Properties.Modifier}static {fullIName} {pName} {{ get; }} = new {fullCName}();");
         WriteLine();
-        WriteLine(indent, $@"[System.Diagnostics.DebuggerDisplay(""\\{{{Helper.AsLiteral(resourceName)}\\}}"")]");
-        WriteLine(indent, $"private sealed class {className} : {interfaceFullName}");
+        WriteLine(indent, $@"[System.Diagnostics.DebuggerDisplay(""\\{{{Helper.AsLiteral(rName)}\\}}"")]");
+        WriteLine(indent, $"private sealed class {cName} : {fullIName}");
         WriteLine(indent, $"{{");
         WriteLine(indent, $"    private global::System.Collections.Generic.IDictionary<string, string> {cache};");
         WriteLine(indent, $"    private global::Windows.ApplicationModel.Resources.ResourceLoader {loader};");
         WriteLine();
-        WriteLine(indent, $"    public {Properties.InterfaceFullName("GeneratedResourceProvider", null)} this[string resourceKey]");
+        WriteLine(indent, $"    {Properties.GRPFullName} {Properties.IRPFullName}.this[string resourceKey]");
         WriteLine(indent, $"    {{");
         WriteLine(indent, $"        get");
         WriteLine(indent, $"        {{");
         WriteLine(indent, $"            if(resourceKey == null)");
         WriteLine(indent, $"                throw new global::System.ArgumentNullException();");
-        WriteLine(indent, $"            return new {Properties.InterfaceFullName("GeneratedResourceProvider", null)}(this, resourceKey);");
+        WriteLine(indent, $"            return new {Properties.GRPFullName}(this, resourceKey);");
         WriteLine(indent, $"        }}");
         WriteLine(indent, $"    }}");
         WriteLine();
-        WriteLine(indent, $"    public string GetValue(string resourceKey)");
+        WriteLine(indent, $"    string {Properties.IRPFullName}.GetValue(string resourceKey)");
         WriteLine(indent, $"    {{");
         WriteLine(indent, $"        string value;");
         WriteLine(indent, $"        if(this.{cache}.TryGetValue(resourceKey, out value))");
@@ -355,28 +357,31 @@ public partial class Functions
         WriteLine(indent, $"        return this.{cache}[resourceKey] = this.{loader}.GetValue(resourceKey);");
         WriteLine(indent, $"    }}");
         WriteLine();
-        WriteLine(indent, $"    public {className}()");
+        WriteLine(indent, $"    public {cName}()");
         WriteLine(indent, $"    {{");
-        WriteLine(indent, $"        this.Reset();");
+        WriteLine(indent, $"        (({Properties.IRRPFullName})this).Reset();");
         WriteLine(indent, $"    }}");
         WriteLine();
-        WriteLine(indent, $"    public void Reset()");
+        WriteLine(indent, $"    void {Properties.IRRPFullName}.Reset()");
         WriteLine(indent, $"    {{");
         WriteLine(indent, $"        this.{cache} = {Properties.CacheActivator};");
-        WriteLine(indent, $"        this.{loader} = global::Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse(\"{resourcePath}\");");
+        WriteLine(indent, $"        this.{loader} = global::Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse(\"{Helper.AsLiteral(rPath)}\");");
         WriteLine(indent, $"    }}");
         foreach(var item in names)
         {
-            var v = item.Value as string;
-            if(v != null)
-                WriteProperty(indent + 1, propertyFullName, "", item.Key, v);
-            else
-                WriteInnerResource(indent + 1, propertyFullName, "", propertyFullName, classFullName, item.Key, (Dictionary<string, object>)item.Value);
+            if(item.Value is Dictionary<string, object> v)
+                WriteInnerResource(indent + 1, fullPName, "", fullPName, fullCName, item.Key, v);
+        }
+        WriteLine();
+        foreach(var item in names)
+        {
+            if(item.Value is string v)
+                WriteProperty(indent + 1, fullPName, fullIName, "", item.Key, v);
         }
         WriteLine(indent, $"}}");
     }
 
-    public void WriteInnerResource(int indent, string rootResource, string parentResource, string parentProperty, string parentClass, string key, Dictionary<string, object> value)
+    public void WriteInnerResource(int indent, string rootFullPName, string parentResource, string parentProperty, string parentClass, string key, Dictionary<string, object> value)
     {
         var pName = Helper.Refine(key);
         var fullPName = $"{parentProperty}.{pName}";
@@ -391,38 +396,41 @@ public partial class Functions
         WriteLine(indent, $@"[System.Diagnostics.DebuggerDisplay(""\\{{{Helper.AsLiteral($"{fullPath}")}\\}}"")]");
         WriteLine(indent, $@"private sealed class {cName} : {fullIName}");
         WriteLine(indent, $@"{{");
-        WriteLine(indent, $@"    public {Properties.InterfaceFullName("GeneratedResourceProvider", null)} this[string resourceKey]");
+        WriteLine(indent, $@"    {Properties.GRPFullName} {Properties.IRPFullName}.this[string resourceKey]");
         WriteLine(indent, $@"    {{");
         WriteLine(indent, $@"        get");
         WriteLine(indent, $@"        {{");
         WriteLine(indent, $@"            if(resourceKey == null)");
         WriteLine(indent, $@"                throw new global::System.ArgumentNullException();");
-        WriteLine(indent, $@"            return new {Properties.InterfaceFullName("GeneratedResourceProvider", null)}(this, resourceKey);");
+        WriteLine(indent, $@"            return new {Properties.GRPFullName}(this, resourceKey);");
         WriteLine(indent, $@"        }}");
         WriteLine(indent, $@"    }}");
         WriteLine();
-        WriteLine(indent, $@"    public string GetValue(string resourceKey)");
+        WriteLine(indent, $@"    string {Properties.IRPFullName}.GetValue(string resourceKey)");
         WriteLine(indent, $@"    {{");
         WriteLine(indent, $@"        if(resourceKey == null)");
-        WriteLine(indent, $@"            return {rootResource}.GetValue(""{Helper.AsLiteral(fullPath)}"");");
-        WriteLine(indent, $@"        return {rootResource}.GetValue(""{Helper.AsLiteral(fullPath)}/"" + resourceKey);");
+        WriteLine(indent, $@"            return {rootFullPName}.GetValue(""{Helper.AsLiteral(fullPath)}"");");
+        WriteLine(indent, $@"        return {rootFullPName}.GetValue(""{Helper.AsLiteral(fullPath)}/"" + resourceKey);");
         WriteLine(indent, $@"    }}");
         foreach(var item in value)
         {
-            var v = item.Value as string;
-            if(v != null)
-                WriteProperty(indent + 1, rootResource, fullPath, item.Key, v);
-            else
-                WriteInnerResource(indent + 1, rootResource, fullPath, fullPName, fullCName, item.Key, (Dictionary<string, object>)item.Value);
+            if(item.Value is Dictionary<string, object> v)
+                WriteInnerResource(indent + 1, rootFullPName, fullPath, fullPName, fullCName, item.Key, v);
+        }
+        WriteLine();
+        foreach(var item in value)
+        {
+            if(item.Value is string v)
+                WriteProperty(indent + 1, rootFullPName, fullIName, fullPath, item.Key, v);
         }
         WriteLine(indent, $@"}}");
     }
 
-    public void WriteProperty(int indent, string rootResource, string parent, string key, string value)
+    public void WriteProperty(int indent, string rootFullPName, string fullIName, string pPath, string key, string value)
     {
-        var fullPath = Helper.CombineResourcePath(parent, key);
-        WriteLine();
-        WriteLine(indent, $@"public string {Helper.Refine(key)} => {rootResource}.GetValue(""{Helper.AsLiteral(fullPath)}"");");
+        var fullPath = Helper.CombineResourcePath(pPath, key);
+        WriteLine(indent, $@"string {fullIName}.{Helper.Refine(key)}");
+        WriteLine(indent + 1, $@"=> {rootFullPName}.GetValue(""{Helper.AsLiteral(fullPath)}"");");
     }
 
     public void SetValue(Dictionary<string, Dictionary<string, object>> output, string root, IList<string> path, string value)
@@ -537,7 +545,7 @@ public partial class Functions
     {
         public static HashSet<string> Keywords = new HashSet<string>() { "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else", "enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for", "foreach", "goto", "if", "implicit", "in", "int", "interface", "internal", "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out", "override", "params", "private", "protected", "public", "readonly", "ref", "return", "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using", "virtual", "void", "volatile", "while" };
 
-        private static HashSet<string> used = new HashSet<string>() { "Reset", "MemberwiseClone", "ReferenceEquals", "Equals", "GetType", "GetHashCode" };
+        private static HashSet<string> used = new HashSet<string>() { "Reset", "GetValue" };
 
         public static string CombineResourcePath(string root, string reletive) => string.IsNullOrEmpty(root) ? reletive : $"{root}/{reletive}";
 
@@ -562,6 +570,13 @@ public partial class Functions
             return sb.ToString();
         }
 
+        public static string IPropModifier(string name)
+        {
+            if(used.Contains(name))
+                return "new ";
+            return "";
+        }
+
         public static string Refine(string name, bool allowDot = false)
         {
             if(allowDot)
@@ -570,8 +585,6 @@ public partial class Functions
                 return "__Empty__";
             if(Keywords.Contains(name))
                 return "@" + name;
-            if(used.Contains(name))
-                return name + "_";
             if(!isValidStartChar(name[0]))
                 name = "_" + name;
             for(var i = 1; i < name.Length; i++)
