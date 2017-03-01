@@ -34,11 +34,11 @@ namespace ResourceGenerator
 <#@ import namespace=""System.Runtime.Serialization.Json"" #>
 <#@ import namespace=""System.Web"" #>
 <#@ import namespace=""System.Linq"" #>
-<#@ output extension="".tt.cs"" #>");
+<#@ output extension="".tt.cs"" #>"); 
 
             WriteCodeBegin();
             var sc = ReadLines(@"../../Scripts.cs").ToArray();
-            WriteLines(sc.Skip(10).Take(sc.Length - 10 - 2), -1);
+            WriteLines(sc.Skip(12).Take(sc.Length - 15), -2);
             WriteCodeEnd();
 
             WriteBlockBegin();
@@ -50,7 +50,7 @@ namespace ResourceGenerator
 
             WriteBlockBegin();
             var fc = ReadLines(@"../../Functions.cs").ToArray();
-            WriteLines(fc.Skip(10).Take(fc.Length - 10 - 1), 0);
+            WriteLines(fc.Skip(12).Take(fc.Length - 14), -1);
             WriteBlockEnd();
 
         }
