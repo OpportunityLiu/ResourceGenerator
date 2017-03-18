@@ -89,7 +89,7 @@ namespace ResourceGenerator
             private string rns;
             private string rc;
             private string ins;
-            private string mf = "public ";
+            private string mf = "internal";
             private string ca = "new global::System.Collections.Generic.Dictionary<string, string>()";
             public string LocalizedStringsNamespace
             {
@@ -111,7 +111,7 @@ namespace ResourceGenerator
                 get => this.mf; set
                 {
                     value = (value ?? "").Trim();
-                    this.mf = string.IsNullOrEmpty(value) ? "internal " : value + " ";
+                    this.mf = string.IsNullOrEmpty(value) ? "internal" : value;
                 }
             }
 
@@ -337,23 +337,23 @@ namespace ResourceGenerator
             WriteLine($"namespace {Properties.InterfacesNamespace}");
             WriteLine($"{{");
             WriteAttributsForInterface(indent);
-            WriteLine(indent, $@"{Properties.Modifier}interface {Properties.IRPName}");
+            WriteLine(indent, $@"{Properties.Modifier} interface {Properties.IRPName}");
             WriteLine(indent, $"{{");
             WriteLine(indent, $"    {Properties.GRPFullName} this[string resourceKey] {{ get; }}");
             WriteLine(indent, $"    string GetValue(string resourceKey);");
             WriteLine(indent, $"}}");
             WriteLine();
             WriteAttributsForInterface(indent);
-            WriteLine(indent, $"{Properties.Modifier}interface {Properties.IGRPName} : {Properties.IRPFullName}");
+            WriteLine(indent, $"{Properties.Modifier} interface {Properties.IGRPName} : {Properties.IRPFullName}");
             WriteLine(indent, $"{{");
             WriteLine(indent, $"    string Value {{ get; }}");
             WriteLine(indent, $"}}");
             WriteLine();
             WriteAttributsForClass(indent);
-            WriteLine(indent, $@"[System.Diagnostics.DebuggerDisplay(""\\{{{{Value}}\\}}"")]");
-            WriteLine(indent, $"{Properties.Modifier}struct {Properties.GRPName} : {Properties.IGRPFullName}");
+            WriteLine(indent, $@"[System.Diagnostics.DebuggerDisplay(""\\{{{{key,nq}}\\}}"")]");
+            WriteLine(indent, $"{Properties.Modifier} struct {Properties.GRPName} : {Properties.IGRPFullName}");
             WriteLine(indent, $"{{");
-            WriteLine(indent, $"    internal {Properties.GRPName}(string key)");
+            WriteLine(indent, $"    {Properties.Modifier} {Properties.GRPName}(string key)");
             WriteLine(indent, $"    {{");
             WriteLine(indent, $"        this.key = key;");
             WriteLine(indent, $"    }}");
@@ -393,7 +393,7 @@ namespace ResourceGenerator
             WriteLine(indent, $"namespace {node.INs}");
             WriteLine(indent, $"{{");
             WriteAttributsForInterface(indent + 1);
-            WriteLine(indent, $"    {Properties.Modifier}interface {node.IName} : {inhertFrom}");
+            WriteLine(indent, $"    {Properties.Modifier} interface {node.IName} : {inhertFrom}");
             WriteLine(indent, $"    {{");
             foreach(var item in node.Childern)
             {
@@ -441,17 +441,15 @@ namespace ResourceGenerator
             var cacheName = Helper.GetRandomName("__cache");
             WriteLine($"namespace {Properties.LocalizedStringsNamespace}");
             WriteLine($"{{");
-            //private global::System.Collections.Generic.IDictionary<string, string> _cache__TWL1Vqwp;
-            //private global::Windows.ApplicationModel.Resources.ResourceLoader _loader__yXhiRB0J;
             WriteAttributsForClass(indent);
-            WriteLine(indent, $"{Properties.Modifier}static class {Properties.LocalizedStringsClassName}");
+            WriteLine(indent, $"{Properties.Modifier} static class {Properties.LocalizedStringsClassName}");
             WriteLine(indent, $"{{");
             WriteLine(indent, $"    private static readonly global::System.Collections.Generic.IDictionary<string, string> {cacheName}");
             WriteLine(indent, $"        = {Properties.CacheActivator};");
             WriteLine(indent, $"    private static readonly global::Windows.ApplicationModel.Resources.ResourceLoader {loaderName}");
             WriteLine(indent, $"        = global::Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse();");
             WriteLine();
-            WriteLine(indent, $"    public static string GetValue(string resourceKey)");
+            WriteLine(indent, $"    {Properties.Modifier} static string GetValue(string resourceKey)");
             WriteLine(indent, $"    {{");
             WriteLine(indent, $"        string value;");
             WriteLine(indent, $"        if({Properties.LocalizedStringsFullName}.{cacheName}.TryGetValue(resourceKey, out value))");
@@ -470,8 +468,9 @@ namespace ResourceGenerator
         public void WriteRootResource(int indent, ResourceRootNode node)
         {
             WriteLine();
-            WriteLine(indent, $"{Properties.Modifier}static {node.IFName} {node.PName} {{ get; }} = new {node.CFName}();");
+            WriteLine(indent, $"{Properties.Modifier} static {node.IFName} {node.PName} {{ get; }} = new {node.CFName}();");
             WriteLine();
+            WriteAttributsForClass(indent);
             WriteLine(indent, $@"[System.Diagnostics.DebuggerDisplay(""\\{{{Helper.AsLiteral(node.RName)}\\}}"")]");
             WriteLine(indent, $"private sealed class {node.CName} : {node.IFName}");
             WriteLine(indent, $"{{");
@@ -507,8 +506,9 @@ namespace ResourceGenerator
         public void WriteInnerResource(int indent, ResourceNode node)
         {
             WriteLine();
-            WriteLine(indent, $@"public {node.IFName} {node.PName} {{ get; }} = new {node.CFName}();");
+            WriteLine(indent, $@"{node.IFName} {node.Parent.IFName}.{node.PName} {{ get; }} = new {node.CFName}();");
             WriteLine();
+            WriteAttributsForClass(indent);
             WriteLine(indent, $@"[System.Diagnostics.DebuggerDisplay(""\\{{{Helper.AsLiteral($"{node.RName}")}\\}}"")]");
             WriteLine(indent, $@"private sealed class {node.CName} : {node.IFName}");
             WriteLine(indent, $@"{{");

@@ -30,7 +30,7 @@
             Properties.IsDefaultProject = true;
 
             // 是否调试生成的代码。
-            // Properties.DebugGeneratedCode = false;
+            Properties.DebugGeneratedCode = false;
 
             // 生成 Cache 存储的方法，默认为 "new global::System.Collections.Generic.Dictionary<string, string>()"，必须实现 "IDictionary<string, string>"
             // Properties.CacheActivator = "new MyNamespace.MyCacheDictionaty()";

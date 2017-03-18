@@ -7,21 +7,6 @@ namespace Windows.ApplicationModel.Resources
     //     提供对应用程序资源的简化访问，例如应用程序 UI 字符串。
     public sealed class ResourceLoader
     {
-        //
-        // 摘要:
-        //     为指定的 ResourceMap 构造新的 ResourceLoader 对象。
-        //
-        // 参数:
-        //   name:
-        //     新的资源加载程序用于非限定资源引用的 ResourceMap 的资源标识符。 该标识符随后可检索与这些引用相关的资源。该资源标识符被视为统一资源标识符 (URI)
-        //     片段，受统一资源标识符 (URI) 语义约束。 例如，Caption%20 被视为 Caption。 不使用？ 或资源标识符中的 #，因为它们会终止已命名的资源路径。
-        //     例如，Foo?3 被视为 Foo 处理。
-        [Obsolete("ResourceLoader may be altered or unavailable for releases after Windows 8.1. Instead, use GetForCurrentView.")]
-        public ResourceLoader(string name)
-        {
-            this.name = name;
-        }
-
         private string name;
 
         //
@@ -29,7 +14,7 @@ namespace Windows.ApplicationModel.Resources
         //     为当前正在运行应用的主 ResourceMap 的 Resources 子树构造新的 ResourceLoader 对象。
         public ResourceLoader()
         {
-            this.name = "/";
+            this.name = "Resources";
         }
 
         //
@@ -46,11 +31,16 @@ namespace Windows.ApplicationModel.Resources
         //     默认 ResourceContext 的指定资源最合适的字符串值。
         public string GetString(string resource)
         {
-            return $"{name}/{resource}";
+            if(resource.StartsWith("ms-resource:"))
+                return $"resource for Uri {resource}";
+            return $"resource for Uri ms-resource:///{name}/{resource}";
         }
+
         public string GetStringForUri(Uri uri)
         {
-            return null;
+            if(uri.Scheme=="ms-resource")
+                return $"resource for Uri {uri}";
+            throw new ArgumentException("Unsupported Uri");
         }
         //
         // 摘要:
@@ -106,12 +96,6 @@ namespace Windows.ApplicationModel.Resources
         public static ResourceLoader GetForViewIndependentUse(string name)
         {
             return new ResourceLoader { name = name };
-        }
-
-        [Obsolete("GetStringForReference may be altered or unavailable for releases after Windows Phone 'OSVersion' (TBD). Instead, use GetStringForUri.")]
-        public static string GetStringForReference(Uri uri)
-        {
-            return new ResourceLoader().GetStringForUri(uri);
         }
     }
 }
