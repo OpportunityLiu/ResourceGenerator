@@ -12,6 +12,7 @@ namespace ResourceGenerator
     {
         static void Main(string[] args)
         {
+            var r = LocalizedStrings.Resource.Equals;
             Directory.CreateDirectory(@"../../Output/");
             using(var w = new StreamWriter(@"../../Output/ResourceGenerator.tt"))
             {
