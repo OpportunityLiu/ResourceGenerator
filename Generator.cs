@@ -19,6 +19,8 @@ namespace ResourceGenerator
 
         public void Generate()
         {
+            var sc = ReadLines(@"../../Scripts.cs").ToArray();
+            var fc = ReadLines(@"../../Functions.cs").ToArray();
             WriteBlock(
 @"<#@ template debug=""false"" hostspecific=""true"" language=""C#"" #>
 <#@ assembly name=""System"" #>
@@ -26,19 +28,17 @@ namespace ResourceGenerator
 <#@ assembly name=""System.Xml"" #>
 <#@ assembly name=""System.Web"" #>
 <#@ assembly name=""System.Runtime.Serialization"" #>
-<#@ assembly name=""EnvDTE"" #>
-<#@ import namespace=""System"" #>
-<#@ import namespace=""System.IO"" #>
-<#@ import namespace=""System.Xml"" #>
-<#@ import namespace=""System.Collections.Generic"" #>
-<#@ import namespace=""System.Runtime.Serialization.Json"" #>
-<#@ import namespace=""System.Web"" #>
-<#@ import namespace=""System.Linq"" #>
-<#@ output extension="".tt.cs"" #>"); 
+<#@ assembly name=""EnvDTE"" #>");
+
+            var usings = fc.TakeWhile(s => s.StartsWith("using"))
+                .Select(s => s.Split(' ', ';')[1])
+                .Select(s => $@"<#@ import namespace=""{s}"" #>").ToArray();
+            WriteLines(usings, 0);
+
+            WriteLine(@"<#@ output extension="".tt.cs"" #>", 0);
 
             WriteCodeBegin();
-            var sc = ReadLines(@"../../Scripts.cs").ToArray();
-            WriteLines(sc.Skip(12).Take(sc.Length - 15), -2);
+            WriteLines(sc.Skip(6).Take(sc.Length - 9), -2);
             WriteCodeEnd();
 
             WriteBlockBegin();
@@ -49,60 +49,59 @@ namespace ResourceGenerator
             WriteBlockEnd();
 
             WriteBlockBegin();
-            var fc = ReadLines(@"../../Functions.cs").ToArray();
-            WriteLines(fc.Skip(12).Take(fc.Length - 14), -1);
+            WriteLines(fc.Skip(usings.Length + 5).Take(fc.Length - 7 - usings.Length), -1);
             WriteBlockEnd();
 
         }
 
         private void WriteBlock(string value)
         {
-            sw.WriteLine(value);
+            this.sw.WriteLine(value);
         }
 
         private void WriteLine(string value, int indent)
         {
             if(indent >= 0)
             {
-                for(int i = 0; i < indent; i++)
+                for(var i = 0; i < indent; i++)
                 {
-                    sw.Write("    ");
+                    this.sw.Write("    ");
                 }
-                sw.WriteLine(value);
+                this.sw.WriteLine(value);
             }
             else
             {
                 var empty = new string(' ', -indent * 4);
                 if(value.StartsWith(empty))
-                    sw.WriteLine(value.Substring(-indent * 4));
+                    this.sw.WriteLine(value.Substring(-indent * 4));
                 else
-                    sw.WriteLine(value.TrimStart());
+                    this.sw.WriteLine(value.TrimStart());
             }
         }
 
         private void WriteLine()
         {
-            sw.WriteLine();
+            this.sw.WriteLine();
         }
 
         private void WriteCodeBegin()
         {
-            sw.WriteLine("<#");
+            this.sw.WriteLine("<#");
         }
 
         private void WriteCodeEnd()
         {
-            sw.WriteLine("#>");
+            this.sw.WriteLine("#>");
         }
 
         private void WriteBlockBegin()
         {
-            sw.WriteLine("<#+");
+            this.sw.WriteLine("<#+");
         }
 
         private void WriteBlockEnd()
         {
-            sw.WriteLine("#>");
+            this.sw.WriteLine("#>");
         }
 
         private void WriteLines(IEnumerable<string> value, int indent)

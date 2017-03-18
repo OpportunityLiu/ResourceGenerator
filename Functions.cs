@@ -289,7 +289,7 @@ namespace ResourceGenerator
         {
             if(!Helper.Keywords.Contains(node.Name) && node.Name != node.PName)
             {
-                WriteLine($"#warning Resource has been renamed. ResourceName: \"{node.Name}\", PropertyName: \"{node.PName}\"");
+                WriteLine($"#warning Resource has been renamed. ResourceName: \"{Helper.AsLiteral(node.Name)}\", PropertyName: \"{Helper.AsLiteral(node.PName)}\"");
             }
         }
 
@@ -437,8 +437,8 @@ namespace ResourceGenerator
         public void WriteResources(IList<ResourceRootNode> tree)
         {
             var indent = 1;
-            var loaderName = Helper.GetRandomName("__loader__");
-            var cacheName = Helper.GetRandomName("__cache__");
+            var loaderName = Helper.GetRandomName("__loader");
+            var cacheName = Helper.GetRandomName("__cache");
             WriteLine($"namespace {Properties.LocalizedStringsNamespace}");
             WriteLine($"{{");
             //private global::System.Collections.Generic.IDictionary<string, string> _cache__TWL1Vqwp;
@@ -446,14 +446,10 @@ namespace ResourceGenerator
             WriteAttributsForClass(indent);
             WriteLine(indent, $"{Properties.Modifier}static class {Properties.LocalizedStringsClassName}");
             WriteLine(indent, $"{{");
-            WriteLine(indent, $"    private static global::System.Collections.Generic.IDictionary<string, string> {cacheName};");
-            WriteLine(indent, $"    private static global::Windows.ApplicationModel.Resources.ResourceLoader {loaderName};");
-            WriteLine();
-            WriteLine(indent, $"    static {Properties.LocalizedStringsClassName}()");
-            WriteLine(indent, $"    {{");
-            WriteLine(indent, $"        {Properties.LocalizedStringsFullName}.{cacheName} = {Properties.CacheActivator};");
-            WriteLine(indent, $"        {Properties.LocalizedStringsFullName}.{loaderName} = global::Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse();");
-            WriteLine(indent, $"    }}");
+            WriteLine(indent, $"    private static readonly global::System.Collections.Generic.IDictionary<string, string> {cacheName}");
+            WriteLine(indent, $"        = {Properties.CacheActivator};");
+            WriteLine(indent, $"    private static readonly global::Windows.ApplicationModel.Resources.ResourceLoader {loaderName}");
+            WriteLine(indent, $"        = global::Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse();");
             WriteLine();
             WriteLine(indent, $"    public static string GetValue(string resourceKey)");
             WriteLine(indent, $"    {{");
@@ -674,7 +670,27 @@ namespace ResourceGenerator
                 foreach(var item in value)
                 {
                     var chType = char.GetUnicodeCategory(item);
-                    if(chType == System.Globalization.UnicodeCategory.Control || chType == System.Globalization.UnicodeCategory.OtherPunctuation)
+                    if(item == '"')
+                        sb.Append(@"\""");
+                    else if(item == '\\')
+                        sb.Append(@"\\");
+                    else if(item == '\0')
+                        sb.Append(@"\0");
+                    else if(item == '\a')
+                        sb.Append(@"\a");
+                    else if(item == '\b')
+                        sb.Append(@"\b");
+                    else if(item == '\f')
+                        sb.Append(@"\f");
+                    else if(item == '\r')
+                        sb.Append(@"\r");
+                    else if(item == '\n')
+                        sb.Append(@"\n");
+                    else if(item == '\t')
+                        sb.Append(@"\t");
+                    else if(item == '\v')
+                        sb.Append(@"\v");
+                    else if(chType == System.Globalization.UnicodeCategory.Control)
                     {
                         sb.Append(@"\u");
                         sb.Append(((ushort)item).ToString("X4"));
@@ -733,7 +749,7 @@ namespace ResourceGenerator
                 var buf = new byte[6];
                 ran.NextBytes(buf);
                 var r = Convert.ToBase64String(buf);
-                return $"{head}__{r.Replace("+", "").Replace("/", "")}";
+                return $"{head}__{r.Replace("+", "_").Replace("/", "_")}";
             }
         }
 

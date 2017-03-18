@@ -1,22 +1,25 @@
 ﻿{
-    "ha\"ha": "6",
-    "ha.h\"a2": {
-        "a": "7",
-        "b": {
-            "c": "8",
-            "haha3/cc": "9"
-        }
-    },
-    "_haha": "10",
-    "\t": "\t",
-    "test//test": "",
-    "Reset": "Re",
-    "MemberwiseClone": "MC",
-    "ReferenceEquals": "REq",
-    "Equals": "Eq",
-    "GetType": "GT",
-    "GetHashCode": "GHC",
-    "GetValue": {
-        "GetValue": "Va"
+  "ha\"ha": "6",
+  "ha.h\"a2": {
+    "a": "7",
+    "b": {
+      "c": "8",
+      "haha3/cc": "9"
     }
+  },
+  "_haha": "10",
+  "\t": "\t",
+  "test//test": "",
+  "Reset": "Re",
+  "MemberwiseClone": "MC",
+  "ReferenceEquals": "REq",
+  "Equals": "Eq",
+  "GetType": "GT",
+  "GetHashCode": "GHC",
+  "GetValue": {
+    "GetValue": "Va"
+  },
+  "double": {
+    "string": "string of double"
+  }
 }

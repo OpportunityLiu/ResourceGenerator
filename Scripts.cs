@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ResourceGenerator
+﻿namespace ResourceGenerator
 {
     partial class Functions
     {
@@ -30,10 +24,10 @@ namespace ResourceGenerator
             // Properties.InterfacesNamespace = "MyNamespace.MyNamespace_ResourceInfo";
 
             // 生成辅助类的修饰符
-            // Properties.Modifier = "public";
+            Properties.Modifier = "internal";
 
             // 是否为默认工程，决定是否需要显式定义资源路径。
-            // Properties.IsDefaultProject = true;
+            Properties.IsDefaultProject = true;
 
             // 是否调试生成的代码。
             // Properties.DebugGeneratedCode = false;
