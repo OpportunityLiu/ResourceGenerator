@@ -441,8 +441,6 @@ namespace ResourceGenerator
             var cacheName = Helper.GetRandomName("__cache");
             WriteLine($"namespace {Properties.LocalizedStringsNamespace}");
             WriteLine($"{{");
-            //private global::System.Collections.Generic.IDictionary<string, string> _cache__TWL1Vqwp;
-            //private global::Windows.ApplicationModel.Resources.ResourceLoader _loader__yXhiRB0J;
             WriteAttributsForClass(indent);
             WriteLine(indent, $"{Properties.Modifier}static class {Properties.LocalizedStringsClassName}");
             WriteLine(indent, $"{{");
@@ -472,6 +470,7 @@ namespace ResourceGenerator
             WriteLine();
             WriteLine(indent, $"{Properties.Modifier}static {node.IFName} {node.PName} {{ get; }} = new {node.CFName}();");
             WriteLine();
+            WriteAttributsForClass(indent);
             WriteLine(indent, $@"[System.Diagnostics.DebuggerDisplay(""\\{{{Helper.AsLiteral(node.RName)}\\}}"")]");
             WriteLine(indent, $"private sealed class {node.CName} : {node.IFName}");
             WriteLine(indent, $"{{");
@@ -507,8 +506,9 @@ namespace ResourceGenerator
         public void WriteInnerResource(int indent, ResourceNode node)
         {
             WriteLine();
-            WriteLine(indent, $@"public {node.IFName} {node.PName} {{ get; }} = new {node.CFName}();");
+            WriteLine(indent, $@"{node.IFName} {node.Parent.IFName}.{node.PName} {{ get; }} = new {node.CFName}();");
             WriteLine();
+            WriteAttributsForClass(indent);
             WriteLine(indent, $@"[System.Diagnostics.DebuggerDisplay(""\\{{{Helper.AsLiteral($"{node.RName}")}\\}}"")]");
             WriteLine(indent, $@"private sealed class {node.CName} : {node.IFName}");
             WriteLine(indent, $@"{{");
