@@ -5,6 +5,7 @@ using System.Xml;
 using System.Runtime.Serialization.Json;
 using System.Linq;
 using System.Web;
+using System.Text.RegularExpressions;
 
 namespace ResourceGenerator
 {
@@ -196,9 +197,9 @@ namespace ResourceGenerator
                 get
                 {
                     if(PropertiesClass.Current.IsDefaultProject)
-                        return $"ms-resource:///{Name}";
+                        return $"ms-resource:///{Encode(Name)}";
                     else
-                        return $"ms-resource:///{PropertiesClass.Current.ProjectAssemblyName}/{Name}";
+                        return $"ms-resource:///{Encode(PropertiesClass.Current.ProjectAssemblyName)}/{Encode(Name)}";
                 }
             }
             public override string INs => PropertiesClass.Current.InterfacesNamespace;
@@ -208,6 +209,16 @@ namespace ResourceGenerator
 
         public class ResourceNode
         {
+            protected static string Encode(string name)
+            {
+                return name.Replace("%", "%25")
+                    .Replace("?", "%3F")
+                    .Replace("#", "%23")
+                    .Replace("/", "%2F")
+                    .Replace("*", "%2A")
+                    .Replace("\"", "%22");
+            }
+
             public static ResourceNode GetNode(string name, string value)
             {
                 return new ResourceNode(name, value);
@@ -278,7 +289,7 @@ namespace ResourceGenerator
             public string Name { get; }
             public string Value { get; }
 
-            public virtual string RName => Helper.CombineResourcePath(Parent?.RName, Name);
+            public virtual string RName => Helper.CombineResourcePath(Parent?.RName, Encode(Name));
 
             public string IName { get; private set; }
             public virtual string INs => $"{Parent.INs}.{Parent.PName}";
@@ -441,7 +452,6 @@ namespace ResourceGenerator
         {
             WriteComment(indent, node.Value);
             Check(node);
-            WriteLine(indent, $@"[global::System.Diagnostics.DebuggerDisplay("""", Name = ""{Helper.AsLiteral(node.PName)}"")]");
             this.WriteLine(indent, $@"{Helper.IPropModifier(node.PName)}string {node.PName} {{ get; }}");
         }
 
@@ -609,6 +619,89 @@ namespace ResourceGenerator
             }
         }
 
+        private class CommentStateMachine
+        {
+            private enum State
+            {
+                Default,
+                String,
+                EscapeChar,
+                PreComment,
+                Comment
+            }
+
+            private readonly string Original;
+            private State Current;
+            private int CommentStartIndex = -1;
+            private int CurrentPosition;
+
+            private bool MoveNext()
+            {
+                var CurrentChar = this.Original[this.CurrentPosition];
+                switch(this.Current)
+                {
+                case State.Default:
+                    switch(CurrentChar)
+                    {
+                    case '"':
+                        this.Current = State.String;
+                        break;
+                    case '/':
+                        this.Current = State.PreComment;
+                        break;
+                    }
+                    break;
+                case State.String:
+                    switch(CurrentChar)
+                    {
+                    case '\\':
+                        this.Current = State.EscapeChar;
+                        break;
+                    case '"':
+                        this.Current = State.Default;
+                        break;
+                    }
+                    break;
+                case State.EscapeChar:
+                    this.Current = State.String;
+                    break;
+                case State.PreComment:
+                    switch(CurrentChar)
+                    {
+                    case '/':
+                        this.Current = State.Comment;
+                        this.CommentStartIndex = this.CurrentPosition - 1;
+                        break;
+                    default:
+                        this.Current = State.Default;
+                        break;
+                    }
+                    break;
+                case State.Comment:
+                    break;
+                }
+                this.CurrentPosition++;
+                return !(this.CommentStartIndex >= 0 || this.Original.Length == this.CurrentPosition);
+            }
+
+            private CommentStateMachine(string original)
+            {
+                this.Original = original;
+            }
+
+            public static string RemoveComment(string original)
+            {
+                var sm = new CommentStateMachine(original);
+                while(sm.MoveNext())
+                {
+
+                }
+                if(sm.CommentStartIndex == -1)
+                    return original;
+                return original.Substring(0, sm.CommentStartIndex);
+            }
+        }
+
         public void AnalyzeResJson(Dictionary<string, Dictionary<string, object>> output, string path)
         {
             var resourceName = Path.GetFileNameWithoutExtension(path);
@@ -619,6 +712,9 @@ namespace ResourceGenerator
                 var line = default(string);
                 while((line = reader.ReadLine()) != null)
                 {
+                    line = CommentStateMachine.RemoveComment(line);
+                    if(string.IsNullOrWhiteSpace(line))
+                        continue;
                     writer.WriteLine(line);
                 }
                 writer.Flush();

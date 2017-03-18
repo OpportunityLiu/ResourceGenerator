@@ -4,11 +4,11 @@
     "a": "7",
     "b": {
       "c": "8",
-      "haha3/cc": "9"
+      "haha3/cc": "//9"
     }
   },
-  "_haha": "10",
-  "\t": "\t",
+  "_haha": "1'0",
+  "\t": "",
   "test//test": "",
   "Reset": "Re",
   "MemberwiseClone": "MC",
