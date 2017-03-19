@@ -12,7 +12,7 @@ namespace ResourceGenerator
     {
         static void Main(string[] args)
         {
-            var r = LocalizedStrings.Resource.Equals;
+            var r = Debugger.LocalizedStringsDebugView.Current;
             Directory.CreateDirectory(@"../../Output/");
             using(var w = new StreamWriter(@"../../Output/ResourceGenerator.tt"))
             {
@@ -25,9 +25,8 @@ namespace ResourceGenerator
                 Console.WriteLine("T4 template output generated at /Output/ResourceGenerator.tt.cs");
             }
 
-            
-        }
 
+        }
     }
 }
 

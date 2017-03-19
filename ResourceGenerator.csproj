@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Debugger\LocalizedStringsDebugView.cs" />
     <Compile Include="PlaceHolder\DTE.cs" />
     <Compile Include="Functions.cs" />
     <Compile Include="PlaceHolder\Functions.cs" />

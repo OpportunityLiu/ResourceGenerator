@@ -21,5 +21,6 @@
   },
   "double": {
     "string": "string of double"
-  }
+  },
+  "What?": "A question mark?"
 }

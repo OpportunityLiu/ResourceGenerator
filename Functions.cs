@@ -197,9 +197,9 @@ namespace ResourceGenerator
                 get
                 {
                     if(PropertiesClass.Current.IsDefaultProject)
-                        return $"ms-resource:///{Encode(Name)}";
+                        return $"ms-resource:///{Name}";
                     else
-                        return $"ms-resource:///{Encode(PropertiesClass.Current.ProjectAssemblyName)}/{Encode(Name)}";
+                        return $"ms-resource:///{PropertiesClass.Current.ProjectAssemblyName}/{Name}";
                 }
             }
             public override string INs => PropertiesClass.Current.InterfacesNamespace;
@@ -209,16 +209,6 @@ namespace ResourceGenerator
 
         public class ResourceNode
         {
-            protected static string Encode(string name)
-            {
-                return name.Replace("%", "%25")
-                    .Replace("?", "%3F")
-                    .Replace("#", "%23")
-                    .Replace("/", "%2F")
-                    .Replace("*", "%2A")
-                    .Replace("\"", "%22");
-            }
-
             public static ResourceNode GetNode(string name, string value)
             {
                 return new ResourceNode(name, value);
@@ -289,7 +279,7 @@ namespace ResourceGenerator
             public string Name { get; }
             public string Value { get; }
 
-            public virtual string RName => Helper.CombineResourcePath(Parent?.RName, Encode(Name));
+            public virtual string RName => Helper.CombineResourcePath(Parent?.RName, Name);
 
             public string IName { get; private set; }
             public virtual string INs => $"{Parent.INs}.{Parent.PName}";
@@ -481,7 +471,12 @@ namespace ResourceGenerator
             WriteLine(indent, $"        string value;");
             WriteLine(indent, $"        if({Properties.LocalizedStringsFullName}.{cacheName}.TryGetValue(resourceKey, out value))");
             WriteLine(indent, $"            return value;");
-            WriteLine(indent, $"        return {Properties.LocalizedStringsFullName}.{cacheName}[resourceKey] = {Properties.LocalizedStringsFullName}.{loaderName}.GetString(resourceKey);");
+            WriteLine(indent, $"        string escaped = resourceKey.Replace(\"%\", \"%25\")" +
+                $".Replace(\"?\", \"%3F\")" +
+                $".Replace(\"#\", \"%23\")" +
+                $".Replace(\"*\", \"%2A\")" +
+                $".Replace(\"\\\"\", \"%22\");");
+            WriteLine(indent, $"        return {Properties.LocalizedStringsFullName}.{cacheName}[resourceKey] = {Properties.LocalizedStringsFullName}.{loaderName}.GetString(escaped);");
             WriteLine(indent, $"    }}");
             WriteLine();
             foreach(var item in tree)
