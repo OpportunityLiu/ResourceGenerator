@@ -566,7 +566,7 @@ namespace ResourceGenerator
 
         public void WriteProperty(int indent, ResourceNode node)
         {
-            WriteLine(indent, $@"public {Helper.CPropModifier(node.PName)}string {node.PName}");
+            WriteLine(indent, $@"string {node.Parent.IFName}.{node.PName}");
             WriteLine(indent + 1, $@"=> {Properties.LocalizedStringsFullName}.GetValue(""{Helper.AsLiteral(node.RName)}"");");
         }
 
@@ -686,6 +686,8 @@ namespace ResourceGenerator
 
             public static string RemoveComment(string original)
             {
+                if(string.IsNullOrWhiteSpace(original))
+                    return "";
                 var sm = new CommentStateMachine(original);
                 while(sm.MoveNext())
                 {
