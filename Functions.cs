@@ -23,14 +23,14 @@ namespace ResourceGenerator
 
         public void Execute()
         {
-            if(Properties.SourceLanguagePath == null)
+            if (Properties.SourceLanguagePath == null)
                 Properties.SourceLanguagePath = Directory.EnumerateDirectories(Path.Combine(Properties.ProjectPath, Properties.ResourcePath)).First();
             var names = new Dictionary<string, Dictionary<string, object>>();
             var stringsPath = Path.Combine(Properties.ProjectPath, Properties.ResourcePath, Properties.SourceLanguagePath);
             string[] reswPaths;
             string[] resJsonPaths;
 
-            if(Directory.Exists(stringsPath))
+            if (Directory.Exists(stringsPath))
             {
                 reswPaths = Directory.GetFiles(stringsPath, "*.resw", SearchOption.AllDirectories);
                 resJsonPaths = Directory.GetFiles(stringsPath, "*.resJson", SearchOption.AllDirectories);
@@ -40,12 +40,12 @@ namespace ResourceGenerator
                 reswPaths = new string[0];
                 resJsonPaths = new string[0];
             }
-            foreach(var reswPath in reswPaths)
+            foreach (var reswPath in reswPaths)
             {
                 Hash(reswPath);
                 AnalyzeResw(names, reswPath);
             }
-            foreach(var resJsonPath in resJsonPaths)
+            foreach (var resJsonPath in resJsonPaths)
             {
                 Hash(resJsonPath);
                 AnalyzeResJson(names, resJsonPath);
@@ -73,7 +73,7 @@ namespace ResourceGenerator
 
             private void setIdentity(ref string field, string value, string def, bool allowDots)
             {
-                if(!string.IsNullOrWhiteSpace(value))
+                if (!string.IsNullOrWhiteSpace(value))
                     field = Helper.Refine(value.Trim(), allowDots);
                 else
                     field = def;
@@ -93,7 +93,7 @@ namespace ResourceGenerator
                 get => ca;
                 set
                 {
-                    if(!string.IsNullOrWhiteSpace(value))
+                    if (!string.IsNullOrWhiteSpace(value))
                         this.ca = value;
                 }
             }
@@ -131,16 +131,16 @@ namespace ResourceGenerator
                 => $"global::{LocalizedStringsNamespace}.{LocalizedStringsClassName}";
             public string InterfaceFullName(string interfaceName, string ins)
             {
-                if(string.IsNullOrEmpty(ins))
+                if (string.IsNullOrEmpty(ins))
                     return $"global::{InterfacesNamespace}.{interfaceName}";
-                else if(ins.StartsWith("global::"))
+                else if (ins.StartsWith("global::"))
                     return $"{ins}.{interfaceName}";
                 else
                     return $"global::{ins}.{interfaceName}";
             }
             public string InterfaceFullName(string propertyName)
             {
-                if(!propertyName.StartsWith(LocalizedStringsFullName + "."))
+                if (!propertyName.StartsWith(LocalizedStringsFullName + "."))
                     throw new Exception();
                 propertyName = propertyName.Substring(LocalizedStringsFullName.Length + 1);
                 var names = propertyName.Split('.');
@@ -160,7 +160,7 @@ namespace ResourceGenerator
             public static List<ResourceRootNode> GetTree(Dictionary<string, Dictionary<string, object>> raw)
             {
                 var l = new List<ResourceRootNode>();
-                foreach(var item in raw)
+                foreach (var item in raw)
                 {
                     l.Add(getRootNode(item));
                 }
@@ -170,13 +170,13 @@ namespace ResourceGenerator
             private static ResourceRootNode getRootNode(KeyValuePair<string, Dictionary<string, object>> item)
             {
                 var node = new ResourceRootNode(item.Key);
-                foreach(var i in item.Value)
+                foreach (var i in item.Value)
                 {
-                    if(i.Value is string v)
+                    if (i.Value is string v)
                     {
                         node.Childern.Add(GetNode(i.Key, v));
                     }
-                    else if(i.Value is Dictionary<string, object> v2)
+                    else if (i.Value is Dictionary<string, object> v2)
                     {
                         node.Childern.Add(GetNode(i.Key, v2));
                     }
@@ -196,7 +196,7 @@ namespace ResourceGenerator
             {
                 get
                 {
-                    if(PropertiesClass.Current.IsDefaultProject)
+                    if (PropertiesClass.Current.IsDefaultProject)
                         return $"ms-resource:///{Name}";
                     else
                         return $"ms-resource:///{PropertiesClass.Current.ProjectAssemblyName}/{Name}";
@@ -217,13 +217,13 @@ namespace ResourceGenerator
             public static ResourceNode GetNode(string name, Dictionary<string, object> values)
             {
                 var r = new ResourceNode(name);
-                foreach(var i in values)
+                foreach (var i in values)
                 {
-                    if(i.Value is string v)
+                    if (i.Value is string v)
                     {
                         r.Childern.Add(GetNode(i.Key, v));
                     }
-                    else if(i.Value is Dictionary<string, object> v2)
+                    else if (i.Value is Dictionary<string, object> v2)
                     {
                         r.Childern.Add(GetNode(i.Key, v2));
                     }
@@ -247,9 +247,9 @@ namespace ResourceGenerator
 
             protected void Refine()
             {
-                if(Childern == null)
+                if (Childern == null)
                     return;
-                foreach(var item in Childern)
+                foreach (var item in Childern)
                 {
                     item.Parent = this;
                     item.Root = this.Root;
@@ -260,7 +260,7 @@ namespace ResourceGenerator
             private void setNames()
             {
                 var r = Helper.Refine(Name);
-                if(r.StartsWith("@"))
+                if (r.StartsWith("@"))
                     this.IName = $"I{Name}";
                 else
                     this.IName = $"I{r}";
@@ -298,7 +298,7 @@ namespace ResourceGenerator
         private readonly System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
         private void Hash(string path)
         {
-            using(var stream = new FileStream(path, FileMode.Open))
+            using (var stream = new FileStream(path, FileMode.Open))
             {
                 var hash = this.md5.ComputeHash(stream);
                 var hashstr = string.Concat(BitConverter.ToString(hash).Split('-'));
@@ -308,7 +308,7 @@ namespace ResourceGenerator
 
         private void Check(ResourceNode node)
         {
-            if(!Helper.Keywords.Contains(node.Name) && node.Name != node.PName)
+            if (!Helper.Keywords.Contains(node.Name) && node.Name != node.PName)
             {
                 WriteLine($"#warning Resource has been renamed. ResourceName: \"{Helper.AsLiteral(node.Name)}\", PropertyName: \"{Helper.AsLiteral(node.PName)}\"");
             }
@@ -316,7 +316,7 @@ namespace ResourceGenerator
 
         public void WriteLine(int indent, string value)
         {
-            for(var i = 0; i < indent; i++)
+            for (var i = 0; i < indent; i++)
                 Write("    ");
             WriteLine(value);
         }
@@ -333,7 +333,7 @@ namespace ResourceGenerator
 
         public void WriteAttributsForClass(int indent)
         {
-            if(!Properties.DebugGeneratedCode)
+            if (!Properties.DebugGeneratedCode)
                 WriteLine(indent, $@"[global::System.Diagnostics.DebuggerNonUserCodeAttribute]");
             WriteLine(indent, $@"[global::System.CodeDom.Compiler.GeneratedCodeAttribute(""{ProductName}"", ""{ProductVersion}"")]");
         }
@@ -342,10 +342,10 @@ namespace ResourceGenerator
         {
             WriteLine(indent, "/// <summary>");
             var comments = new StringReader(summary);
-            while(true)
+            while (true)
             {
                 var comment = HttpUtility.HtmlEncode(comments.ReadLine());
-                if(comment == null)
+                if (comment == null)
                     break;
                 WriteLine(indent, $@"/// <para>{comment}</para>");
             }
@@ -373,7 +373,7 @@ namespace ResourceGenerator
             WriteLine(indent, $"        this.key = key;");
             WriteLine(indent, $"    }}");
             WriteLine();
-            if(!Properties.DebugGeneratedCode)
+            if (!Properties.DebugGeneratedCode)
                 WriteLine(indent, @"    [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]");
             WriteLine(indent, $"    private readonly string key;");
             WriteLine();
@@ -398,7 +398,7 @@ namespace ResourceGenerator
             WriteLine(indent, $"}}");
             WriteLine($"}}");
 
-            foreach(var item in tree)
+            foreach (var item in tree)
             {
                 WriteRootInterface(item);
             }
@@ -412,18 +412,18 @@ namespace ResourceGenerator
             WriteAttributsForInterface(indent + 1);
             WriteLine(indent, $"    {Properties.Modifier} interface {node.IName} : {inhertFrom}");
             WriteLine(indent, $"    {{");
-            foreach(var item in node.Childern)
+            foreach (var item in node.Childern)
             {
-                if(item.IsLeaf)
+                if (item.IsLeaf)
                     WriteInterfaceProperty(indent + 2, item);
                 else
                     WriteInterfaceIProperty(indent + 2, item);
             }
             WriteLine(indent, $"    }}");
             WriteLine(indent, $"}}");
-            foreach(var item in node.Childern)
+            foreach (var item in node.Childern)
             {
-                if(!item.IsLeaf)
+                if (!item.IsLeaf)
                     WriteInnerInterface(indent, item);
             }
         }
@@ -467,10 +467,15 @@ namespace ResourceGenerator
             WriteLine(indent, $"        = global::Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse();");
             WriteLine();
             WriteLine(indent, $"    {Properties.Modifier} static string GetValue(string resourceKey)");
+            WriteLine(indent, $"        => {Properties.LocalizedStringsFullName}.GetValue(resourceKey, true);");
+            WriteLine();
+            WriteLine(indent, $"    private static string GetValue(string resourceKey, bool escape)");
             WriteLine(indent, $"    {{");
             WriteLine(indent, $"        string value;");
             WriteLine(indent, $"        if({Properties.LocalizedStringsFullName}.{cacheName}.TryGetValue(resourceKey, out value))");
             WriteLine(indent, $"            return value;");
+            WriteLine(indent, $"        if(!escape)");
+            WriteLine(indent, $"            return {Properties.LocalizedStringsFullName}.{cacheName}[resourceKey] = {Properties.LocalizedStringsFullName}.{loaderName}.GetString(resourceKey);");
             WriteLine(indent, $"        string escaped = resourceKey.Replace(\"%\", \"%25\")" +
                 $".Replace(\"?\", \"%3F\")" +
                 $".Replace(\"#\", \"%23\")" +
@@ -479,7 +484,7 @@ namespace ResourceGenerator
             WriteLine(indent, $"        return {Properties.LocalizedStringsFullName}.{cacheName}[resourceKey] = {Properties.LocalizedStringsFullName}.{loaderName}.GetString(escaped);");
             WriteLine(indent, $"    }}");
             WriteLine();
-            foreach(var item in tree)
+            foreach (var item in tree)
             {
                 WriteRootResource(indent + 1, item);
             }
@@ -511,15 +516,15 @@ namespace ResourceGenerator
             WriteLine(indent, $"        return {Properties.LocalizedStringsFullName}.GetValue(\"{Helper.AsLiteral(node.RName)}/\" + resourceKey);");
             WriteLine(indent, $"    }}");
             WriteLine();
-            foreach(var item in node.Childern)
+            foreach (var item in node.Childern)
             {
-                if(!item.IsLeaf)
+                if (!item.IsLeaf)
                     WriteInnerResource(indent + 1, item);
             }
             WriteLine();
-            foreach(var item in node.Childern)
+            foreach (var item in node.Childern)
             {
-                if(item.IsLeaf)
+                if (item.IsLeaf)
                     WriteProperty(indent + 1, item);
             }
             WriteLine(indent, $"}}");
@@ -550,15 +555,15 @@ namespace ResourceGenerator
             WriteLine(indent, $@"            return {Properties.LocalizedStringsFullName}.GetValue(""{Helper.AsLiteral(node.RName)}"");");
             WriteLine(indent, $@"        return {Properties.LocalizedStringsFullName}.GetValue(""{Helper.AsLiteral(node.RName)}/"" + resourceKey);");
             WriteLine(indent, $@"    }}");
-            foreach(var item in node.Childern)
+            foreach (var item in node.Childern)
             {
-                if(!item.IsLeaf)
+                if (!item.IsLeaf)
                     WriteInnerResource(indent + 1, item);
             }
             WriteLine();
-            foreach(var item in node.Childern)
+            foreach (var item in node.Childern)
             {
-                if(item.IsLeaf)
+                if (item.IsLeaf)
                     WriteProperty(indent + 1, item);
             }
             WriteLine(indent, $@"}}");
@@ -566,27 +571,28 @@ namespace ResourceGenerator
 
         public void WriteProperty(int indent, ResourceNode node)
         {
+            var escaped = Helper.EscapeResourceKey(node.RName);
             WriteLine(indent, $@"string {node.Parent.IFName}.{node.PName}");
-            WriteLine(indent + 1, $@"=> {Properties.LocalizedStringsFullName}.GetValue(""{Helper.AsLiteral(node.RName)}"");");
+            WriteLine(indent + 1, $@"=> {Properties.LocalizedStringsFullName}.GetValue(""{Helper.AsLiteral(escaped)}"", false);");
         }
 
         public void SetValue(Dictionary<string, Dictionary<string, object>> output, string root, IList<string> path, string value)
         {
             output.TryGetValue(root, out var o);
-            if(o == null)
+            if (o == null)
                 output[root] = o = new Dictionary<string, object>();
             SetValueCore(o, path, 0, value);
         }
 
         public void SetValueCore(Dictionary<string, object> output, IList<string> path, int index, string value)
         {
-            if(index == path.Count - 1)
+            if (index == path.Count - 1)
                 SetValueCore(output, path[index], value);
             else
             {
                 output.TryGetValue(path[index], out var o);
                 var dic = o as Dictionary<string, object>;
-                if(dic == null)
+                if (dic == null)
                     output[path[index]] = dic = new Dictionary<string, object>();
                 SetValueCore(dic, path, index + 1, value);
             }
@@ -604,9 +610,9 @@ namespace ResourceGenerator
             document.Load(path);
 
             var dataNodes = document.GetElementsByTagName("data");
-            foreach(XmlElement dataNode in dataNodes)
+            foreach (XmlElement dataNode in dataNodes)
             {
-                if(dataNode != null)
+                if (dataNode != null)
                 {
                     var value = dataNode.GetAttribute("name");
                     SetValue(output, resourceName, value.Split('.', '/'), dataNode["value"].InnerText);
@@ -633,47 +639,47 @@ namespace ResourceGenerator
             private bool MoveNext()
             {
                 var CurrentChar = this.Original[this.CurrentPosition];
-                switch(this.Current)
+                switch (this.Current)
                 {
-                case State.Default:
-                    switch(CurrentChar)
-                    {
-                    case '"':
+                    case State.Default:
+                        switch (CurrentChar)
+                        {
+                            case '"':
+                                this.Current = State.String;
+                                break;
+                            case '/':
+                                this.Current = State.PreComment;
+                                break;
+                        }
+                        break;
+                    case State.String:
+                        switch (CurrentChar)
+                        {
+                            case '\\':
+                                this.Current = State.EscapeChar;
+                                break;
+                            case '"':
+                                this.Current = State.Default;
+                                break;
+                        }
+                        break;
+                    case State.EscapeChar:
                         this.Current = State.String;
                         break;
-                    case '/':
-                        this.Current = State.PreComment;
+                    case State.PreComment:
+                        switch (CurrentChar)
+                        {
+                            case '/':
+                                this.Current = State.Comment;
+                                this.CommentStartIndex = this.CurrentPosition - 1;
+                                break;
+                            default:
+                                this.Current = State.Default;
+                                break;
+                        }
                         break;
-                    }
-                    break;
-                case State.String:
-                    switch(CurrentChar)
-                    {
-                    case '\\':
-                        this.Current = State.EscapeChar;
+                    case State.Comment:
                         break;
-                    case '"':
-                        this.Current = State.Default;
-                        break;
-                    }
-                    break;
-                case State.EscapeChar:
-                    this.Current = State.String;
-                    break;
-                case State.PreComment:
-                    switch(CurrentChar)
-                    {
-                    case '/':
-                        this.Current = State.Comment;
-                        this.CommentStartIndex = this.CurrentPosition - 1;
-                        break;
-                    default:
-                        this.Current = State.Default;
-                        break;
-                    }
-                    break;
-                case State.Comment:
-                    break;
                 }
                 this.CurrentPosition++;
                 return !(this.CommentStartIndex >= 0 || this.Original.Length == this.CurrentPosition);
@@ -686,14 +692,14 @@ namespace ResourceGenerator
 
             public static string RemoveComment(string original)
             {
-                if(string.IsNullOrWhiteSpace(original))
+                if (string.IsNullOrWhiteSpace(original))
                     return "";
                 var sm = new CommentStateMachine(original);
-                while(sm.MoveNext())
+                while (sm.MoveNext())
                 {
 
                 }
-                if(sm.CommentStartIndex == -1)
+                if (sm.CommentStartIndex == -1)
                     return original;
                 return original.Substring(0, sm.CommentStartIndex);
             }
@@ -702,15 +708,15 @@ namespace ResourceGenerator
         public void AnalyzeResJson(Dictionary<string, Dictionary<string, object>> output, string path)
         {
             var resourceName = Path.GetFileNameWithoutExtension(path);
-            using(var reader = new StreamReader(path, true))
-            using(var ms = new MemoryStream())
-            using(var writer = new StreamWriter(ms, new System.Text.UTF8Encoding(false)))
+            using (var reader = new StreamReader(path, true))
+            using (var ms = new MemoryStream())
+            using (var writer = new StreamWriter(ms, new System.Text.UTF8Encoding(false)))
             {
                 var line = default(string);
-                while((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) != null)
                 {
                     line = CommentStateMachine.RemoveComment(line);
-                    if(string.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrWhiteSpace(line))
                         continue;
                     writer.WriteLine(line);
                 }
@@ -721,7 +727,7 @@ namespace ResourceGenerator
                 doc.Load(xmlreader);
                 var root = doc.FirstChild;
                 var p = new List<string>();
-                foreach(XmlElement item in root.ChildNodes)
+                foreach (XmlElement item in root.ChildNodes)
                 {
                     AnalyzeNode(output, resourceName, p, item);
                 }
@@ -732,14 +738,14 @@ namespace ResourceGenerator
         public void AnalyzeNode(Dictionary<string, Dictionary<string, object>> output, string root, List<string> path, XmlElement node)
         {
             var nodeName = GetNodeName(node);
-            if(string.IsNullOrEmpty(nodeName) || nodeName.StartsWith("_"))
+            if (string.IsNullOrEmpty(nodeName) || nodeName.StartsWith("_"))
                 return;
             var currentName = GetNodeName(node).Split('/');
             path.AddRange(currentName);
-            if(node.FirstChild.NodeType == XmlNodeType.Text)
+            if (node.FirstChild.NodeType == XmlNodeType.Text)
             {
                 var text = default(string);
-                foreach(XmlText item in node.ChildNodes)
+                foreach (XmlText item in node.ChildNodes)
                 {
                     text += item.InnerText;
                 }
@@ -747,7 +753,7 @@ namespace ResourceGenerator
             }
             else
             {
-                foreach(XmlElement item in node.ChildNodes)
+                foreach (XmlElement item in node.ChildNodes)
                 {
                     AnalyzeNode(output, root, path, item);
                 }
@@ -759,13 +765,18 @@ namespace ResourceGenerator
         public string GetNodeName(XmlElement node)
         {
             var name = node.GetAttribute("item");
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
                 return node.Name;
             return name;
         }
 
         public static class Helper
         {
+            public static string EscapeResourceKey(string key)
+            {
+                return key.Replace("%", "%25").Replace("?", "%3F").Replace("#", "%23").Replace("*", "%2A").Replace("\"", "%22");
+            }
+
             public static HashSet<string> Keywords = new HashSet<string>() { "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked", "class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else", "enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for", "foreach", "goto", "if", "implicit", "in", "int", "interface", "internal", "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out", "override", "params", "private", "protected", "public", "readonly", "ref", "return", "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using", "virtual", "void", "volatile", "while" };
 
             private static HashSet<string> usedInInterface = new HashSet<string>() { "GetValue" };
@@ -775,33 +786,33 @@ namespace ResourceGenerator
 
             public static string AsLiteral(string value)
             {
-                if(string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                     return "";
                 var sb = new System.Text.StringBuilder(value.Length);
-                foreach(var item in value)
+                foreach (var item in value)
                 {
                     var chType = char.GetUnicodeCategory(item);
-                    if(item == '"')
+                    if (item == '"')
                         sb.Append(@"\""");
-                    else if(item == '\\')
+                    else if (item == '\\')
                         sb.Append(@"\\");
-                    else if(item == '\0')
+                    else if (item == '\0')
                         sb.Append(@"\0");
-                    else if(item == '\a')
+                    else if (item == '\a')
                         sb.Append(@"\a");
-                    else if(item == '\b')
+                    else if (item == '\b')
                         sb.Append(@"\b");
-                    else if(item == '\f')
+                    else if (item == '\f')
                         sb.Append(@"\f");
-                    else if(item == '\r')
+                    else if (item == '\r')
                         sb.Append(@"\r");
-                    else if(item == '\n')
+                    else if (item == '\n')
                         sb.Append(@"\n");
-                    else if(item == '\t')
+                    else if (item == '\t')
                         sb.Append(@"\t");
-                    else if(item == '\v')
+                    else if (item == '\v')
                         sb.Append(@"\v");
-                    else if(chType == System.Globalization.UnicodeCategory.Control)
+                    else if (chType == System.Globalization.UnicodeCategory.Control)
                     {
                         sb.Append(@"\u");
                         sb.Append(((ushort)item).ToString("X4"));
@@ -816,31 +827,31 @@ namespace ResourceGenerator
 
             public static string IPropModifier(string name)
             {
-                if(usedInInterface.Contains(name))
+                if (usedInInterface.Contains(name))
                     return "new ";
                 return "";
             }
 
             public static string CPropModifier(string name)
             {
-                if(usedInClass.Contains(name))
+                if (usedInClass.Contains(name))
                     return "new ";
                 return "";
             }
 
             public static string Refine(string name, bool allowDot = false)
             {
-                if(allowDot)
+                if (allowDot)
                     return string.Join(".", name.Split('.').Select(n => Refine(n)));
-                if(string.IsNullOrEmpty(name))
+                if (string.IsNullOrEmpty(name))
                     return "__Empty__";
-                if(Keywords.Contains(name))
+                if (Keywords.Contains(name))
                     return "@" + name;
-                if(!isValidStartChar(name[0]))
+                if (!isValidStartChar(name[0]))
                     name = "_" + name;
-                for(var i = 1; i < name.Length; i++)
+                for (var i = 1; i < name.Length; i++)
                 {
-                    if(!isValidPartChar(name[i]))
+                    if (!isValidPartChar(name[i]))
                         name = name.Replace(name[i], '_');
                 }
                 return name;
