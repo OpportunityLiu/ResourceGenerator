@@ -6,7 +6,7 @@ namespace Opportunity.ResourceGenerator
     /// <summary>
     /// Represent a resource path.
     /// </summary>
-    [DebuggerDisplay("[{key,nq}] = {Value}")]
+    [DebuggerDisplay("[{Key,nq}] = {Value}")]
     public struct GeneratedResourceProvider : IResourceProvider
     {
         /// <summary>

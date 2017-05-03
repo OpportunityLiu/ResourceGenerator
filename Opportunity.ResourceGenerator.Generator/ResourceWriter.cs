@@ -58,6 +58,7 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public void WriteAttributsForClass(int indent)
         {
+            WriteLine(indent, "[global::System.Diagnostics.DebuggerTypeProxy(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]");
             if (!Config.DebugGeneratedCode)
                 WriteLine(indent, $@"[global::System.Diagnostics.DebuggerNonUserCodeAttribute]");
             WriteLine(indent, $@"[global::System.CodeDom.Compiler.GeneratedCodeAttribute(""{Helper.ProductName}"", ""{Helper.ProductVersion}"")]");

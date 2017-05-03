@@ -9,14 +9,11 @@ namespace Opportunity.ResourceGenerator
     /// </summary>
     public static class LocalizedStrings
     {
-        private static IDictionary<string, string> cache
-            = new Dictionary<string, string>();
-        private static ResourceLoader loader
-            = ResourceLoader.GetForViewIndependentUse("");
+        private static Dictionary<string, string> cache = new Dictionary<string, string>();
+        private static ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("");
 
         /// <summary>
         /// Reset the <see cref="LocalizedStrings"/>.
-        /// Clean cache of <see cref="string"/>s, re-create a <see cref="ResourceLoader"/>.
         /// </summary>
         public static void Reset()
         {

@@ -40,10 +40,11 @@ function Generate-Resource
         $tool = ToolPath
         $configFiles = GetConfigFiles($dteProject)
         $toolArgs = $dteProject.FullName;
-        Write-Host "==== Project" $Project "===="
+        Write-Host "============= Project" $Project "============="
         if(!$configFiles)
         {
             Write-Host "No config files found, skipped."
+            Write-Host
             return
         }
         Start-Process -FilePath $tool -ArgumentList ($toolArgs +" " +( $configFiles -join " ")) -NoNewWindow -Wait
@@ -57,6 +58,7 @@ function Generate-Resource
             $i = $i + 1
         }
         Write-Host ($i - 1) "file(s) generated."
+        Write-Host
     }
 }
 

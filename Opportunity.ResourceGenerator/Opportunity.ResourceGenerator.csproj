@@ -43,6 +43,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DebuggerDisplay.cs" />
     <Compile Include="GeneratedResourceProvider.cs" />
     <Compile Include="IResourceProvider.cs" />
     <Compile Include="LocalizedStrings.cs" />
