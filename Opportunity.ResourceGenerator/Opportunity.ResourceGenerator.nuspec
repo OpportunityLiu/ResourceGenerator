@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>$id$</id>
-    <version>$version$</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <id>Opportunity.ResourceGenerator</id>
+    <version>1.0.3</version>
+    <title>Opportunity.ResourceGenerator</title>
+    <authors>Opportunity</authors>
+    <owners>Opportunity</owners>
     <licenseUrl>https://github.com/OpportunityLiu/ResourceGenerator/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/OpportunityLiu/ResourceGenerator</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
-    <releaseNotes>First version of the package.</releaseNotes>
+    <description>A tool to generate classes for UWP string resources. </description>
     <copyright>Copyright 2017</copyright>
-    <tags>UWP resw resjson resources generator</tags>
+    <releaseNotes>First Release</releaseNotes>
+    <tags>UWP resw resjson resources localization</tags>
   </metadata>
   <files>
     <file src="bin\Release\*.dll" target="lib\uap10.0" />
