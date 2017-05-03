@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Opportunity.ResourceGenerator</id>
-    <version>1.0.3</version>
+    <version>1.0.5</version>
     <title>Opportunity.ResourceGenerator</title>
     <authors>Opportunity</authors>
     <owners>Opportunity</owners>
@@ -18,7 +18,5 @@
     <file src="bin\Release\*.dll" target="lib\uap10.0" />
     <file src="bin\Release\*.xml" target="lib\uap10.0" />
     <file src="..\Scripts\*.*" target="tools" />
-    <file src="..\Opportunity.ResourceGenerator.Generator\bin\Release\*.dll" target="tools" />
-    <file src="..\Opportunity.ResourceGenerator.Generator\bin\Release\*.exe" target="tools" />
   </files>
 </package>

@@ -2,7 +2,7 @@
 
 Register-TabExpansion Create-Config @{
     Project = { GetProjects }
-    Name = { "LocalizedStrings", "Strings" }
+    Name = { "LocalizedStrings", "Strings", "Strings/LocalizedStrings", "Resources/Strings" }
 }
 Register-TabExpansion Generate-Resource @{
     Project = { GetProjects }
@@ -16,7 +16,6 @@ function Create-Config
         [Parameter(Position = 0, Mandatory = $true)]
         [string] $Name,
         [string] $Project)
-
     $dteProject = GetProject($Project)
     $path = Split-Path $dteProject.FullName -Parent
     $file = Join-Path $path ($Name + ".resgenconfig")
@@ -75,30 +74,32 @@ function ToolPath
 function GetFile
 {
     return @"
-    {
-      // TODO: 修改相关配置。
+{
+  // Path for resource files (*.resw & *.resjson).
+  // Default value is "/Strings".
+  "ResourcePath": "/Strings",
 
-      // 检索 resw 的路径，默认为 "Strings"。
-      "ResourcePath": "/Strings",
+  // Default language of resources, will be detected automatically if unset.
+  //"SourceLanguagePath": "en-Us",
 
-      // 检索 resw 并生成注释时使用的语言相对 ResourcePath 的路径。
-      //"SourceLanguagePath": "en-Us",
+  // Namespace for resource visitor class.
+  // Default value is "<ProjectDefaultNamespace>".
+  //"LocalizedStringsNamespace": "MyNamespace",
 
-      // 生成辅助类的命名空间，默认使用 "<ProjectDefaultNamespace>"。
-      //"LocalizedStringsNamespace": "MyNamespace",
+  // Namespace for resource visitor interfaces.
+  // Default value is "<ProjectDefaultNamespace>.<ProjectDefaultNamespace>_ResourceInfo".
+  //"InterfacesNamespace": "MyNamespace.MyNamespace_ResourceInfo",
 
-      // 生成辅助类的相关接口的命名空间，默认使用 "<ProjectDefaultNamespace>.<ProjectDefaultNamespace>_ResourceInfo"。
-      //"InterfacesNamespace": "MyNamespace.MyNamespace_ResourceInfo",
+  // Modifier for resource visitor class and interfaces.
+  "Modifier": "internal",
 
-      // 生成辅助类的修饰符
-      "Modifier": "internal",
+  // Specifies whether this project is the default project or not.
+  // Determines if it is necessary to contains project name in the resource path.
+  "IsDefaultProject": true,
 
-      // 是否为默认工程，决定是否需要显式定义资源路径。
-      "IsDefaultProject": true,
-
-      // 是否调试生成的代码。
-      "DebugGeneratedCode": false
-    }
+  // Specifies whether the tool generates code that is debuggable.
+  "DebugGeneratedCode": false
+}
 "@
 }
 

@@ -151,7 +151,10 @@ namespace Opportunity.ResourceGenerator.Generator
         public void WriteRootResource(int indent, RootNode node)
         {
             WriteLine();
-            WriteLine(indent, $"{Config.Modifier} static {node.IFName} {node.PName} {{ get; }} = new {node.CFName}();");
+            WriteLine(indent, "[global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]");
+            WriteLine(indent, $"private static {node.IFName} {node.FName};");
+            WriteLine(indent, $"{Config.Modifier} static {node.IFName} {node.PName} ");
+            WriteLine(indent, $"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref {node.FName}, () => new {node.CFName}());");
             WriteLine();
             WriteAttributsForClass(indent);
             WriteLine(indent, $@"[global::System.Diagnostics.DebuggerDisplay(""[{Helper.AsLiteral(node.RName)}]"")]");
@@ -189,7 +192,10 @@ namespace Opportunity.ResourceGenerator.Generator
         public void WriteInnerResource(int indent, Node node)
         {
             WriteLine();
-            WriteLine(indent, $@"{node.IFName} {node.Parent.IFName}.{node.PName} {{ get; }} = new {node.CFName}();");
+            WriteLine(indent, "[global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]");
+            WriteLine(indent, $"private {node.IFName} {node.FName};");
+            WriteLine(indent, $"{node.IFName} {node.Parent.IFName}.{node.PName} ");
+            WriteLine(indent, $"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref {node.FName}, () => new {node.CFName}());");
             WriteLine();
             WriteAttributsForClass(indent);
             WriteLine(indent, $@"[global::System.Diagnostics.DebuggerDisplay(""[{Helper.AsLiteral($"{node.RName}")}]"", Name = ""{Helper.AsLiteral(node.PName)}"")]");

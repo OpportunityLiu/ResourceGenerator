@@ -14,7 +14,7 @@
   //"InterfacesNamespace": "MyNamespace.MyNamespace_ResourceInfo",
 
   // 生成辅助类的修饰符
-  "Modifier": "internal",
+  "Modifier": "public",
 
   // 是否为默认工程，决定是否需要显式定义资源路径。
   "IsDefaultProject": true,

@@ -61,6 +61,7 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
                 this.IName = $"I{r}";
             this.CName = Helper.Refine(Helper.GetRandomName(Name));
             this.PName = r;
+            this.FName = Helper.GetRandomName(r);
         }
 
         public IList<Node> Childern { get; }
@@ -82,6 +83,8 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
         public string CName { get; private set; }
 
         public string PName { get; private set; }
+
+        public string FName { get; private set; }
 
         public string IFName => Configuration.Current.InterfaceFullName(IName, INs);
 
