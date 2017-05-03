@@ -21,6 +21,10 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+/Scripts/*.dll
+/Scripts/*.xml
+/Scripts/*.exe
+/Scripts/*.exe.config
 
 # Visual Studio 2015 cache/options directory
 .vs/
