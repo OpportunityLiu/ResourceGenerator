@@ -17,16 +17,45 @@ namespace Opportunity.ResourceGenerator
         /// <summary>
         /// Key-value pair of resources.
         /// </summary>
-        [DebuggerDisplay("{DisplayValue,nq}", Name = "{Name,nq}")]
+        [DebuggerDisplay("{GetDisplayValue(),nq}", Name = "{Name,nq}", Type = "{GetDisplayType(),nq}")]
         public struct Pair
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             internal string Name;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            internal string DisplayValue;
 
             [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
             internal object Value;
+
+            internal string GetDisplayValue()
+            {
+                if (this.Value == null)
+                    return "null";
+                if (this.Value is string vs)
+                {
+                    return asLiteral(vs);
+                }
+                else
+                {
+                    var dbg = this.Value.GetType().GetTypeInfo().GetCustomAttribute<DebuggerDisplayAttribute>(true);
+                    if (dbg != null)
+                        return dbg.Value;
+                    else
+                        return this.Value.ToString();
+                }
+            }
+
+            internal string GetDisplayType()
+            {
+                if (this.Value == null)
+                    return "object";
+                if (this.Value is string)
+                    return "string";
+                var type = this.Value.GetType();
+                var interfaces = type.GetInterfaces();
+                if (interfaces.Length == 0)
+                    return type.ToString();
+                return interfaces[0].ToString();
+            }
         }
 
         private IResourceProvider provider;
@@ -61,20 +90,7 @@ namespace Opportunity.ResourceGenerator
                 if (dot != -1)
                     name = name.Substring(dot + 1);
                 this.items[i].Name = name;
-                var v = p.GetValue(this.provider);
-                if (v is string vs)
-                {
-                    this.items[i].DisplayValue = asLiteral(vs);
-                }
-                else
-                {
-                    var dbg = v.GetType().GetTypeInfo().GetCustomAttribute<DebuggerDisplayAttribute>(true);
-                    if (dbg != null)
-                        this.items[i].DisplayValue = dbg.Value;
-                    else
-                        this.items[i].DisplayValue = v.ToString();
-                }
-                this.items[i].Value = v;
+                this.items[i].Value = p.GetValue(this.provider);
             }
         }
 

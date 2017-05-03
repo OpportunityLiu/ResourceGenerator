@@ -58,7 +58,7 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public void WriteAttributsForClass(int indent)
         {
-            WriteLine(indent, "[global::System.Diagnostics.DebuggerTypeProxy(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]");
+            WriteLine(indent, "[global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]");
             if (!Config.DebugGeneratedCode)
                 WriteLine(indent, $@"[global::System.Diagnostics.DebuggerNonUserCodeAttribute]");
             WriteLine(indent, $@"[global::System.CodeDom.Compiler.GeneratedCodeAttribute(""{Helper.ProductName}"", ""{Helper.ProductVersion}"")]");
@@ -152,13 +152,13 @@ namespace Opportunity.ResourceGenerator.Generator
         public void WriteRootResource(int indent, RootNode node)
         {
             WriteLine();
-            WriteLine(indent, "[global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]");
+            WriteLine(indent, "[global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]");
             WriteLine(indent, $"private static {node.IFName} {node.FName};");
             WriteLine(indent, $"{Config.Modifier} static {node.IFName} {node.PName} ");
             WriteLine(indent, $"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref {node.FName}, () => new {node.CFName}());");
             WriteLine();
             WriteAttributsForClass(indent);
-            WriteLine(indent, $@"[global::System.Diagnostics.DebuggerDisplay(""[{Helper.AsLiteral(node.RName)}]"")]");
+            WriteLine(indent, $@"[global::System.Diagnostics.DebuggerDisplayAttribute(""[{Helper.AsLiteral(node.RName)}]"")]");
             WriteLine(indent, $"private sealed class {node.CName} : {node.IFName}");
             WriteLine(indent, $"{{");
             WriteLine(indent, $"    {Config.GRPFullName} {Config.IRPFullName}.this[string resourceKey]");
@@ -193,13 +193,13 @@ namespace Opportunity.ResourceGenerator.Generator
         public void WriteInnerResource(int indent, Node node)
         {
             WriteLine();
-            WriteLine(indent, "[global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]");
+            WriteLine(indent, "[global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]");
             WriteLine(indent, $"private {node.IFName} {node.FName};");
             WriteLine(indent, $"{node.IFName} {node.Parent.IFName}.{node.PName} ");
             WriteLine(indent, $"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref {node.FName}, () => new {node.CFName}());");
             WriteLine();
             WriteAttributsForClass(indent);
-            WriteLine(indent, $@"[global::System.Diagnostics.DebuggerDisplay(""[{Helper.AsLiteral($"{node.RName}")}]"", Name = ""{Helper.AsLiteral(node.PName)}"")]");
+            WriteLine(indent, $@"[global::System.Diagnostics.DebuggerDisplayAttribute(""[{Helper.AsLiteral($"{node.RName}")}]"")]");
             WriteLine(indent, $@"private sealed class {node.CName} : {node.IFName}");
             WriteLine(indent, $@"{{");
             WriteLine(indent, $@"    {Config.GRPFullName} {Config.IRPFullName}.this[string resourceKey]");

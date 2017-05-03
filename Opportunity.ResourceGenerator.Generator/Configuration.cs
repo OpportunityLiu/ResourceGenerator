@@ -75,7 +75,7 @@ namespace Opportunity.ResourceGenerator.Generator
         public string InterfacesNamespace
         {
             get => this.ins;
-            set => setIdentity(ref this.ins, value, $"{ProjectDefaultNamespace}.{ProjectDefaultNamespace}_ResourceInfo", true);
+            set => setIdentity(ref this.ins, value, $"{ProjectDefaultNamespace}.ResourceInfo", true);
         }
         public string Modifier
         {

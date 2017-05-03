@@ -58,8 +58,8 @@
 
     # Functions to export from this module
     FunctionsToExport = (
-        'Create-Config',
-        'Generate-Resource'
+        'New-Config',
+        'Convert-Resource'
     )
 
     # Cmdlets to export from this module

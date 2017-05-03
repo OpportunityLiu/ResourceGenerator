@@ -1,16 +1,15 @@
 ﻿$ErrorActionPreference = 'Stop'
 
-Register-TabExpansion Create-Config @{
+Register-TabExpansion New-Config @{
     Project = { GetProjects }
     Name = { "LocalizedStrings", "Strings", "Strings/LocalizedStrings", "Resources/Strings" }
 }
-Register-TabExpansion Generate-Resource @{
+Register-TabExpansion Convert-Resource @{
     Project = { GetProjects }
 }
 
 
-function Create-Config
-{
+function New-Config {
     [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Position = 0, Mandatory = $true)]
@@ -24,32 +23,29 @@ function Create-Config
     $dte.ItemOperations.OpenFile($file)| Out-Null
 }
 
-function Generate-Resource
-{
+
+function Convert-Resource {
     [CmdletBinding(PositionalBinding = $false)]
     param(
         [Parameter(Position = 0, Mandatory = $false)]
         [string] $Project)
-    if(!$Project)
-    {
-        GetProjects | ForEach-Object{Generate-Resource -Project $_}
+    if (!$Project) {
+        GetProjects | ForEach-Object { Convert-Resource -Project $_ }
     }
-    else
-    {
+    else {
         $dteProject = GetProject($Project)
         $tool = ToolPath
         $configFiles = GetConfigFiles($dteProject)
         $toolArgs = $dteProject.FullName;
         Write-Host "============= Project" $Project "============="
-        if(!$configFiles)
-        {
+        if (!$configFiles) {
             Write-Host "No config files found, skipped."
             Write-Host
             return
         }
-        Start-Process -FilePath $tool -ArgumentList ($toolArgs +" " +( $configFiles -join " ")) -NoNewWindow -Wait
+        Start-Process -FilePath $tool -ArgumentList ($toolArgs + " " + ( $configFiles -join " ")) -WindowStyle Hidden -Wait
         $i = 1
-        $configFiles | ForEach-Object{
+        $configFiles | ForEach-Object {
             $file = ClassFileName($_)
             Write-Host $i ">" $_ 
             Write-Host $i ">" "`t=>" $file
@@ -62,70 +58,63 @@ function Generate-Resource
     }
 }
 
-function ClassFileName($configFileName)
-{
+function ClassFileName($configFileName) {
     $className = [System.IO.Path]::GetFileNameWithoutExtension($configFileName)
     return [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($configFileName), $className + ".cs");
 }
 
-function ToolPath
-{
+function ToolPath {
     return Join-Path $PSScriptRoot "Opportunity.ResourceGenerator.Generator.exe"
 }
 
-function GetFile
-{
+function GetFile {
     return @"
 {
   // Path for resource files (*.resw & *.resjson).
   // Default value is "/Strings".
   "ResourcePath": "/Strings",
-
+  
   // Default language of resources, will be detected automatically if unset.
   //"SourceLanguagePath": "en-Us",
-
+  
   // Namespace for resource visitor class.
   // Default value is "<ProjectDefaultNamespace>".
   //"LocalizedStringsNamespace": "MyNamespace",
-
+  
   // Namespace for resource visitor interfaces.
-  // Default value is "<ProjectDefaultNamespace>.<ProjectDefaultNamespace>_ResourceInfo".
-  //"InterfacesNamespace": "MyNamespace.MyNamespace_ResourceInfo",
-
+  // Default value is "<ProjectDefaultNamespace>.ResourceInfo".
+  //"InterfacesNamespace": "MyNamespace.ResourceInfo",
+  
   // Modifier for resource visitor class and interfaces.
   "Modifier": "internal",
-
+  
   // Specifies whether this project is the default project or not.
   // Determines if it is necessary to contains project name in the resource path.
   "IsDefaultProject": true,
-
+  
   // Specifies whether the tool generates code that is debuggable.
   "DebugGeneratedCode": false
 }
 "@
 }
 
-function GetProjects
-{
-    return Get-Project -All | ForEach-Object{ if(IsUWP($_)){ $_.ProjectName} }
+function GetProjects {
+    return Get-Project -All | ForEach-Object { if (IsUWP($_)) { $_.ProjectName} }
 }
 
-function GetConfigFiles($dteProject)
-{
+function GetConfigFiles($dteProject) {
     $path = Split-Path $dteProject.FullName -Parent
-    Get-ChildItem -Path $path -Filter "*.resgenconfig" -Recurse | ForEach-Object{$_.FullName}
+    Get-ChildItem -Path $path -Filter "*.resgenconfig" -Recurse | ForEach-Object {$_.FullName}
 }
 
-function GetProjectTypes($project)
-{
+function GetProjectTypes($project) {
     $solution = Get-VSService 'Microsoft.VisualStudio.Shell.Interop.SVsSolution' 'Microsoft.VisualStudio.Shell.Interop.IVsSolution'
     $hierarchy = $null
     $hr = $solution.GetProjectOfUniqueName($project.UniqueName, [ref] $hierarchy)
     [Runtime.InteropServices.Marshal]::ThrowExceptionForHR($hr)
 
     $aggregatableProject = Get-Interface $hierarchy 'Microsoft.VisualStudio.Shell.Interop.IVsAggregatableProject'
-    if (!$aggregatableProject)
-    {
+    if (!$aggregatableProject) {
         return $project.Kind
     }
 
@@ -136,17 +125,14 @@ function GetProjectTypes($project)
     return $projectTypeGuidsString.Split(';')
 }
 
-function IsUWP($project)
-{
+function IsUWP($project) {
     $types = GetProjectTypes $project
 
     return $types -contains '{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A}'
 }
 
-function GetProject($projectName)
-{
-    if (!$projectName)
-    {
+function GetProject($projectName) {
+    if (!$projectName) {
         return Get-Project
     }
 

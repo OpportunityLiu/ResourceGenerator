@@ -10,9 +10,9 @@
 //------------------------------------------------------------------------------
 
 
-namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo
+namespace Opportunity.ResourceGenerator.TestApp.ResourceInfo
 {
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
     public interface IResource : global::Opportunity.ResourceGenerator.IResourceProvider
     {
         /// <summary>
@@ -21,7 +21,7 @@ namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.Te
 #warning Resource has been renamed. ResourceName: "ha\"ha", PropertyName: "ha_ha"
         string ha_ha { get; }
 #warning Resource has been renamed. ResourceName: "ha.h\"a2", PropertyName: "ha_h_a2"
-        global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Iha_h_a2 ha_h_a2 { get; }
+        global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Iha_h_a2 ha_h_a2 { get; }
         /// <summary>
         /// <para>1&#39;0</para>
         /// </summary>
@@ -30,7 +30,7 @@ namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.Te
         /// </summary>
 #warning Resource has been renamed. ResourceName: "\t", PropertyName: "__"
         string __ { get; }
-        global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Itest test { get; }
+        global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Itest test { get; }
         /// <summary>
         /// <para>Re</para>
         /// </summary>
@@ -51,8 +51,8 @@ namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.Te
         /// <para>GHC</para>
         /// </summary>
         string GetHashCode { get; }
-        new global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.IGetValue GetValue { get; }
-        global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Idouble @double { get; }
+        new global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.IGetValue GetValue { get; }
+        global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Idouble @double { get; }
         /// <summary>
         /// <para>A question mark?</para>
         /// </summary>
@@ -70,7 +70,7 @@ namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.Te
         /// <para>str1</para>
         /// </summary>
         string String1 { get; }
-        global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.IString2 String2 { get; }
+        global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.IString2 String2 { get; }
         /// <summary>
         /// <para>&lt;1&gt;</para>
         /// </summary>
@@ -79,35 +79,35 @@ namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.Te
     }
 }
 
-namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource
+namespace Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource
 {
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
     public interface Iha_h_a2 : global::Opportunity.ResourceGenerator.IResourceProvider
     {
         /// <summary>
         /// <para>7</para>
         /// </summary>
         string a { get; }
-        global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2.Ib b { get; }
+        global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2.Ib b { get; }
     }
 }
 
-namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2
+namespace Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2
 {
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
     public interface Ib : global::Opportunity.ResourceGenerator.IResourceProvider
     {
         /// <summary>
         /// <para>8</para>
         /// </summary>
         string c { get; }
-        global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2.b.Ihaha3 haha3 { get; }
+        global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2.b.Ihaha3 haha3 { get; }
     }
 }
 
-namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2.b
+namespace Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2.b
 {
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
     public interface Ihaha3 : global::Opportunity.ResourceGenerator.IResourceProvider
     {
         /// <summary>
@@ -117,9 +117,9 @@ namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.Te
     }
 }
 
-namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource
+namespace Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource
 {
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
     public interface Itest : global::Opportunity.ResourceGenerator.IResourceProvider
     {
         /// <summary>
@@ -128,9 +128,9 @@ namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.Te
     }
 }
 
-namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource
+namespace Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource
 {
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
     public interface IGetValue : global::Opportunity.ResourceGenerator.IResourceProvider
     {
         /// <summary>
@@ -140,9 +140,9 @@ namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.Te
     }
 }
 
-namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource
+namespace Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource
 {
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
     public interface Idouble : global::Opportunity.ResourceGenerator.IResourceProvider
     {
         /// <summary>
@@ -152,18 +152,18 @@ namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.Te
     }
 }
 
-namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource
+namespace Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource
 {
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
     public interface IString2 : global::Opportunity.ResourceGenerator.IResourceProvider
     {
-        global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.String2.Iaa aa { get; }
+        global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.String2.Iaa aa { get; }
     }
 }
 
-namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.String2
+namespace Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.String2
 {
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
     public interface Iaa : global::Opportunity.ResourceGenerator.IResourceProvider
     {
         /// <summary>
@@ -180,22 +180,22 @@ namespace Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.Te
 
 namespace Opportunity.ResourceGenerator.TestApp
 {
-    [global::System.Diagnostics.DebuggerTypeProxy(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
+    [global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
     public static class Strings
     {
 
-        [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-        private static global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource Resource__HJlvms9k;
-        public static global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource Resource 
-            => global::System.Threading.LazyInitializer.EnsureInitialized(ref Resource__HJlvms9k, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__17QnP83M());
+        [global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]
+        private static global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource Resource__AfoHYdv2;
+        public static global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource Resource 
+            => global::System.Threading.LazyInitializer.EnsureInitialized(ref Resource__AfoHYdv2, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__3lgf2inu());
 
-        [global::System.Diagnostics.DebuggerTypeProxy(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
+        [global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
-        [global::System.Diagnostics.DebuggerDisplay("[ms-resource:///Resource]")]
-        private sealed class Resource__17QnP83M : global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
+        [global::System.Diagnostics.DebuggerDisplayAttribute("[ms-resource:///Resource]")]
+        private sealed class Resource__3lgf2inu : global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource
         {
             global::Opportunity.ResourceGenerator.GeneratedResourceProvider global::Opportunity.ResourceGenerator.IResourceProvider.this[string resourceKey]
             {
@@ -213,16 +213,16 @@ namespace Opportunity.ResourceGenerator.TestApp
             }
 
 
-            [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-            private global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Iha_h_a2 ha_h_a2__CVjDU2N5;
-            global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Iha_h_a2 global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.ha_h_a2 
-                => global::System.Threading.LazyInitializer.EnsureInitialized(ref ha_h_a2__CVjDU2N5, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__17QnP83M.ha_h_a2__NOrVp4QX());
+            [global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]
+            private global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Iha_h_a2 ha_h_a2__FDPu6MNf;
+            global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Iha_h_a2 global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.ha_h_a2 
+                => global::System.Threading.LazyInitializer.EnsureInitialized(ref ha_h_a2__FDPu6MNf, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__3lgf2inu.ha_h_a2__en5NVZQU());
 
-            [global::System.Diagnostics.DebuggerTypeProxy(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
+            [global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
-            [global::System.Diagnostics.DebuggerDisplay("[ms-resource:///Resource/ha.h\"a2]", Name = "ha_h_a2")]
-            private sealed class ha_h_a2__NOrVp4QX : global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Iha_h_a2
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
+            [global::System.Diagnostics.DebuggerDisplayAttribute("[ms-resource:///Resource/ha.h\"a2]")]
+            private sealed class ha_h_a2__en5NVZQU : global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Iha_h_a2
             {
                 global::Opportunity.ResourceGenerator.GeneratedResourceProvider global::Opportunity.ResourceGenerator.IResourceProvider.this[string resourceKey]
                 {
@@ -241,16 +241,16 @@ namespace Opportunity.ResourceGenerator.TestApp
                     return global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/ha.h\"a2/" + resourceKey);
                 }
 
-                [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-                private global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2.Ib b__Yk2CLQvi;
-                global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2.Ib global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Iha_h_a2.b 
-                    => global::System.Threading.LazyInitializer.EnsureInitialized(ref b__Yk2CLQvi, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__17QnP83M.ha_h_a2__NOrVp4QX.b__HlenO1EA());
+                [global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]
+                private global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2.Ib b__ItklDl_q;
+                global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2.Ib global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Iha_h_a2.b 
+                    => global::System.Threading.LazyInitializer.EnsureInitialized(ref b__ItklDl_q, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__3lgf2inu.ha_h_a2__en5NVZQU.b__a30j_bEl());
 
-                [global::System.Diagnostics.DebuggerTypeProxy(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
+                [global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
                 [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
-                [global::System.Diagnostics.DebuggerDisplay("[ms-resource:///Resource/ha.h\"a2/b]", Name = "b")]
-                private sealed class b__HlenO1EA : global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2.Ib
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
+                [global::System.Diagnostics.DebuggerDisplayAttribute("[ms-resource:///Resource/ha.h\"a2/b]")]
+                private sealed class b__a30j_bEl : global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2.Ib
                 {
                     global::Opportunity.ResourceGenerator.GeneratedResourceProvider global::Opportunity.ResourceGenerator.IResourceProvider.this[string resourceKey]
                     {
@@ -269,16 +269,16 @@ namespace Opportunity.ResourceGenerator.TestApp
                         return global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/ha.h\"a2/b/" + resourceKey);
                     }
 
-                    [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-                    private global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2.b.Ihaha3 haha3__un_oyoks;
-                    global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2.b.Ihaha3 global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2.Ib.haha3 
-                        => global::System.Threading.LazyInitializer.EnsureInitialized(ref haha3__un_oyoks, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__17QnP83M.ha_h_a2__NOrVp4QX.b__HlenO1EA.haha3__JGixtwmt());
+                    [global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]
+                    private global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2.b.Ihaha3 haha3__vJoKS_kX;
+                    global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2.b.Ihaha3 global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2.Ib.haha3 
+                        => global::System.Threading.LazyInitializer.EnsureInitialized(ref haha3__vJoKS_kX, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__3lgf2inu.ha_h_a2__en5NVZQU.b__a30j_bEl.haha3__aKSGicrg());
 
-                    [global::System.Diagnostics.DebuggerTypeProxy(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
+                    [global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
                     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-                    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
-                    [global::System.Diagnostics.DebuggerDisplay("[ms-resource:///Resource/ha.h\"a2/b/haha3]", Name = "haha3")]
-                    private sealed class haha3__JGixtwmt : global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2.b.Ihaha3
+                    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
+                    [global::System.Diagnostics.DebuggerDisplayAttribute("[ms-resource:///Resource/ha.h\"a2/b/haha3]")]
+                    private sealed class haha3__aKSGicrg : global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2.b.Ihaha3
                     {
                         global::Opportunity.ResourceGenerator.GeneratedResourceProvider global::Opportunity.ResourceGenerator.IResourceProvider.this[string resourceKey]
                         {
@@ -297,28 +297,28 @@ namespace Opportunity.ResourceGenerator.TestApp
                             return global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/ha.h\"a2/b/haha3/" + resourceKey);
                         }
 
-                        string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2.b.Ihaha3.cc
+                        string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2.b.Ihaha3.cc
                             => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/ha.h\"a2/b/haha3/cc");
                     }
 
-                    string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.ha_h_a2.Ib.c
+                    string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.ha_h_a2.Ib.c
                         => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/ha.h\"a2/b/c");
                 }
 
-                string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Iha_h_a2.a
+                string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Iha_h_a2.a
                     => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/ha.h\"a2/a");
             }
 
-            [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-            private global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Itest test__iALdbWLg;
-            global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Itest global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.test 
-                => global::System.Threading.LazyInitializer.EnsureInitialized(ref test__iALdbWLg, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__17QnP83M.test__b97E2wTR());
+            [global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]
+            private global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Itest test__6ZgROFiB;
+            global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Itest global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.test 
+                => global::System.Threading.LazyInitializer.EnsureInitialized(ref test__6ZgROFiB, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__3lgf2inu.test__Jj747UPs());
 
-            [global::System.Diagnostics.DebuggerTypeProxy(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
+            [global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
-            [global::System.Diagnostics.DebuggerDisplay("[ms-resource:///Resource/test]", Name = "test")]
-            private sealed class test__b97E2wTR : global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Itest
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
+            [global::System.Diagnostics.DebuggerDisplayAttribute("[ms-resource:///Resource/test]")]
+            private sealed class test__Jj747UPs : global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Itest
             {
                 global::Opportunity.ResourceGenerator.GeneratedResourceProvider global::Opportunity.ResourceGenerator.IResourceProvider.this[string resourceKey]
                 {
@@ -337,20 +337,20 @@ namespace Opportunity.ResourceGenerator.TestApp
                     return global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/test/" + resourceKey);
                 }
 
-                string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Itest.test
+                string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Itest.test
                     => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/test/test");
             }
 
-            [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-            private global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.IGetValue GetValue__ygoyPG_C;
-            global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.IGetValue global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.GetValue 
-                => global::System.Threading.LazyInitializer.EnsureInitialized(ref GetValue__ygoyPG_C, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__17QnP83M.GetValue__49LCWiUH());
+            [global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]
+            private global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.IGetValue GetValue__hvAoWmSh;
+            global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.IGetValue global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.GetValue 
+                => global::System.Threading.LazyInitializer.EnsureInitialized(ref GetValue__hvAoWmSh, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__3lgf2inu.GetValue__C8UsFxzU());
 
-            [global::System.Diagnostics.DebuggerTypeProxy(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
+            [global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
-            [global::System.Diagnostics.DebuggerDisplay("[ms-resource:///Resource/GetValue]", Name = "GetValue")]
-            private sealed class GetValue__49LCWiUH : global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.IGetValue
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
+            [global::System.Diagnostics.DebuggerDisplayAttribute("[ms-resource:///Resource/GetValue]")]
+            private sealed class GetValue__C8UsFxzU : global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.IGetValue
             {
                 global::Opportunity.ResourceGenerator.GeneratedResourceProvider global::Opportunity.ResourceGenerator.IResourceProvider.this[string resourceKey]
                 {
@@ -369,20 +369,20 @@ namespace Opportunity.ResourceGenerator.TestApp
                     return global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/GetValue/" + resourceKey);
                 }
 
-                string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.IGetValue.GetValue
+                string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.IGetValue.GetValue
                     => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/GetValue/GetValue");
             }
 
-            [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-            private global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Idouble @double__2gxfFJtC;
-            global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Idouble global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.@double 
-                => global::System.Threading.LazyInitializer.EnsureInitialized(ref @double__2gxfFJtC, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__17QnP83M.double__ymk_2ICd());
+            [global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]
+            private global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Idouble @double__x6s7hcfm;
+            global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Idouble global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.@double 
+                => global::System.Threading.LazyInitializer.EnsureInitialized(ref @double__x6s7hcfm, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__3lgf2inu.double__jyw3TuHD());
 
-            [global::System.Diagnostics.DebuggerTypeProxy(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
+            [global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
-            [global::System.Diagnostics.DebuggerDisplay("[ms-resource:///Resource/double]", Name = "@double")]
-            private sealed class double__ymk_2ICd : global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Idouble
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
+            [global::System.Diagnostics.DebuggerDisplayAttribute("[ms-resource:///Resource/double]")]
+            private sealed class double__jyw3TuHD : global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Idouble
             {
                 global::Opportunity.ResourceGenerator.GeneratedResourceProvider global::Opportunity.ResourceGenerator.IResourceProvider.this[string resourceKey]
                 {
@@ -401,20 +401,20 @@ namespace Opportunity.ResourceGenerator.TestApp
                     return global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/double/" + resourceKey);
                 }
 
-                string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.Idouble.@string
+                string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.Idouble.@string
                     => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/double/string");
             }
 
-            [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-            private global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.IString2 String2__lj2HKEld;
-            global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.IString2 global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.String2 
-                => global::System.Threading.LazyInitializer.EnsureInitialized(ref String2__lj2HKEld, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__17QnP83M.String2__fayoTXVE());
+            [global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]
+            private global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.IString2 String2__8TaizrHJ;
+            global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.IString2 global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.String2 
+                => global::System.Threading.LazyInitializer.EnsureInitialized(ref String2__8TaizrHJ, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__3lgf2inu.String2__mFtj7Jfn());
 
-            [global::System.Diagnostics.DebuggerTypeProxy(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
+            [global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
-            [global::System.Diagnostics.DebuggerDisplay("[ms-resource:///Resource/String2]", Name = "String2")]
-            private sealed class String2__fayoTXVE : global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.IString2
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
+            [global::System.Diagnostics.DebuggerDisplayAttribute("[ms-resource:///Resource/String2]")]
+            private sealed class String2__mFtj7Jfn : global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.IString2
             {
                 global::Opportunity.ResourceGenerator.GeneratedResourceProvider global::Opportunity.ResourceGenerator.IResourceProvider.this[string resourceKey]
                 {
@@ -433,16 +433,16 @@ namespace Opportunity.ResourceGenerator.TestApp
                     return global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/String2/" + resourceKey);
                 }
 
-                [global::System.Diagnostics.DebuggerBrowsable(global::System.Diagnostics.DebuggerBrowsableState.Never)]
-                private global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.String2.Iaa aa__uw_hs6D_;
-                global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.String2.Iaa global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.IString2.aa 
-                    => global::System.Threading.LazyInitializer.EnsureInitialized(ref aa__uw_hs6D_, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__17QnP83M.String2__fayoTXVE.aa__mjYaXV5e());
+                [global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]
+                private global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.String2.Iaa aa__t7fyTp3y;
+                global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.String2.Iaa global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.IString2.aa 
+                    => global::System.Threading.LazyInitializer.EnsureInitialized(ref aa__t7fyTp3y, () => new global::Opportunity.ResourceGenerator.TestApp.Strings.Resource__3lgf2inu.String2__mFtj7Jfn.aa__RiQ40Xz2());
 
-                [global::System.Diagnostics.DebuggerTypeProxy(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
+                [global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]
                 [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.6.0")]
-                [global::System.Diagnostics.DebuggerDisplay("[ms-resource:///Resource/String2/aa]", Name = "aa")]
-                private sealed class aa__mjYaXV5e : global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.String2.Iaa
+                [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Opportunity.ResourceGenerator.Generator", "1.0.7.0")]
+                [global::System.Diagnostics.DebuggerDisplayAttribute("[ms-resource:///Resource/String2/aa]")]
+                private sealed class aa__RiQ40Xz2 : global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.String2.Iaa
                 {
                     global::Opportunity.ResourceGenerator.GeneratedResourceProvider global::Opportunity.ResourceGenerator.IResourceProvider.this[string resourceKey]
                     {
@@ -461,39 +461,39 @@ namespace Opportunity.ResourceGenerator.TestApp
                         return global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/String2/aa/" + resourceKey);
                     }
 
-                    string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.String2.Iaa._1
+                    string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.String2.Iaa._1
                         => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/String2/aa/1");
-                    string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.Resource.String2.Iaa.bb
+                    string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.Resource.String2.Iaa.bb
                         => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/String2/aa/bb");
                 }
 
             }
 
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.ha_ha
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.ha_ha
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/ha\"ha");
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource._haha
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource._haha
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/_haha");
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.__
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.__
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/\t");
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.Reset
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.Reset
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/Reset");
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.MemberwiseClone
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.MemberwiseClone
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/MemberwiseClone");
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.ReferenceEquals
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.ReferenceEquals
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/ReferenceEquals");
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.GetType
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.GetType
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/GetType");
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.GetHashCode
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.GetHashCode
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/GetHashCode");
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.What_
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.What_
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/What?");
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.Equals
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.Equals
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/Equals");
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.@int
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.@int
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/int");
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.String1
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.String1
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/String1");
-            string global::Opportunity.ResourceGenerator.TestApp.Opportunity.ResourceGenerator.TestApp_ResourceInfo.IResource.__11_
+            string global::Opportunity.ResourceGenerator.TestApp.ResourceInfo.IResource.__11_
                 => global::Opportunity.ResourceGenerator.LocalizedStrings.GetValue("ms-resource:///Resource/<11>");
         }
     }

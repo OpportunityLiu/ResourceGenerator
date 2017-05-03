@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -27,6 +28,7 @@ namespace Opportunity.ResourceGenerator.TestApp
         {
             this.InitializeComponent();
             var s = Strings.Resource["GetValue"]["GetValue"];
+            Debugger.Break();
         }
     }
 }
