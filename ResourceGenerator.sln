@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Opportunity.ResourceGenerat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Opportunity.ResourceGenerator.TestApp", "Opportunity.ResourceGenerator.TestApp\Opportunity.ResourceGenerator.TestApp.csproj", "{319EDE72-0C56-4CBB-8CB3-B4E1D30FB962}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{CDD00DF3-EDCC-4BA8-AF8B-01439CAA3DFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
