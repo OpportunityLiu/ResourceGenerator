@@ -9,25 +9,34 @@ using System.Threading.Tasks;
 
 namespace Opportunity.ResourceGenerator
 {
+    /// <summary>
+    /// Debug view for generated classes.
+    /// </summary>
     public class DebuggerDisplay
     {
+        /// <summary>
+        /// Key-value pair of resources.
+        /// </summary>
         [DebuggerDisplay("{DisplayValue,nq}", Name = "{Name,nq}")]
         public struct Pair
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            public string Name;
+            internal string Name;
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            public string DisplayValue;
+            internal string DisplayValue;
 
             [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-            public object Value;
+            internal object Value;
         }
 
         private IResourceProvider provider;
         private Pair[] items;
 
+        /// <summary>
+        /// Key-value pairs of resources.
+        /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-        public IList<Pair> Items
+        public Pair[] Items
         {
             get
             {
@@ -111,7 +120,7 @@ namespace Opportunity.ResourceGenerator
             return sb.ToString();
         }
 
-        public DebuggerDisplay(IResourceProvider provider)
+        internal DebuggerDisplay(IResourceProvider provider)
         {
             this.provider = provider;
         }

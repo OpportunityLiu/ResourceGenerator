@@ -27,8 +27,6 @@ namespace Opportunity.ResourceGenerator.TestApp
         {
             this.InitializeComponent();
             var s = Strings.Resource["GetValue"]["GetValue"];
-            var d = new DebuggerDisplay(Strings.Resource);
-            var r = d.Items;
         }
     }
 }
