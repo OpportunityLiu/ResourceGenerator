@@ -7,14 +7,15 @@ namespace Opportunity.ResourceGenerator.Generator
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            //var c = args.First();
-            var c = @"C:\Users\liuzh\Source\Repos\ResourceGenerator\Opportunity.ResourceGenerator.TestApp\Opportunity.ResourceGenerator.TestApp.csproj";
-            Configuration.SetCurrent(c);
-            var configPaths = Directory.GetFiles(Configuration.Current.ProjectPath, "*.resgenconfig", SearchOption.AllDirectories);
+            var project = args.First();
+            Configuration.SetCurrent(project);
+            var configPaths = args.Skip(1).ToArray();
+            if (configPaths.Length == 0)
+                configPaths = Directory.GetFiles(Configuration.Current.ProjectPath, "*.resgenconfig", SearchOption.AllDirectories);
             if (configPaths == null || configPaths.Length == 0)
-                return;
+                return 0;
             foreach (var item in configPaths)
             {
                 var t = File.ReadAllText(item);
@@ -27,7 +28,11 @@ namespace Opportunity.ResourceGenerator.Generator
                 {
                     writer.Execute();
                 }
+                Console.WriteLine($"{item} ==> {generatedFileName}");
             }
+            Console.WriteLine();
+            Console.WriteLine($"Finished, {configPaths.Length} file(s) generated.");
+            return 0;
         }
     }
 }

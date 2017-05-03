@@ -48,6 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Opportunity.ResourceGenerator\Properties\Version.cs">
+      <Link>Properties\Version.cs</Link>
+    </Compile>
     <Compile Include="Configuration.cs" />
     <Compile Include="FileWriter.cs" />
     <Compile Include="Helper.cs" />
