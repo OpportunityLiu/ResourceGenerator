@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{CDD0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{C9B2487B-106C-4B74-90C8-BB63C57B6407}"
 	ProjectSection(SolutionItems) = preProject
-		configschema.json = configschema.json
+		resgenconfig.json = resgenconfig.json
 	EndProjectSection
 EndProject
 Global
