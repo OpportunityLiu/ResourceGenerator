@@ -23,7 +23,7 @@ namespace Opportunity.ResourceGenerator
 
         /// <summary>
         /// Get value of given <paramref name="resourceKey"/>.
-        /// Speical chars (%?#*") will be escaped in this method, don't need to escape before calling.
+        /// Speical chars (%?#*" \t) will be escaped in this method, don't need to escape before calling.
         /// </summary>
         /// <param name="resourceKey">The key of resource.</param>
         /// <returns>The value of resource.</returns>
@@ -38,10 +38,12 @@ namespace Opportunity.ResourceGenerator
                 .Replace("?", "%3F")
                 .Replace("#", "%23")
                 .Replace("*", "%2A")
-                .Replace("\"", "%22");
+                .Replace("\"", "%22")
+                .Replace(" ", "%20")
+                .Replace("\t", "%09");
             return cache[resourceKey] = loader.GetString(escaped);
         }
 
-        private static readonly char[] charsNeedToEscape = "%?#*\"".ToCharArray();
+        private static readonly char[] charsNeedToEscape = "%?#*\"\t ".ToCharArray();
     }
 }

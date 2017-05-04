@@ -118,21 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Equals" xml:space="preserve">
-    <value>5</value>
+    <value>Speical name Equals</value>
   </data>
   <data name="int" xml:space="preserve">
-    <value>int value</value>
+    <value>keyword int</value>
   </data>
   <data name="String1" xml:space="preserve">
     <value>str1</value>
   </data>
   <data name="String2.aa.1" xml:space="preserve">
-    <value>2</value>
+    <value>str2.aa.1</value>
   </data>
   <data name="String2.aa.bb" xml:space="preserve">
-    <value>3</value>
+    <value>str2.aa.bb</value>
   </data>
   <data name="&lt;11&gt;" xml:space="preserve">
-    <value>&lt;1&gt;</value>
+    <value>Completely invalid name in c# "&lt;11&gt;"</value>
+  </data>
+  <data name="_StartWithUnderscoreInResw" xml:space="preserve">
+    <value>Starts With - In Resw</value>
   </data>
 </root>

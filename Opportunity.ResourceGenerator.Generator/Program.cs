@@ -20,15 +20,26 @@ namespace Opportunity.ResourceGenerator.Generator
                 return;
             foreach (var item in configPaths)
             {
-                var t = File.ReadAllText(item);
-                JsonConvert.PopulateObject(t, Configuration.Current);
                 var className = Path.GetFileNameWithoutExtension(item);
                 var generatedFileName = Path.Combine(Path.GetDirectoryName(item), $"{className}.cs");
-                className = Helper.Refine(className);
-                Configuration.Current.LocalizedStringsClassName = className;
-                using (var writer = new ResourceWriter(generatedFileName))
+                try
                 {
-                    writer.Execute();
+                    var t = File.ReadAllText(item);
+                    JsonConvert.PopulateObject(t, Configuration.Current);
+                    className = Helper.Refine(className);
+                    Configuration.Current.LocalizedStringsClassName = className;
+                    using (var writer = new ResourceWriter(generatedFileName))
+                    {
+                        writer.Execute();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    File.WriteAllText(generatedFileName, $@"Something went wrong in generation!
+
+Message: {ex.Message}
+
+StackTrace: {ex.StackTrace}", System.Text.Encoding.UTF8);
                 }
             }
         }

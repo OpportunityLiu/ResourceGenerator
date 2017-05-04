@@ -29,8 +29,7 @@
       "type": "string",
       "enum": [
         "public",
-        "internal",
-        null
+        "internal"
       ],
       "description": "Modifier for resource visitor class and interfaces."
     },

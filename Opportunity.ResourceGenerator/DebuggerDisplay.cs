@@ -17,39 +17,34 @@ namespace Opportunity.ResourceGenerator
         /// <summary>
         /// Key-value pair of resources.
         /// </summary>
-        [DebuggerDisplay("{GetDisplayValue(),nq}", Name = "{Name,nq}", Type = "{GetDisplayType(),nq}")]
-        public struct Pair
+        public abstract class ResourceView
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            internal string Name;
+            internal ResourceView() { }
 
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            internal ResourcePathAttribute ResourcePath { get; set; }
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            internal string Name { get; set; }
+        }
+
+        [DebuggerDisplay("{Value}", Name = "{Name,nq}", Type = "string")]
+        private sealed class ResourceValueView : ResourceView
+        {
+            public string Value { get; set; }
+
+            public ResourcePathAttribute Path => this.ResourcePath;
+        }
+
+        [DebuggerDisplay("{ResourcePath.ToString(),nq}", Name = "{Name,nq}", Type = "{GetDisplayType(),nq}")]
+        private sealed class ResourcePathView : ResourceView
+        {
             [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
             internal object Value;
-
-            internal string GetDisplayValue()
-            {
-                if (this.Value == null)
-                    return "null";
-                if (this.Value is string vs)
-                {
-                    return asLiteral(vs);
-                }
-                else
-                {
-                    var dbg = this.Value.GetType().GetTypeInfo().GetCustomAttribute<DebuggerDisplayAttribute>(true);
-                    if (dbg != null)
-                        return dbg.Value;
-                    else
-                        return this.Value.ToString();
-                }
-            }
 
             internal string GetDisplayType()
             {
                 if (this.Value == null)
                     return "object";
-                if (this.Value is string)
-                    return "string";
                 var type = this.Value.GetType();
                 var interfaces = type.GetInterfaces();
                 if (interfaces.Length == 0)
@@ -58,14 +53,16 @@ namespace Opportunity.ResourceGenerator
             }
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IResourceProvider provider;
-        private Pair[] items;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ResourceView[] items;
 
         /// <summary>
         /// Key-value pairs of resources.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-        public Pair[] Items
+        public ResourceView[] Items
         {
             get
             {
@@ -79,61 +76,38 @@ namespace Opportunity.ResourceGenerator
         {
             var q = from p in this.provider.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                     where p.GetMethod.GetParameters().Length == 0
-                    select p;
+                    let value = p.GetValue(this.provider)
+                    let path = p.GetCustomAttribute<ResourcePathAttribute>()
+                    orderby value.GetType().ToString(), path.ToString()
+                    select new { Prop = p, Value = value, Path = path };
             var props = q.ToArray();
-            this.items = new Pair[props.Length];
+            this.items = new ResourceView[props.Length];
             for (var i = 0; i < props.Length; i++)
             {
                 var p = props[i];
-                var name = p.Name;
+                var name = p.Prop.Name;
                 var dot = name.LastIndexOf('.');
                 if (dot != -1)
                     name = name.Substring(dot + 1);
-                this.items[i].Name = name;
-                this.items[i].Value = p.GetValue(this.provider);
-            }
-        }
-
-
-        private static string asLiteral(string value)
-        {
-            var sb = new StringBuilder(value.Length);
-            sb.Append('"');
-            foreach (var item in value)
-            {
-                var chType = CharUnicodeInfo.GetUnicodeCategory(item);
-                if (item == '"')
-                    sb.Append(@"\""");
-                else if (item == '\\')
-                    sb.Append(@"\\");
-                else if (item == '\0')
-                    sb.Append(@"\0");
-                else if (item == '\a')
-                    sb.Append(@"\a");
-                else if (item == '\b')
-                    sb.Append(@"\b");
-                else if (item == '\f')
-                    sb.Append(@"\f");
-                else if (item == '\r')
-                    sb.Append(@"\r");
-                else if (item == '\n')
-                    sb.Append(@"\n");
-                else if (item == '\t')
-                    sb.Append(@"\t");
-                else if (item == '\v')
-                    sb.Append(@"\v");
-                else if (chType == UnicodeCategory.Control)
+                if (p.Value is string vs)
                 {
-                    sb.Append(@"\u");
-                    sb.Append(((ushort)item).ToString("X4"));
+                    this.items[i] = new ResourceValueView
+                    {
+                        Name = name,
+                        Value = vs,
+                        ResourcePath = p.Path
+                    };
                 }
                 else
                 {
-                    sb.Append(item);
+                    this.items[i] = new ResourcePathView
+                    {
+                        Name = name,
+                        Value = p.Value,
+                        ResourcePath = p.Path
+                    };
                 }
             }
-            sb.Append('"');
-            return sb.ToString();
         }
 
         internal DebuggerDisplay(IResourceProvider provider)

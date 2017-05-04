@@ -192,14 +192,15 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public void WriteInnerResource(int indent, Node node)
         {
+            var pathlit = Helper.AsLiteral(node.RName);
             WriteLine();
             WriteLine(indent, "[global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]");
             WriteLine(indent, $"private {node.IFName} {node.FName};");
+            WriteLine(indent, $@"[global::Opportunity.ResourceGenerator.ResourcePathAttribute(""{pathlit}"")]");
             WriteLine(indent, $"{node.IFName} {node.Parent.IFName}.{node.PName} ");
             WriteLine(indent, $"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref {node.FName}, () => new {node.CFName}());");
             WriteLine();
             WriteAttributsForClass(indent);
-            WriteLine(indent, $@"[global::System.Diagnostics.DebuggerDisplayAttribute(""[{Helper.AsLiteral($"{node.RName}")}]"")]");
             WriteLine(indent, $@"private sealed class {node.CName} : {node.IFName}");
             WriteLine(indent, $@"{{");
             WriteLine(indent, $@"    {Config.GRPFullName} {Config.IRPFullName}.this[string resourceKey]");
@@ -208,15 +209,15 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteLine(indent, $@"        {{");
             WriteLine(indent, $@"            if(resourceKey == null)");
             WriteLine(indent, $@"                throw new global::System.ArgumentNullException();");
-            WriteLine(indent, $@"            return new {Config.GRPFullName}(""{Helper.AsLiteral(node.RName)}/"" + resourceKey);");
+            WriteLine(indent, $@"            return new {Config.GRPFullName}(""{pathlit}/"" + resourceKey);");
             WriteLine(indent, $@"        }}");
             WriteLine(indent, $@"    }}");
             WriteLine();
             WriteLine(indent, $@"    string {Config.IRPFullName}.GetValue(string resourceKey)");
             WriteLine(indent, $@"    {{");
             WriteLine(indent, $@"        if(resourceKey == null)");
-            WriteLine(indent, $@"            return {Config.RLFullName}.GetValue(""{Helper.AsLiteral(node.RName)}"");");
-            WriteLine(indent, $@"        return {Config.RLFullName}.GetValue(""{Helper.AsLiteral(node.RName)}/"" + resourceKey);");
+            WriteLine(indent, $@"            return {Config.RLFullName}.GetValue(""{pathlit}"");");
+            WriteLine(indent, $@"        return {Config.RLFullName}.GetValue(""{pathlit}/"" + resourceKey);");
             WriteLine(indent, $@"    }}");
             foreach (var item in node.Childern)
             {
@@ -234,8 +235,10 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public void WriteProperty(int indent, Node node)
         {
+            var pathlit = Helper.AsLiteral(node.RName);
+            WriteLine(indent, $@"[global::Opportunity.ResourceGenerator.ResourcePathAttribute(""{pathlit}"")]");
             WriteLine(indent, $@"string {node.Parent.IFName}.{node.PName}");
-            WriteLine(indent + 1, $@"=> {Config.RLFullName}.GetValue(""{Helper.AsLiteral(node.RName)}"");");
+            WriteLine(indent + 1, $@"=> {this.Config.RLFullName}.GetValue(""{pathlit}"");");
         }
     }
 }

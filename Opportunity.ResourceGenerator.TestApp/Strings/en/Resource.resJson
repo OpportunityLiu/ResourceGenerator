@@ -1,25 +1,33 @@
 ﻿{
-  "ha\"ha": "6",
-  "ha.h\"a2": {
-    "a": "7",
-    "b": {
-      "c": "8",
-      "haha3/cc": "//9"
+  "QuatationMark\"Test": "Test \"",
+  "QuatationMark\"And.DotTest": {
+    "SubItem1": "sub 1",
+    "SubItem2": {
+      "SubSubItem1": "sub sub 1",
+      "SubSubItem2/WithPath": "sub sub 2 / path"
     }
   },
-  "_haha": "1'0",
-  "\t": "",
-  "test/test": "",
-  "Reset": "Re",
-  "MemberwiseClone": "MC",
-  "ReferenceEquals": "REq",
-  "GetType": "GT",
-  "GetHashCode": "GHC",
+  "_StartsWithUnderscore": "Starts with _",
+  "Contains_underscore": "contains _",
+  //"\t": "TabTest",
+  "test/test": "path of test/test without object",
+  "Reset": "Speicial name Reset",
+  "MemberwiseClone": "Speicial name MemberwiseClone",
+  "ReferenceEquals": "Speicial name ReferenceEquals",
+  "GetType": "Speicial name GetType",
+  "GetHashCode": "Speicial name GetHashCode",
   "GetValue": {
-    "GetValue": "Va"
+    "GetValue": "GetValue in GetValue object"
   },
   "double": {
-    "string": "string of double"
+    "string": "keyword test double/string"
   },
-  "What?": "A question mark?"
+  "What?": "Question mark test What?",
+  "Space Test": "Space test",
+  " StartWithSpace": "start with space",
+  "EndWithSpace ": "end with space",
+  " ": {
+    " ": "Space and space"
+  },
+  "Plus+Test": "+"
 }

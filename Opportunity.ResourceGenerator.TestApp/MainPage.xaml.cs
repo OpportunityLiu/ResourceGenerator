@@ -28,6 +28,7 @@ namespace Opportunity.ResourceGenerator.TestApp
         {
             this.InitializeComponent();
             var s = Strings.Resource["GetValue"]["GetValue"];
+            var r = ResourceLoader.GetForViewIndependentUse("");
             Debugger.Break();
         }
     }
