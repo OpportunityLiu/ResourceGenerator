@@ -147,7 +147,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Strings_4Strings_1resgenconfig__JSONSchema="." />
+      <UserProperties Strings_4Strings_1resgenconfig__JSONSchema="..\..\configschema.json" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

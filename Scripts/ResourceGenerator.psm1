@@ -70,6 +70,7 @@ function ToolPath {
 function GetFile {
     return @"
 {
+  "$schema": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/configschema.json",
   // Path for resource files (*.resw & *.resjson).
   // Default value is "/Strings".
   "ResourcePath": "/Strings",
