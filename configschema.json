@@ -8,43 +8,37 @@
       "type": "string"
     },
     "DebugGeneratedCode": {
-      "id": "/properties/DebugGeneratedCode",
       "type": "boolean",
       "description": "Specifies whether the tool generates code that is debuggable."
     },
     "InterfacesNamespace": {
-      "id": "/properties/InterfacesNamespace",
       "type": "string",
       "description": "Namespace for resource visitor interfaces.",
       "default": "<ProjectDefaultNamespace>.ResourceInfo"
     },
     "IsDefaultProject": {
-      "id": "/properties/IsDefaultProject",
       "type": "boolean",
       "description": "Specifies whether this project is the default project or not.\nDetermines if it is necessary to contains project name in the resource path."
     },
     "LocalizedStringsNamespace": {
-      "id": "/properties/LocalizedStringsNamespace",
       "type": "string",
       "description": "Namespace for resource visitor class.",
       "default": "<ProjectDefaultNamespace>"
     },
     "Modifier": {
-      "id": "/properties/Modifier",
       "type": "string",
       "enum": [
         "public",
-        "internal"
+        "internal",
+        null
       ],
       "description": "Modifier for resource visitor class and interfaces."
     },
     "ResourcePath": {
-      "id": "/properties/ResourcePath",
       "type": "string",
       "description": "Path for resource files (*.resw & *.resjson)."
     },
     "SourceLanguagePath": {
-      "id": "/properties/SourceLanguagePath",
       "type": "string",
       "description": "Default language of resources, will be detected automatically if unset."
     }
