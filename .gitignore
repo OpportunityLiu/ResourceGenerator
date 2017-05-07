@@ -25,6 +25,7 @@ bld/
 /Scripts/*.xml
 /Scripts/*.exe
 /Scripts/*.exe.config
+*.g.cs
 
 # Visual Studio 2015 cache/options directory
 .vs/

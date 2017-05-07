@@ -198,7 +198,7 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteLine(indent, $"private {node.IFName} {node.FName};");
             WriteLine(indent, $@"[global::Opportunity.ResourceGenerator.ResourcePathAttribute(""{pathlit}"")]");
             WriteLine(indent, $"{node.IFName} {node.Parent.IFName}.{node.PName} ");
-            WriteLine(indent, $"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref {node.FName}, () => new {node.CFName}());");
+            WriteLine(indent, $"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref this.{node.FName}, () => new {node.CFName}());");
             WriteLine();
             WriteAttributsForClass(indent);
             WriteLine(indent, $@"private sealed class {node.CName} : {node.IFName}");

@@ -17,7 +17,7 @@ namespace Opportunity.ResourceGenerator
         /// </summary>
         public static void Reset()
         {
-            loader = ResourceLoader.GetForViewIndependentUse();
+            loader = ResourceLoader.GetForViewIndependentUse("");
             cache.Clear();
         }
 

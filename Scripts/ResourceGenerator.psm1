@@ -60,7 +60,7 @@ function Convert-Resource {
 
 function ClassFileName($configFileName) {
     $className = [System.IO.Path]::GetFileNameWithoutExtension($configFileName)
-    return [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($configFileName), $className + ".cs");
+    return [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($configFileName), $className + ".g.cs");
 }
 
 function ToolPath {

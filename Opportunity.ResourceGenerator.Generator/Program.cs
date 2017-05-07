@@ -21,7 +21,7 @@ namespace Opportunity.ResourceGenerator.Generator
             foreach (var item in configPaths)
             {
                 var className = Path.GetFileNameWithoutExtension(item);
-                var generatedFileName = Path.Combine(Path.GetDirectoryName(item), $"{className}.cs");
+                var generatedFileName = Path.Combine(Path.GetDirectoryName(item), $"{className}.g.cs");
                 try
                 {
                     var t = File.ReadAllText(item);

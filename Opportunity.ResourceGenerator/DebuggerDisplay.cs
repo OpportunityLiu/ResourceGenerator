@@ -22,9 +22,26 @@ namespace Opportunity.ResourceGenerator
             internal ResourceView() { }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            internal ResourcePathAttribute ResourcePath { get; set; }
+#if !DEBUG
+            internal 
+#else
+            public
+#endif
+            ResourcePathAttribute ResourcePath
+            {
+                get; internal set;
+            }
+
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            internal string Name { get; set; }
+#if !DEBUG
+            internal 
+#else
+            public
+#endif
+            string Name
+            {
+                get; internal set;
+            }
         }
 
         [DebuggerDisplay("{Value}", Name = "{Name,nq}", Type = "string")]
@@ -74,43 +91,55 @@ namespace Opportunity.ResourceGenerator
 
         private void init()
         {
-            var q = from p in this.provider.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                    where p.GetMethod.GetParameters().Length == 0
-                    let value = p.GetValue(this.provider)
-                    let path = p.GetCustomAttribute<ResourcePathAttribute>()
-                    orderby value.GetType().ToString(), path.ToString()
-                    select new { Prop = p, Value = value, Path = path };
-            var props = q.ToArray();
-            this.items = new ResourceView[props.Length];
-            for (var i = 0; i < props.Length; i++)
-            {
-                var p = props[i];
-                var name = p.Prop.Name;
-                var dot = name.LastIndexOf('.');
-                if (dot != -1)
-                    name = name.Substring(dot + 1);
-                if (p.Value is string vs)
+            this.items = this.provider.GetType()
+                .GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+                .Select(prop => new { prop, path = prop.GetCustomAttribute<ResourcePathAttribute>() })
+                .Where(o => o.path != null)
+                .OrderBy(o => o.prop.PropertyType, Comparer<Type>.Create((a, b) =>
                 {
-                    this.items[i] = new ResourceValueView
-                    {
-                        Name = name,
-                        Value = vs,
-                        ResourcePath = p.Path
-                    };
-                }
-                else
+                    if (a == b)
+                        return 0;
+                    if (a == typeof(string))
+                        return 1;
+                    else if (b == typeof(string))
+                        return -1;
+                    return StringComparer.Ordinal.Compare(a.ToString(), b.ToString());
+                }))
+                .ThenBy(o => o.path.Path)
+                .Select(o =>
                 {
-                    this.items[i] = new ResourcePathView
+                    var name = o.prop.Name;
+                    var dot = name.LastIndexOf('.');
+                    if (dot != -1)
+                        name = name.Substring(dot + 1);
+                    var value = o.prop.GetValue(this.provider);
+                    if (value is string vs)
                     {
-                        Name = name,
-                        Value = p.Value,
-                        ResourcePath = p.Path
-                    };
-                }
-            }
+                        return (ResourceView)new ResourceValueView
+                        {
+                            Name = name,
+                            Value = vs,
+                            ResourcePath = o.path
+                        };
+                    }
+                    else
+                    {
+                        return new ResourcePathView
+                        {
+                            Name = name,
+                            Value = value,
+                            ResourcePath = o.path
+                        };
+                    }
+                }).ToArray();
         }
 
-        internal DebuggerDisplay(IResourceProvider provider)
+#if !DEBUG
+        internal 
+#else
+        public
+#endif
+            DebuggerDisplay(IResourceProvider provider)
         {
             this.provider = provider;
         }
