@@ -29,7 +29,7 @@ namespace Opportunity.ResourceGenerator
 #endif
             ResourcePathAttribute ResourcePath
             {
-                get; internal set;
+                get; set;
             }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -40,7 +40,7 @@ namespace Opportunity.ResourceGenerator
 #endif
             string Name
             {
-                get; internal set;
+                get; set;
             }
         }
 
