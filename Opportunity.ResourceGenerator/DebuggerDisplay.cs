@@ -66,7 +66,7 @@ namespace Opportunity.ResourceGenerator
                 var interfaces = type.GetInterfaces();
                 if (interfaces.Length == 0)
                     return type.ToString();
-                return interfaces[0].ToString();
+                return interfaces.Last().ToString();
             }
         }
 
