@@ -56,12 +56,12 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
         {
             var r = Helper.Refine(Name);
             if (r.StartsWith("@"))
-                this.IName = $"I{Name}";
+                this.InterfaceName = $"I{Name}";
             else
-                this.IName = $"I{r}";
-            this.CName = Helper.Refine(Helper.GetRandomName(Name));
-            this.PName = r;
-            this.FName = Helper.GetRandomName(r);
+                this.InterfaceName = $"I{r}";
+            this.ClassName = Helper.Refine(Helper.GetRandomName(Name));
+            this.PropertyName = r;
+            this.FieldName = Helper.GetRandomName(r);
         }
 
         public IList<Node> Childern { get; }
@@ -75,21 +75,21 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
         public string Name { get; }
         public string Value { get; }
 
-        public virtual string RName => Helper.CombineResourcePath(Parent?.RName, Name);
+        public virtual string ResourceName => Helper.CombineResourcePath(Parent?.ResourceName, Name);
 
-        public string IName { get; private set; }
-        public virtual string INs => $"{Parent.INs}.{Parent.PName}";
+        public string InterfaceName { get; private set; }
+        public virtual string InterfaceNamespace => $"{Parent.InterfaceNamespace}.{Parent.PropertyName}";
 
-        public string CName { get; private set; }
+        public string ClassName { get; private set; }
 
-        public string PName { get; private set; }
+        public string PropertyName { get; private set; }
 
-        public string FName { get; private set; }
+        public string FieldName { get; private set; }
 
-        public string IFName => Configuration.Current.InterfaceFullName(IName, INs);
+        public string InterfaceFullName => Configuration.Current.InterfaceFullName(InterfaceName, InterfaceNamespace);
 
-        public virtual string CFName => $"{Parent.CFName}.{CName}";
+        public virtual string ClassFullName => $"{Parent.ClassFullName}.{ClassName}";
 
-        public virtual string PFName => $"{Parent.CFName}.{PName}";
+        public virtual string PropertyFullName => $"{Parent.ClassFullName}.{PropertyName}";
     }
 }

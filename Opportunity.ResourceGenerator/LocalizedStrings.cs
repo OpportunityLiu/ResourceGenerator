@@ -27,6 +27,7 @@ namespace Opportunity.ResourceGenerator
         /// </summary>
         /// <param name="resourceKey">The key of resource.</param>
         /// <returns>The value of resource.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="resourceKey"/> is null.</exception>
         public static string GetValue(string resourceKey)
         {
             if (cache.TryGetValue(resourceKey, out var value))

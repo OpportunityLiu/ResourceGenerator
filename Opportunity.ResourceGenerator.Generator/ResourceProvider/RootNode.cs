@@ -39,7 +39,7 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
             this.Parent = null;
         }
 
-        public override string RName
+        public override string ResourceName
         {
             get
             {
@@ -49,8 +49,8 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
                     return $"ms-resource:///{Configuration.Current.ProjectAssemblyName}/{Name}";
             }
         }
-        public override string INs => Configuration.Current.InterfacesNamespace;
-        public override string CFName => $"{Configuration.Current.LocalizedStringsFullName}.{CName}";
-        public override string PFName => $"{Configuration.Current.LocalizedStringsFullName}.{PName}";
+        public override string InterfaceNamespace => Configuration.Current.InterfacesNamespace;
+        public override string ClassFullName => $"{Configuration.Current.LocalizedStringsFullName}.{ClassName}";
+        public override string PropertyFullName => $"{Configuration.Current.LocalizedStringsFullName}.{PropertyName}";
     }
 }

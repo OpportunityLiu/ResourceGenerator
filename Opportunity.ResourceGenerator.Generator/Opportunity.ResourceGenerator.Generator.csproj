@@ -78,6 +78,7 @@
     <Compile Include="ResourceProvider\ReswProvider.cs" />
     <Compile Include="ResourceProvider\RootNode.cs" />
     <Compile Include="ResourceWriter.cs" />
+    <Compile Include="Strings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

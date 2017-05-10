@@ -35,12 +35,13 @@ namespace Opportunity.ResourceGenerator
         /// <returns>
         /// The <see cref="GeneratedResourceProvider"/> represents resource path ralative to current <see cref="GeneratedResourceProvider"/>.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="resourceKey"/> is null.</exception>
         public GeneratedResourceProvider this[string resourceKey]
         {
             get
             {
                 if (resourceKey == null)
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(resourceKey));
                 return new GeneratedResourceProvider($"{Key}/{resourceKey}");
             }
         }

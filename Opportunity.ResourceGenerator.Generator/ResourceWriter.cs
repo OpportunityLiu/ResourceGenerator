@@ -19,12 +19,12 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public void Execute()
         {
-            if (Config.SourceLanguagePath == null)
+            if(Config.SourceLanguagePath == null)
                 Config.SourceLanguagePath = Directory.EnumerateDirectories(Path.Combine(Config.ProjectPath, Config.ResourcePath)).First();
             var stringsPath = Path.Combine(Config.ProjectPath, Config.ResourcePath, Config.SourceLanguagePath);
             string[] files;
 
-            if (Directory.Exists(stringsPath))
+            if(Directory.Exists(stringsPath))
             {
                 files = Directory.GetFiles(stringsPath);
             }
@@ -32,7 +32,7 @@ namespace Opportunity.ResourceGenerator.Generator
             {
                 files = new string[0];
             }
-            foreach (var item in files)
+            foreach(var item in files)
             {
                 WriteHash(item);
             }
@@ -45,33 +45,33 @@ namespace Opportunity.ResourceGenerator.Generator
 
         private void Check(Node node)
         {
-            if (!Helper.Keywords.Contains(node.Name) && node.Name != node.PName)
+            if(!Helper.Keywords.Contains(node.Name) && node.Name != node.PropertyName)
             {
-                WriteLine($"#warning Resource has been renamed. ResourceName: \"{Helper.AsLiteral(node.Name)}\", PropertyName: \"{Helper.AsLiteral(node.PName)}\"");
+                WriteLine($"#warning Resource has been renamed. ResourceName: \"{Helper.AsLiteral(node.Name)}\", PropertyName: \"{Helper.AsLiteral(node.PropertyName)}\"");
             }
         }
 
         public void WriteAttributsForInterface(int indent)
         {
-            WriteLine(indent, $@"[global::System.CodeDom.Compiler.GeneratedCodeAttribute(""{Helper.ProductName}"", ""{Helper.ProductVersion}"")]");
+            WriteLine(indent, Strings.GeneratedCode);
         }
 
         public void WriteAttributsForClass(int indent)
         {
             WriteLine(indent, "[global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]");
-            if (!Config.DebugGeneratedCode)
-                WriteLine(indent, $@"[global::System.Diagnostics.DebuggerNonUserCodeAttribute]");
-            WriteLine(indent, $@"[global::System.CodeDom.Compiler.GeneratedCodeAttribute(""{Helper.ProductName}"", ""{Helper.ProductVersion}"")]");
+            if(!Config.DebugGeneratedCode)
+                WriteLine(indent, Strings.DebuggerNonUserCode);
+            WriteLine(indent, Strings.GeneratedCode);
         }
 
         public void WriteComment(int indent, string summary)
         {
             WriteLine(indent, "/// <summary>");
             var comments = new StringReader(summary);
-            while (true)
+            while(true)
             {
                 var comment = HttpUtility.HtmlEncode(comments.ReadLine());
-                if (comment == null)
+                if(comment == null)
                     break;
                 WriteLine(indent, $@"/// <para>{comment}</para>");
             }
@@ -80,7 +80,7 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public void WriteInterfaces(IList<RootNode> tree)
         {
-            foreach (var item in tree)
+            foreach(var item in tree)
             {
                 WriteRootInterface(item);
             }
@@ -89,48 +89,48 @@ namespace Opportunity.ResourceGenerator.Generator
         public void WriteInterface(int indent, string inhertFrom, Node node)
         {
             WriteLine();
-            WriteLine(indent, $"namespace {node.INs}");
+            WriteLine(indent, $"namespace {node.InterfaceNamespace}");
             WriteLine(indent, $"{{");
             WriteAttributsForInterface(indent + 1);
-            WriteLine(indent, $"    {Config.Modifier} interface {node.IName} : {inhertFrom}");
+            WriteLine(indent, $"    {Config.Modifier} interface {node.InterfaceName} : {inhertFrom}");
             WriteLine(indent, $"    {{");
-            foreach (var item in node.Childern)
+            foreach(var item in node.Childern)
             {
-                if (item.IsLeaf)
+                if(item.IsLeaf)
                     WriteInterfaceProperty(indent + 2, item);
                 else
                     WriteInterfaceIProperty(indent + 2, item);
             }
             WriteLine(indent, $"    }}");
             WriteLine(indent, $"}}");
-            foreach (var item in node.Childern)
+            foreach(var item in node.Childern)
             {
-                if (!item.IsLeaf)
+                if(!item.IsLeaf)
                     WriteInnerInterface(indent, item);
             }
         }
 
         public void WriteRootInterface(RootNode node)
         {
-            WriteInterface(0, Config.IRPFullName, node);
+            WriteInterface(0, Strings.IResourceProvider, node);
         }
 
         public void WriteInnerInterface(int indent, Node node)
         {
-            WriteInterface(indent, Config.IRPFullName, node);
+            WriteInterface(indent, Strings.IResourceProvider, node);
         }
 
         public void WriteInterfaceProperty(int indent, Node node)
         {
             WriteComment(indent, node.Value);
             Check(node);
-            this.WriteLine(indent, $@"{Helper.IPropModifier(node.PName)}string {node.PName} {{ get; }}");
+            this.WriteLine(indent, $@"{Helper.IPropModifier(node.PropertyName)}string {node.PropertyName} {{ get; }}");
         }
 
         public void WriteInterfaceIProperty(int indent, Node node)
         {
             Check(node);
-            WriteLine(indent, $@"{Helper.IPropModifier(node.PName)}{node.IFName} {node.PName} {{ get; }}");
+            WriteLine(indent, $@"{Helper.IPropModifier(node.PropertyName)}{node.InterfaceFullName} {node.PropertyName} {{ get; }}");
         }
 
         public void WriteResources(IList<RootNode> tree)
@@ -141,7 +141,7 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteAttributsForClass(indent);
             WriteLine(indent, $"{Config.Modifier} static class {Config.LocalizedStringsClassName}");
             WriteLine(indent, $"{{");
-            foreach (var item in tree)
+            foreach(var item in tree)
             {
                 WriteRootResource(indent + 1, item);
             }
@@ -152,82 +152,52 @@ namespace Opportunity.ResourceGenerator.Generator
         public void WriteRootResource(int indent, RootNode node)
         {
             WriteLine();
-            WriteLine(indent, "[global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]");
-            WriteLine(indent, $"private static {node.IFName} {node.FName};");
-            WriteLine(indent, $"{Config.Modifier} static {node.IFName} {node.PName} ");
-            WriteLine(indent, $"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref {node.FName}, () => new {node.CFName}());");
+            WriteLine(indent, Strings.DebuggerNeverBrowse);
+            WriteLine(indent, $@"private static {node.InterfaceFullName} {node.FieldName};");
+            WriteLine(indent, $@"{Config.Modifier} static {node.InterfaceFullName} {node.PropertyName} ");
+            WriteLine(indent, $@"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref {node.FieldName}, () => new {node.ClassFullName}());");
             WriteLine();
             WriteAttributsForClass(indent);
-            WriteLine(indent, $@"[global::System.Diagnostics.DebuggerDisplayAttribute(""[{Helper.AsLiteral(node.RName)}]"")]");
-            WriteLine(indent, $"private sealed class {node.CName} : {node.IFName}");
-            WriteLine(indent, $"{{");
-            WriteLine(indent, $"    {Config.GRPFullName} {Config.IRPFullName}.this[string resourceKey]");
-            WriteLine(indent, $"    {{");
-            WriteLine(indent, $"        get");
-            WriteLine(indent, $"        {{");
-            WriteLine(indent, $"            if(resourceKey == null)");
-            WriteLine(indent, $"                throw new global::System.ArgumentNullException();");
-            WriteLine(indent, $"            return new {Config.GRPFullName}(\"{Helper.AsLiteral(node.RName)}/\" + resourceKey);");
-            WriteLine(indent, $"        }}");
-            WriteLine(indent, $"    }}");
+            WriteLine(indent, $@"private sealed class {node.ClassName} : {Strings.ResourceProviderBase}, {node.InterfaceFullName}");
+            WriteLine(indent, $@"{{");
+            WriteLine(indent, $@"    public {node.ClassName}() : base(""{Helper.AsLiteral(node.ResourceName)}/"") {{ }}");
             WriteLine();
-            WriteLine(indent, $"    string {Config.IRPFullName}.GetValue(string resourceKey)");
-            WriteLine(indent, $"    {{");
-            WriteLine(indent, $"        return {Config.RLFullName}.GetValue(\"{Helper.AsLiteral(node.RName)}/\" + resourceKey);");
-            WriteLine(indent, $"    }}");
-            WriteLine();
-            foreach (var item in node.Childern)
+            foreach(var item in node.Childern)
             {
-                if (!item.IsLeaf)
+                if(!item.IsLeaf)
                     WriteInnerResource(indent + 1, item);
             }
             WriteLine();
-            foreach (var item in node.Childern)
+            foreach(var item in node.Childern)
             {
-                if (item.IsLeaf)
+                if(item.IsLeaf)
                     WriteProperty(indent + 1, item);
             }
-            WriteLine(indent, $"}}");
+            WriteLine(indent, $@"}}");
         }
 
         public void WriteInnerResource(int indent, Node node)
         {
-            var pathlit = Helper.AsLiteral(node.RName);
             WriteLine();
-            WriteLine(indent, "[global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]");
-            WriteLine(indent, $"private {node.IFName} {node.FName};");
-            WriteLine(indent, $@"[global::Opportunity.ResourceGenerator.ResourcePathAttribute(""{pathlit}"")]");
-            WriteLine(indent, $"{node.IFName} {node.Parent.IFName}.{node.PName} ");
-            WriteLine(indent, $"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref this.{node.FName}, () => new {node.CFName}());");
+            WriteLine(indent, Strings.DebuggerNeverBrowse);
+            WriteLine(indent, $@"private {node.InterfaceFullName} {node.FieldName};");
+            WriteLine(indent, Strings.ResourcePath(node.ResourceName));
+            WriteLine(indent, $@"{node.InterfaceFullName} {node.Parent.InterfaceFullName}.{node.PropertyName} ");
+            WriteLine(indent, $@"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref this.{node.FieldName}, () => new {node.ClassFullName}());");
             WriteLine();
             WriteAttributsForClass(indent);
-            WriteLine(indent, $@"private sealed class {node.CName} : {node.IFName}");
+            WriteLine(indent, $@"private sealed class {node.ClassName} : {Strings.ResourceProviderBase}, {node.InterfaceFullName}");
             WriteLine(indent, $@"{{");
-            WriteLine(indent, $@"    {Config.GRPFullName} {Config.IRPFullName}.this[string resourceKey]");
-            WriteLine(indent, $@"    {{");
-            WriteLine(indent, $@"        get");
-            WriteLine(indent, $@"        {{");
-            WriteLine(indent, $@"            if(resourceKey == null)");
-            WriteLine(indent, $@"                throw new global::System.ArgumentNullException();");
-            WriteLine(indent, $@"            return new {Config.GRPFullName}(""{pathlit}/"" + resourceKey);");
-            WriteLine(indent, $@"        }}");
-            WriteLine(indent, $@"    }}");
-            WriteLine();
-            WriteLine(indent, $@"    string {Config.IRPFullName}.GetValue(string resourceKey)");
-            WriteLine(indent, $@"    {{");
-            WriteLine(indent, $@"        if(resourceKey == null)");
-            WriteLine(indent, $@"            return {Config.RLFullName}.GetValue(""{pathlit}"");");
-            WriteLine(indent, $@"        return {Config.RLFullName}.GetValue(""{pathlit}/"" + resourceKey);");
-            WriteLine(indent, $@"    }}");
-            foreach (var item in node.Childern)
+            WriteLine(indent, $@"    public {node.ClassName}() : base(""{Helper.AsLiteral(node.ResourceName)}/"") {{ }}");
+            foreach(var item in node.Childern)
             {
-                if (!item.IsLeaf)
+                if(!item.IsLeaf)
                     WriteInnerResource(indent + 1, item);
             }
             WriteLine();
-            foreach (var item in node.Childern)
+            foreach(var item in node.Childern)
             {
-                if (item.IsLeaf)
+                if(item.IsLeaf)
                     WriteProperty(indent + 1, item);
             }
             WriteLine(indent, $@"}}");
@@ -235,10 +205,10 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public void WriteProperty(int indent, Node node)
         {
-            var pathlit = Helper.AsLiteral(node.RName);
-            WriteLine(indent, $@"[global::Opportunity.ResourceGenerator.ResourcePathAttribute(""{pathlit}"")]");
-            WriteLine(indent, $@"string {node.Parent.IFName}.{node.PName}");
-            WriteLine(indent + 1, $@"=> {this.Config.RLFullName}.GetValue(""{pathlit}"");");
+            var pathlit = Helper.AsLiteral(node.ResourceName);
+            WriteLine(indent, Strings.ResourcePath(node.ResourceName));
+            WriteLine(indent, $@"string {node.Parent.InterfaceFullName}.{node.PropertyName}");
+            WriteLine(indent + 1, $@"=> {Strings.LocalizedStrings}.GetValue(""{pathlit}"");");
         }
     }
 }

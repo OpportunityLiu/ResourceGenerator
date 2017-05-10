@@ -21,21 +21,6 @@ namespace Opportunity.ResourceGenerator.Generator
             this.LocalizedStringsClassName = null;
         }
 
-        private string GetProjectDefaultNamespace(string projectFilePath)
-        {
-            throw new NotImplementedException();
-        }
-
-        private string GetProjectAssemblyName(string projectFilePath)
-        {
-            throw new NotImplementedException();
-        }
-
-        private string GetProjectPath(string projectFilePath)
-        {
-            throw new NotImplementedException();
-        }
-
         private void setIdentity(ref string field, string value, string def, bool allowDots)
         {
             if (!string.IsNullOrWhiteSpace(value))
@@ -106,10 +91,6 @@ namespace Opportunity.ResourceGenerator.Generator
             names[names.Length - 1] = "I" + names[names.Length - 1];
             return $"global::{InterfacesNamespace}.{string.Join(".", names)}";
         }
-
-        public string IRPFullName => "global::Opportunity.ResourceGenerator.IResourceProvider";
-        public string GRPFullName => "global::Opportunity.ResourceGenerator.GeneratedResourceProvider";
-        public string RLFullName => "global::Opportunity.ResourceGenerator.LocalizedStrings";
 
         public static Configuration Current { get; private set; }
 
