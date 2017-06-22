@@ -11,7 +11,7 @@ namespace System
     public static class EnumExtension
     {
         private static class EnumExtentionCache<T>
-            where T : struct
+            where T : struct, IComparable, IFormattable, IConvertible
         {
             static EnumExtentionCache()
             {
@@ -168,32 +168,60 @@ namespace System
             }
         }
 
+        public static ulong ToUInt64(this Enum that)
+        {
+            var c = (IConvertible)that;
+            switch (c.GetTypeCode())
+            {
+            case TypeCode.SByte:
+            case TypeCode.Int16:
+            case TypeCode.Int32:
+            case TypeCode.Int64:
+                return unchecked((ulong)c.ToInt64(Globalization.CultureInfo.InvariantCulture));
+
+            case TypeCode.Byte:
+            case TypeCode.UInt16:
+            case TypeCode.UInt32:
+            case TypeCode.UInt64:
+            case TypeCode.Boolean:
+            case TypeCode.Char:
+                return c.ToUInt64(Globalization.CultureInfo.InvariantCulture);
+            }
+            throw new ArgumentException("Can't convert.");
+        }
+
+        public static T ToEnum<T>(this ulong that)
+            where T : struct, IComparable, IFormattable, IConvertible
+        {
+            return (T)Enum.ToObject(typeof(T), that);
+        }
+
         public static string ToFriendlyNameString<T>(this T that, Func<T, string> nameProvider)
-            where T : struct
+            where T : struct, IComparable, IFormattable, IConvertible
         {
             return EnumExtentionCache<T>.ToFriendlyNameString(that, nameProvider);
         }
 
         public static string ToFriendlyNameString<T>(this T that, Func<string, string> nameProvider)
-            where T : struct
+            where T : struct, IComparable, IFormattable, IConvertible
         {
             return EnumExtentionCache<T>.ToFriendlyNameString(that, nameProvider);
         }
 
         public static string ToDisplayNameString<T>(this T that)
-            where T : struct
+            where T : struct, IComparable, IFormattable, IConvertible
         {
             return EnumExtentionCache<T>.ToFriendlyNameString(that);
         }
 
         public static bool IsDefined<T>(this T that)
-            where T : struct
+            where T : struct, IComparable, IFormattable, IConvertible
         {
             return EnumExtentionCache<T>.GetIndex(that) >= 0;
         }
 
         public static IEnumerable<KeyValuePair<string, T>> GetDefinedValues<T>()
-            where T : struct
+            where T : struct, IComparable, IFormattable, IConvertible
         {
             var names = EnumExtentionCache<T>.Names;
             var values = EnumExtentionCache<T>.Values;
