@@ -32,6 +32,14 @@ namespace Opportunity.ResourceGenerator.TestApp
             var p = new DebuggerDisplay(Strings.Resource);
             //this.lv.ItemsSource = p.Items;
             Debugger.Break();
+            a.a1.ToDisplayNameString();
         }
+    }
+
+    public enum a
+    {
+        [EnumDisplayName("a1disp")]
+        a1,
+        a2
     }
 }
