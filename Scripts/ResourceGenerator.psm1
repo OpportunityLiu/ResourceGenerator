@@ -50,10 +50,14 @@ function Convert-Resource {
             Write-Host $i ">" $_ 
             Write-Host $i ">" "`t=>" $file
             $dteProject.ProjectItems.AddFromFile($file) | Out-Null
-            $dte.ItemOperations.OpenFile($file)| Out-Null
             $i = $i + 1
         }
-        Write-Host ($i - 1) "file(s) generated."
+        if ($i -eq 2) {
+            Write-Host "1 file generated."
+        }
+        else {
+            Write-Host ($i - 1) "file(s) generated."
+        }
         Write-Host
     }
 }

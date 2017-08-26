@@ -111,8 +111,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="LocalizedStrings.resgenconfig" />
-    <None Include="Opportunity.ResourceGenerator.TestApp_TemporaryKey.pfx" />
     <None Include="Strings\Strings.resgenconfig" />
     <PRIResource Include="Strings\en\Resource.resw" />
     <PRIResource Include="Strings\en\Resource.resJson" />
