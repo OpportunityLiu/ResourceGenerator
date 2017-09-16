@@ -46,8 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DebuggerDisplay.cs" />
+    <Compile Include="EnumDisplayExtension.cs" />
     <Compile Include="EnumDisplayNameAttribute.cs" />
-    <Compile Include="EnumExtension.cs" />
     <Compile Include="GeneratedResourceProvider.cs" />
     <Compile Include="IResourceProvider.cs" />
     <Compile Include="LocalizedStrings.cs" />
