@@ -16,5 +16,5 @@
 
 internal static class AssemblyVersionInfo
 {
-    public const string Version = "1.1.8.0";
+    public const string Version = "1.1.9.0";
 }
