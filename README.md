@@ -5,20 +5,20 @@ A tool to generate classes for UWP string resources.
 [![Build status](https://ci.appveyor.com/api/projects/status/m9bn4ub78r62aw1e?svg=true)](https://ci.appveyor.com/project/OpportunityLiu/resourcegenerator)
 
 ## How-To
-1.  **Install package**    
+1. **Install package**    
     To install this package, execute following command in 
     [package manager console](https://docs.nuget.org/docs/start-here/using-the-package-manager-console).
     ```powershell
     Install-Package Opportunity.ResourceGenerator
-    ```     
-1.  **Create config file**   
+    ```
+1. **Create config file**    
     To create default config file of ResourceGenerator, execute following command.  
     ```powershell
     New-Config Resources/Strings
-    ``` 
+    ```
     You can also specify paths other than `Resources/Strings`.   
     Use `-Project <ProjectName>` to create config file in project other than default project.    
-1.  **Edit config file**      
+1. **Edit config file**      
     After step 2, you'll get a `.resgenconfig` file with following content.  
     ```js
     {
@@ -48,8 +48,8 @@ A tool to generate classes for UWP string resources.
       "DebugGeneratedCode": false
     }
     ```  
-    Edit this file to control properties of generated classes.    
-1.  **Generate resource class**    
+    Edit this file to control properties of generated classes.      
+1. **Generate resource class**    
     Run following command to generate resource class.  
     ```powershell
     Convert-Resource -Project <ProjectName>
