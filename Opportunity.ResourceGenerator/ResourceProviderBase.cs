@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Opportunity.Helpers.Universal;
 
 namespace Opportunity.ResourceGenerator
 {
@@ -21,9 +22,9 @@ namespace Opportunity.ResourceGenerator
         /// <exception cref="ArgumentException"><paramref name="path"/> dosen't meet the requirements.</exception>
         protected ResourceProviderBase(string path)
         {
-            if(path == null)
+            if (path == null)
                 throw new ArgumentNullException(nameof(path));
-            if(!path.StartsWith("ms-resource:") || !path.EndsWith("/"))
+            if (!path.StartsWith("ms-resource:") || !path.EndsWith("/"))
                 throw new ArgumentException("Invalid path", nameof(path));
             this.path = path;
         }
@@ -51,7 +52,7 @@ namespace Opportunity.ResourceGenerator
         {
             get
             {
-                if(resourceKey == null)
+                if (resourceKey == null)
                     throw new ArgumentNullException(nameof(resourceKey));
                 return new GeneratedResourceProvider(this.path + resourceKey);
             }
@@ -67,7 +68,7 @@ namespace Opportunity.ResourceGenerator
         /// <exception cref="ArgumentNullException"><paramref name="resourceKey"/> is null.</exception>
         public string GetValue(string resourceKey)
         {
-            if(resourceKey == null)
+            if (resourceKey == null)
                 throw new ArgumentNullException(nameof(resourceKey));
             return LocalizedStrings.GetValue(this.path + resourceKey);
         }

@@ -111,6 +111,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <PRIResource Include="Strings\en\Resources.resJson" />
     <None Include="Strings\Strings.resgenconfig" />
     <PRIResource Include="Strings\en\Resource.resw" />
     <PRIResource Include="Strings\en\Resource.resJson" />

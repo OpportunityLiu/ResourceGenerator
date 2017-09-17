@@ -19,12 +19,12 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public void Execute()
         {
-            if(Config.SourceLanguagePath == null)
+            if (Config.SourceLanguagePath == null)
                 Config.SourceLanguagePath = Directory.EnumerateDirectories(Path.Combine(Config.ProjectPath, Config.ResourcePath)).First();
             var stringsPath = Path.Combine(Config.ProjectPath, Config.ResourcePath, Config.SourceLanguagePath);
             string[] files;
 
-            if(Directory.Exists(stringsPath))
+            if (Directory.Exists(stringsPath))
             {
                 files = Directory.GetFiles(stringsPath);
             }
@@ -32,7 +32,7 @@ namespace Opportunity.ResourceGenerator.Generator
             {
                 files = new string[0];
             }
-            foreach(var item in files)
+            foreach (var item in files)
             {
                 WriteHash(item);
             }
@@ -45,7 +45,7 @@ namespace Opportunity.ResourceGenerator.Generator
 
         private void Check(Node node)
         {
-            if(!Helper.Keywords.Contains(node.Name) && node.Name != node.PropertyName)
+            if (!Helper.Keywords.Contains(node.Name) && node.Name != node.PropertyName)
             {
                 WriteLine($"#warning Resource has been renamed. ResourceName: \"{Helper.AsLiteral(node.Name)}\", PropertyName: \"{Helper.AsLiteral(node.PropertyName)}\"");
             }
@@ -59,7 +59,7 @@ namespace Opportunity.ResourceGenerator.Generator
         public void WriteAttributsForClass(int indent)
         {
             WriteLine(indent, "[global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]");
-            if(!Config.DebugGeneratedCode)
+            if (!Config.DebugGeneratedCode)
                 WriteLine(indent, Strings.DebuggerNonUserCode);
             WriteLine(indent, Strings.GeneratedCode);
         }
@@ -68,10 +68,10 @@ namespace Opportunity.ResourceGenerator.Generator
         {
             WriteLine(indent, "/// <summary>");
             var comments = new StringReader(summary);
-            while(true)
+            while (true)
             {
                 var comment = HttpUtility.HtmlEncode(comments.ReadLine());
-                if(comment == null)
+                if (comment == null)
                     break;
                 WriteLine(indent, $@"/// <para>{comment}</para>");
             }
@@ -80,7 +80,7 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public void WriteInterfaces(IList<RootNode> tree)
         {
-            foreach(var item in tree)
+            foreach (var item in tree)
             {
                 WriteRootInterface(item);
             }
@@ -94,18 +94,18 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteAttributsForInterface(indent + 1);
             WriteLine(indent, $"    {Config.Modifier} interface {node.InterfaceName} : {inhertFrom}");
             WriteLine(indent, $"    {{");
-            foreach(var item in node.Childern)
+            foreach (var item in node.Childern)
             {
-                if(item.IsLeaf)
+                if (item.IsLeaf)
                     WriteInterfaceProperty(indent + 2, item);
                 else
                     WriteInterfaceIProperty(indent + 2, item);
             }
             WriteLine(indent, $"    }}");
             WriteLine(indent, $"}}");
-            foreach(var item in node.Childern)
+            foreach (var item in node.Childern)
             {
-                if(!item.IsLeaf)
+                if (!item.IsLeaf)
                     WriteInnerInterface(indent, item);
             }
         }
@@ -141,7 +141,7 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteAttributsForClass(indent);
             WriteLine(indent, $"{Config.Modifier} static class {Config.LocalizedStringsClassName}");
             WriteLine(indent, $"{{");
-            foreach(var item in tree)
+            foreach (var item in tree)
             {
                 WriteRootResource(indent + 1, item);
             }
@@ -162,15 +162,15 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteLine(indent, $@"{{");
             WriteLine(indent, $@"    public {node.ClassName}() : base(""{Helper.AsLiteral(node.ResourceName)}/"") {{ }}");
             WriteLine();
-            foreach(var item in node.Childern)
+            foreach (var item in node.Childern)
             {
-                if(!item.IsLeaf)
+                if (!item.IsLeaf)
                     WriteInnerResource(indent + 1, item);
             }
             WriteLine();
-            foreach(var item in node.Childern)
+            foreach (var item in node.Childern)
             {
-                if(item.IsLeaf)
+                if (item.IsLeaf)
                     WriteProperty(indent + 1, item);
             }
             WriteLine(indent, $@"}}");
@@ -189,15 +189,15 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteLine(indent, $@"private sealed class {node.ClassName} : {Strings.ResourceProviderBase}, {node.InterfaceFullName}");
             WriteLine(indent, $@"{{");
             WriteLine(indent, $@"    public {node.ClassName}() : base(""{Helper.AsLiteral(node.ResourceName)}/"") {{ }}");
-            foreach(var item in node.Childern)
+            foreach (var item in node.Childern)
             {
-                if(!item.IsLeaf)
+                if (!item.IsLeaf)
                     WriteInnerResource(indent + 1, item);
             }
             WriteLine();
-            foreach(var item in node.Childern)
+            foreach (var item in node.Childern)
             {
-                if(item.IsLeaf)
+                if (item.IsLeaf)
                     WriteProperty(indent + 1, item);
             }
             WriteLine(indent, $@"}}");

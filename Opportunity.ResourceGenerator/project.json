@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
-    "Opportunity.Helpers": "1.0.4"
+    "Opportunity.Helpers.Universal": "1.1.2"
   },
   "frameworks": {
     "uap10.0.10586": {}

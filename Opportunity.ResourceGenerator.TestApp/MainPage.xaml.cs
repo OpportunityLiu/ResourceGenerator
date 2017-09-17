@@ -28,11 +28,15 @@ namespace Opportunity.ResourceGenerator.TestApp
         {
             this.InitializeComponent();
             var s = Strings.Resource["GetValue"]["GetValue"];
-            var r = ResourceLoader.GetForViewIndependentUse("");
+            var rd = ResourceLoader.GetForViewIndependentUse();
+            var r1 = ResourceLoader.GetForViewIndependentUse("");
             var p = new DebuggerDisplay(Strings.Resource);
             //this.lv.ItemsSource = p.Items;
+            var ns1 = a.a1.ToDisplayNameString();
+            var ns2 = a.a2.ToDisplayNameString();
+            var ns3 = a.a3.ToDisplayNameString();
+            var ns4 = a.a4.ToDisplayNameString();
             Debugger.Break();
-            a.a1.ToDisplayNameString();
         }
     }
 
@@ -40,6 +44,10 @@ namespace Opportunity.ResourceGenerator.TestApp
     {
         [EnumDisplayName("a1disp")]
         a1,
-        a2
+        a2,
+        [EnumDisplayName("ms-resource:AppName")]
+        a3,
+        [EnumDisplayName("ms-resource:///Resource/Plus+Test")]
+        a4
     }
 }
