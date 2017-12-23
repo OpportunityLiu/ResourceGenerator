@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "additionalProperties": false,
   "definitions": {},
-  "id": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/resgenconfig.json",
+  "id": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/resgenconfig.json?version=1.2.1",
   "properties": {
     "$schema": {
       "type": "string"
