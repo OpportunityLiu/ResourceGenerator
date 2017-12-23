@@ -8,14 +8,16 @@
     <owners>Opportunity</owners>
     <licenseUrl>https://github.com/OpportunityLiu/ResourceGenerator/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/OpportunityLiu/ResourceGenerator</projectUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>A tool to generate classes for UWP string resources. </description>
     <copyright>Copyright 2017</copyright>
     <releaseNotes> </releaseNotes>
     <tags>UWP resw resjson resources localization</tags>
-    <dependencies targetFramework="UAP10.0.10586">
-      <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.2.2"/>
-      <dependency id="Opportunity.Helpers.Universal" version="1.1.2" />
+    <dependencies>
+      <group targetFramework="UAP10.0.10586">
+        <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.2.2"/>
+        <dependency id="Opportunity.Helpers.Universal" version="1.1.2" />
+      </group>
     </dependencies>
   </metadata>
   <files>
