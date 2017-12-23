@@ -8,7 +8,7 @@ namespace Opportunity.ResourceGenerator
     /// Represent a resource path.
     /// </summary>
     [DebuggerDisplay("[{Key,nq}] = {Value}")]
-    public struct GeneratedResourceProvider : IResourceProvider
+    public readonly struct GeneratedResourceProvider : IResourceProvider
     {
         /// <summary>
         /// Create a new instance of <see cref="GeneratedResourceProvider"/> with specified resource path.

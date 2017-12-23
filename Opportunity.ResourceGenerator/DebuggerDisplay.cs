@@ -22,23 +22,13 @@ namespace Opportunity.ResourceGenerator
             internal ResourceView() { }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#if !DEBUG
-            internal
-#else
-            public
-#endif
-            ResourcePathAttribute ResourcePath
+            internal ResourcePathAttribute ResourcePath
             {
                 get; set;
             }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-#if !DEBUG
-            internal
-#else
-            public
-#endif
-            string Name
+            internal string Name
             {
                 get; set;
             }
@@ -134,12 +124,7 @@ namespace Opportunity.ResourceGenerator
                 }).ToArray();
         }
 
-#if !DEBUG
-        internal
-#else
-        public
-#endif
-            DebuggerDisplay(IResourceProvider provider)
+        internal DebuggerDisplay(IResourceProvider provider)
         {
             this.provider = provider;
         }

@@ -9,4 +9,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("A tool to generate classes for UWP string resources. ")]
 [assembly: AssemblyProduct("Opportunity.ResourceGenerator")]
 [assembly: AssemblyCopyright("Copyright © Opportunity 2017")]
+[assembly: InternalsVisibleTo("Opportunity.ResourceGenerator.TestApp")]
 [assembly: ComVisible(false)]
