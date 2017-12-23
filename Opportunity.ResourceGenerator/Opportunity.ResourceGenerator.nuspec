@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
     <id>Opportunity.ResourceGenerator</id>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <title>Opportunity.ResourceGenerator</title>
     <authors>Opportunity</authors>
     <owners>Opportunity</owners>
@@ -13,6 +13,10 @@
     <copyright>Copyright 2017</copyright>
     <releaseNotes> </releaseNotes>
     <tags>UWP resw resjson resources localization</tags>
+    <dependencies targetFramework="UAP10.0.10586">
+      <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.2.2"/>
+      <dependency id="Opportunity.Helpers.Universal" version="1.1.2" />
+    </dependencies>
   </metadata>
   <files>
     <file src="bin\Release\*.dll" target="lib\uap10.0" />
