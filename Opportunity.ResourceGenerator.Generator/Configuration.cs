@@ -10,7 +10,7 @@ namespace Opportunity.ResourceGenerator.Generator
     {
         private Configuration(string projectFilePath)
         {
-            this.ProjectPath = Path.GetDirectoryName(projectFilePath);
+            this.ProjectDirectory = Path.GetDirectoryName(projectFilePath);
             var project = XDocument.Load(projectFilePath);
             var ns = project.Descendants(XName.Get("RootNamespace", "http://schemas.microsoft.com/developer/msbuild/2003")).FirstOrDefault();
             var an = project.Descendants(XName.Get("AssemblyName", "http://schemas.microsoft.com/developer/msbuild/2003")).FirstOrDefault();
@@ -29,7 +29,7 @@ namespace Opportunity.ResourceGenerator.Generator
                 field = def;
         }
 
-        public string ProjectPath { get; set; }
+        public string ProjectDirectory { get; set; }
         public string ProjectDefaultNamespace { get; set; }
         public string ProjectAssemblyName { get; set; }
 

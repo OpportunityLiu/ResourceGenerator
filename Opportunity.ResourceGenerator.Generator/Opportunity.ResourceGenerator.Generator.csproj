@@ -73,6 +73,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="FileWriter.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceProvider\Node.cs" />

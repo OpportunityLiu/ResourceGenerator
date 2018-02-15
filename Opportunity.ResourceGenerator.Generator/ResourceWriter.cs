@@ -20,8 +20,8 @@ namespace Opportunity.ResourceGenerator.Generator
         public void Execute()
         {
             if (Config.SourceLanguagePath == null)
-                Config.SourceLanguagePath = Directory.EnumerateDirectories(Path.Combine(Config.ProjectPath, Config.ResourcePath)).First();
-            var stringsPath = Path.Combine(Config.ProjectPath, Config.ResourcePath, Config.SourceLanguagePath);
+                Config.SourceLanguagePath = Directory.EnumerateDirectories(Path.Combine(Config.ProjectDirectory, Config.ResourcePath)).First();
+            var stringsPath = Path.Combine(Config.ProjectDirectory, Config.ResourcePath, Config.SourceLanguagePath);
             string[] files;
 
             if (Directory.Exists(stringsPath))
