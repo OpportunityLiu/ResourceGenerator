@@ -31,7 +31,7 @@ namespace Opportunity.ResourceGenerator.TestApp
             var rd = ResourceLoader.GetForViewIndependentUse();
             var r1 = ResourceLoader.GetForViewIndependentUse("");
             var p = new DebuggerDisplay(Strings.Resource);
-            //this.lv.ItemsSource = p.Items;
+            this.lv.ItemsSource = p.Items;
             var ns1 = a.a1.ToDisplayNameString();
             var ns2 = a.a2.ToDisplayNameString();
             var ns3 = a.a3.ToDisplayNameString();
