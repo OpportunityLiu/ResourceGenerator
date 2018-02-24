@@ -8,6 +8,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Opportunity.ResourceGenerator")]
 [assembly: AssemblyDescription("A tool to generate classes for UWP string resources. ")]
 [assembly: AssemblyProduct("Opportunity.ResourceGenerator")]
-[assembly: AssemblyCopyright("Copyright © Opportunity 2017")]
+[assembly: AssemblyCopyright("Copyright © Opportunity 2018")]
 [assembly: InternalsVisibleTo("Opportunity.ResourceGenerator.TestApp")]
 [assembly: ComVisible(false)]
