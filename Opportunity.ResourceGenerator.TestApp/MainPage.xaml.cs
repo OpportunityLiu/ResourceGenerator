@@ -26,10 +26,14 @@ namespace Opportunity.ResourceGenerator.TestApp
     {
         public MainPage()
         {
+            dynamic resources = Strings.Resources;
+            string tooltip1 = (string)resources.ContentTextBox.ToolTipService.ToolTip();
+            string tooltip2 = (string)resources.ContentTextBox["ToolTipService"].ToolTip();
+            string tooltip3 = (string)resources.ContentTextBox["ToolTipService/ToolTip"]();
             FormattableString f = $"A = {1}";
             this.InitializeComponent();
             dynamic s0 = Strings.Resource;
-            var ff = s0.FormatJson("P", "N");
+            var ff = s0.FormatJson("P", null);
             var s1 = s0.GetValue;
             var s2t = s1.GetValue;
             var s2a = s2t();

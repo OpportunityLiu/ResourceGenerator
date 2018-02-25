@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -89,6 +90,28 @@ namespace Opportunity.ResourceGenerator
         }
 
         /// <summary>
+        /// Argument in <see cref="FormattableResourceString"/>
+        /// </summary>
+        [DebuggerDisplay(@"[{Name,nq}] = {Index}")]
+        public readonly struct Argument
+        {
+            internal Argument(string name, int index)
+            {
+                this.Name = name;
+                this.Index = index;
+            }
+
+            /// <summary>
+            /// Name of argument.
+            /// </summary>
+            public string Name { get; }
+            /// <summary>
+            /// Index used in <see cref="FormatString"/>.
+            /// </summary>
+            public int Index { get; }
+        }
+
+        /// <summary>
         /// Create new instance of <see cref="FormattableResourceString"/>.
         /// </summary>
         /// <param name="format">Interpolation string.</param>
@@ -99,27 +122,55 @@ namespace Opportunity.ResourceGenerator
                 this.FormatString = "";
                 return;
             }
-            analyze(format, this.arguments);
-            this.orderedArguments = this.arguments.OrderBy(s => s, StringComparer.OrdinalIgnoreCase).ToList();
-            FormatString = analyze(format, this.orderedArguments);
+            var args = new List<string>();
+            analyze(format, args);
+            var oargs = args.OrderBy(s => s).ToList();
+            FormatString = analyze(format, oargs);
+            var argData = new Argument[args.Count];
+            for (var i = 0; i < argData.Length; i++)
+            {
+                var arg = args[i];
+                var index = oargs.IndexOf(arg);
+                argData[i] = new Argument(arg, index);
+            }
+            this.Arguments = new ReadOnlyCollection<Argument>(argData);
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private List<string> arguments = new List<string>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private List<string> orderedArguments;
         /// <summary>
         /// Arguments of the <see cref="FormattableResourceString"/>, ordered by its appearance.
         /// </summary>
-        public IReadOnlyList<string> Arguments => this.arguments;
-        /// <summary>
-        /// Arguments of the <see cref="FormattableResourceString"/>, ordered by <see cref="StringComparer.OrdinalIgnoreCase"/>.
-        /// This is the actual order of indices in <see cref="FormatString"/>.
-        /// </summary>
-        public IReadOnlyList<string> OrderedArguments => this.orderedArguments;
+        public ReadOnlyCollection<Argument> Arguments { get; }
         /// <summary>
         /// Format string used for <see cref="string.Format(string, object[])"/>.
         /// </summary>
         public string FormatString { get; }
+
+        /// <summary>
+        /// Format string with given parameters.
+        /// </summary>
+        /// <param name="parameters">A dictionary of parameters.</param>
+        /// <param name="provider">A format provider for formatting.</param>
+        /// <returns>A formatted string.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
+        public string Format(IFormatProvider provider, IDictionary<string, object> parameters)
+        {
+            if (parameters == null)
+                throw new ArgumentNullException(nameof(parameters));
+            var args = new object[Arguments.Count];
+            foreach (var item in this.Arguments)
+            {
+                parameters.TryGetValue(item.Name, out args[item.Index]);
+            }
+            return string.Format(provider, FormatString, args);
+        }
+
+        /// <summary>
+        /// Format string with given parameters.
+        /// </summary>
+        /// <param name="parameters">A dictionary of parameters.</param>
+        /// <param name="provider">A format provider for formatting.</param>
+        /// <returns>A formatted string.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
+        public string Format(IDictionary<string, object> parameters) => Format(null, parameters);
     }
 }

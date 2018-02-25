@@ -8,6 +8,8 @@ namespace Opportunity.ResourceGenerator.Generator
 {
     public static class Strings
     {
+        public static string IFormatProvider => "global::System.IFormatProvider";
+        public static string[] ProviderNames = new string[] { "provider", "formatProvider", "format_Provider", "format_provider", "_provider", "_formatProvider", "_Provider", "_FormatProvider", "__provider", "__formatProvider", "__Provider", "__FormatProvider" };
         public static string DebuggerNeverBrowse
             => "[global::System.Diagnostics.DebuggerBrowsableAttribute(global::System.Diagnostics.DebuggerBrowsableState.Never)]";
         public static string DebuggerNonUserCode => "[global::System.Diagnostics.DebuggerNonUserCodeAttribute]";

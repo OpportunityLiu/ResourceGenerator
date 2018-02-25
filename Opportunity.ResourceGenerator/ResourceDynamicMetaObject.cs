@@ -83,7 +83,8 @@ namespace Opportunity.ResourceGenerator
                 for (var i = 0; i < paramExp.Length; i++)
                 {
                     paramExp[i] = Expression.Convert(args[i].Expression, param[i].ParameterType);
-                    restrictions = restrictions.Merge(BindingRestrictions.GetTypeRestriction(args[i].Expression, args[i].LimitType));
+                    if (args[i].RuntimeType != null)
+                        restrictions = restrictions.Merge(BindingRestrictions.GetTypeRestriction(args[i].Expression, args[i].LimitType));
                 }
                 var expM = Expression.Convert(Expression.Call(convert, method, paramExp), binder.ReturnType);
                 return new DynamicMetaObject(expM, restrictions);

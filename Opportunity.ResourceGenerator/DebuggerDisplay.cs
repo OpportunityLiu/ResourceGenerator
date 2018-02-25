@@ -56,7 +56,7 @@ namespace Opportunity.ResourceGenerator
         }
 
         [DebuggerDisplay("${Value}", Name = "{Name,nq}", Type = "FormatMethod")]
-        private sealed class ResourceFormatFunctionView : ResourceView
+        private sealed class ResourceFormatMethodView : ResourceView
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             public string Value { get; set; }
@@ -140,7 +140,7 @@ namespace Opportunity.ResourceGenerator
                         name = name.Substring(dot + 1);
                     var value = LocalizedStrings.GetValue(o.path.Path);
                     var format = new FormattableResourceString(value);
-                    return (ResourceView)new ResourceFormatFunctionView
+                    return (ResourceView)new ResourceFormatMethodView
                     {
                         Name = name,
                         Value = value,

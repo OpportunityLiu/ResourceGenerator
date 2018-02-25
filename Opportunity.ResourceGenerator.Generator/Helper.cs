@@ -7,6 +7,16 @@ namespace Opportunity.ResourceGenerator.Generator
 {
     public static class Helper
     {
+        public static string GetUnusedName(ICollection<string> usedNames, IEnumerable<string> alternativeNames)
+        {
+            foreach (var item in alternativeNames)
+            {
+                if (!usedNames.Contains(item))
+                    return item;
+            }
+            return null;
+        }
+
         public static Assembly Assembly { get; } = typeof(Helper).Assembly;
         public static AssemblyName AssemblyName { get; } = new AssemblyName(Assembly.FullName);
 

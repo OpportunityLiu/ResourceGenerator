@@ -119,8 +119,16 @@ namespace Opportunity.ResourceGenerator.Generator
             if (Config.IsFormatStringEnabled && node.Name.StartsWith("$"))
             {
                 var format = new FormattableResourceString(node.Value);
-                var param = string.Join(", ", format.Arguments.Select(a => "object " + Helper.Refine(a)));
+                var paramNames = format.Arguments.Select(a => Helper.Refine(a.Name)).ToList();
+                var param = string.Join(", ", paramNames.Select(a => "object " + a));
                 this.WriteLine(indent, $@"{modifier}string {node.MemberName}({param});");
+
+                var provider = Helper.GetUnusedName(paramNames, Strings.ProviderNames);
+                if (provider != null)
+                {
+                    WriteComment(indent, node.Value);
+                    this.WriteLine(indent, $@"{modifier}string {node.MemberName}({Strings.IFormatProvider} {provider}, {param});");
+                }
             }
             else
                 this.WriteLine(indent, $@"{modifier}string {node.MemberName} {{ get; }}");
@@ -210,14 +218,28 @@ namespace Opportunity.ResourceGenerator.Generator
                 var tempFormatStringFieldName = Helper.GetRandomName(node.MemberName);
                 this.WriteLine(indent, $@"string {tempFormatStringFieldName};");
                 var format = new FormattableResourceString(node.Value);
-                var param = string.Join(", ", format.Arguments.Select(a => "object " + Helper.Refine(a)));
+                var paramNames = format.Arguments.Select(a => Helper.Refine(a.Name)).ToList();
+                var param = string.Join(", ", paramNames.Select(a => "object " + a));
+                var args = string.Join(", ", format.Arguments.OrderBy(a => a.Index).Select(a => Helper.Refine(a.Name)));
+
                 WriteLine(indent, Strings.ResourcePath(node.ResourceName));
                 WriteLine(indent, $@"string {node.Parent.InterfaceFullName}.{node.MemberName}({param})");
                 WriteLine(indent, $@"{{");
                 WriteLine(indent, $@"    if ({tempFormatStringFieldName} == null)");
                 WriteLine(indent, $@"        {tempFormatStringFieldName} = new {Strings.FormattableResource}({Strings.LocalizedStrings}.GetValue(""{pathlit}"")).FormatString;");
-                WriteLine(indent, $@"    return string.Format({tempFormatStringFieldName}, {string.Join(", ", format.OrderedArguments.Select(a => Helper.Refine(a)))});");
+                WriteLine(indent, $@"    return string.Format({tempFormatStringFieldName}, {args});");
                 WriteLine(indent, $@"}}");
+
+                var provider = Helper.GetUnusedName(paramNames, Strings.ProviderNames);
+                if (provider != null)
+                {
+                    WriteLine(indent, $@"string {node.Parent.InterfaceFullName}.{node.MemberName}({Strings.IFormatProvider} {provider}, {param})");
+                    WriteLine(indent, $@"{{");
+                    WriteLine(indent, $@"    if ({tempFormatStringFieldName} == null)");
+                    WriteLine(indent, $@"        {tempFormatStringFieldName} = new {Strings.FormattableResource}({Strings.LocalizedStrings}.GetValue(""{pathlit}"")).FormatString;");
+                    WriteLine(indent, $@"    return string.Format({provider}, {tempFormatStringFieldName}, {args});");
+                    WriteLine(indent, $@"}}");
+                }
             }
             else
             {
