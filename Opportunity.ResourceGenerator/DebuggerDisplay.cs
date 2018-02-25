@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Opportunity.Helpers.Universal;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -22,16 +23,10 @@ namespace Opportunity.ResourceGenerator
             internal ResourceView() { }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            internal ResourcePathAttribute ResourcePath
-            {
-                get; set;
-            }
+            internal ResourcePathAttribute ResourcePath { get; set; }
 
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            internal string Name
-            {
-                get; set;
-            }
+            internal string Name { get; set; }
         }
 
         [DebuggerDisplay("{Value}", Name = "{Name,nq}", Type = "string")]
@@ -60,6 +55,17 @@ namespace Opportunity.ResourceGenerator
             }
         }
 
+        [DebuggerDisplay("${Value}", Name = "{Name,nq}", Type = "FormatMethod")]
+        private sealed class ResourceFormatFunctionView : ResourceView
+        {
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            public string Value { get; set; }
+
+            public FormattableResourceString FormatString { get; set; }
+
+            public ResourcePathAttribute Path => this.ResourcePath;
+        }
+
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IResourceProvider provider;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -81,8 +87,8 @@ namespace Opportunity.ResourceGenerator
 
         private void init()
         {
-            this.items = this.provider.GetType()
-                .GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+            var type = this.provider.GetType();
+            var props = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .Select(prop => new { prop, path = prop.GetCustomAttribute<ResourcePathAttribute>() })
                 .Where(o => o.path != null)
                 .OrderBy(o => o.prop.PropertyType, Comparer<Type>.Create((a, b) =>
@@ -121,7 +127,28 @@ namespace Opportunity.ResourceGenerator
                             ResourcePath = o.path
                         };
                     }
-                }).ToArray();
+                });
+            var methods = type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+                .Select(method => new { method, path = method.GetCustomAttribute<ResourcePathAttribute>() })
+                .Where(o => o.path != null)
+                .OrderBy(o => o.path.Path)
+                .Select(o =>
+                {
+                    var name = o.method.Name;
+                    var dot = name.LastIndexOf('.');
+                    if (dot != -1)
+                        name = name.Substring(dot + 1);
+                    var value = LocalizedStrings.GetValue(o.path.Path);
+                    var format = new FormattableResourceString(value);
+                    return (ResourceView)new ResourceFormatFunctionView
+                    {
+                        Name = name,
+                        Value = value,
+                        FormatString = format,
+                        ResourcePath = o.path
+                    };
+                });
+            this.items = props.Concat(methods).ToArray();
         }
 
         internal DebuggerDisplay(IResourceProvider provider)

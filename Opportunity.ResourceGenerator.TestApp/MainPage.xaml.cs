@@ -29,6 +29,7 @@ namespace Opportunity.ResourceGenerator.TestApp
             FormattableString f = $"A = {1}";
             this.InitializeComponent();
             dynamic s0 = Strings.Resource;
+            var ff = s0.FormatJson("P", "N");
             var s1 = s0.GetValue;
             var s2t = s1.GetValue;
             var s2a = s2t();

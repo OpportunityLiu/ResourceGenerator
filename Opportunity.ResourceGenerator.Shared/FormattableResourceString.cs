@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
 namespace Opportunity.ResourceGenerator
 {
+    /// <summary>
+    /// Analyze interpolation string.
+    /// </summary>
+    [DebuggerDisplay(@"{FormatString}")]
     public sealed class FormattableResourceString
     {
         private static string analyze(string format, List<string> arguments)
@@ -83,6 +88,10 @@ namespace Opportunity.ResourceGenerator
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Create new instance of <see cref="FormattableResourceString"/>.
+        /// </summary>
+        /// <param name="format">Interpolation string.</param>
         public FormattableResourceString(string format)
         {
             if (string.IsNullOrEmpty(format))
@@ -95,10 +104,22 @@ namespace Opportunity.ResourceGenerator
             FormatString = analyze(format, this.orderedArguments);
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private List<string> arguments = new List<string>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private List<string> orderedArguments;
+        /// <summary>
+        /// Arguments of the <see cref="FormattableResourceString"/>, ordered by its appearance.
+        /// </summary>
         public IReadOnlyList<string> Arguments => this.arguments;
+        /// <summary>
+        /// Arguments of the <see cref="FormattableResourceString"/>, ordered by <see cref="StringComparer.OrdinalIgnoreCase"/>.
+        /// This is the actual order of indices in <see cref="FormatString"/>.
+        /// </summary>
         public IReadOnlyList<string> OrderedArguments => this.orderedArguments;
+        /// <summary>
+        /// Format string used for <see cref="string.Format(string, object[])"/>.
+        /// </summary>
         public string FormatString { get; }
     }
 }

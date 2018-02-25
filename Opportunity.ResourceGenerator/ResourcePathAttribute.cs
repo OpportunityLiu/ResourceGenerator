@@ -11,7 +11,7 @@ namespace Opportunity.ResourceGenerator
     /// Attribute stores path of resources, for debug usage.
     /// </summary>
     [DebuggerDisplay("{ToString(),nq}")]
-    [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     public sealed class ResourcePathAttribute : Attribute
     {
         /// <summary>
