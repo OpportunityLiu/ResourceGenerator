@@ -56,10 +56,10 @@ namespace Opportunity.ResourceGenerator.Generator
         static void HandleProject(string csprojPath, string[] resgenconfigPaths)
         {
             csprojPath = Path.GetFullPath(csprojPath);
+            Configuration.SetCurrent(csprojPath, null);
             Logger.LogInfo($"Start handling project \"{Path.GetFileNameWithoutExtension(csprojPath)}\"");
-            Configuration.SetCurrent(csprojPath);
             if (resgenconfigPaths == null || resgenconfigPaths.Length == 0)
-                resgenconfigPaths = Directory.GetFiles(Configuration.Current.ProjectDirectory, "*.resgenconfig", SearchOption.AllDirectories);
+                resgenconfigPaths = Directory.GetFiles(Configuration.Config.ProjectDirectory, "*.resgenconfig", SearchOption.AllDirectories);
             if (resgenconfigPaths.Length == 0)
             {
                 Logger.LogInfo("No .resgenconfig file found in project");
@@ -76,18 +76,15 @@ namespace Opportunity.ResourceGenerator.Generator
             resgenconfigPath = Path.GetFullPath(resgenconfigPath);
             if (Path.GetExtension(resgenconfigPath) != ".resgenconfig")
             {
-                Logger.LogWarning($"Unsupported config file \"{resgenconfigPath.Substring(Configuration.Current.ProjectDirectory.Length)}\"");
+                Logger.LogWarning($"Unsupported config file \"{resgenconfigPath.Substring(Configuration.Config.ProjectDirectory.Length)}\"");
                 return;
             }
-            Logger.LogInfo($"Start handling config \"{resgenconfigPath.Substring(Configuration.Current.ProjectDirectory.Length)}\"");
+            Logger.LogInfo($"Start handling config \"{resgenconfigPath.Substring(Configuration.Config.ProjectDirectory.Length)}\"");
             var className = Path.GetFileNameWithoutExtension(resgenconfigPath);
             var generatedFileName = Path.Combine(Path.GetDirectoryName(resgenconfigPath), $"{className}.g.cs");
             try
             {
-                var t = File.ReadAllText(resgenconfigPath);
-                JsonConvert.PopulateObject(t, Configuration.Current);
-                className = Helper.Refine(className);
-                Configuration.Current.LocalizedStringsClassName = className;
+                Configuration.SetCurrent(csprojPath, resgenconfigPath);
                 using (var writer = new ResourceWriter(generatedFileName))
                 {
                     writer.Execute();

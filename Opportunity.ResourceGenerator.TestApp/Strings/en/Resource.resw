@@ -138,4 +138,7 @@
   <data name="_StartWithUnderscoreInResw" xml:space="preserve">
     <value>Starts With - In Resw</value>
   </data>
+  <data name="$FormatString" xml:space="preserve">
+    <value>{Name} = {Value}</value>
+  </data>
 </root>

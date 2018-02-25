@@ -2,55 +2,26 @@
 
 namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
 {
-    public class RootNode : Node
+    public class RootNode : BranchNode
     {
-        public static List<RootNode> GetTree(Dictionary<string, Dictionary<string, object>> raw)
-        {
-            var l = new List<RootNode>();
-            foreach (var item in raw)
-            {
-                l.Add(getRootNode(item));
-            }
-            return l;
-        }
-
-        private static RootNode getRootNode(KeyValuePair<string, Dictionary<string, object>> item)
-        {
-            var node = new RootNode(item.Key);
-            foreach (var i in item.Value)
-            {
-                if (i.Value is string v)
-                {
-                    node.Childern.Add(GetNode(i.Key, v));
-                }
-                else if (i.Value is Dictionary<string, object> v2)
-                {
-                    node.Childern.Add(GetNode(i.Key, v2));
-                }
-            }
-            node.Refine();
-            return node;
-        }
-
         public RootNode(string name)
-            : base(name)
+            : base(null, name)
         {
-            this.Root = this;
-            this.Parent = null;
         }
 
         public override string ResourceName
         {
             get
             {
-                if (Configuration.Current.IsDefaultProject)
+                if (Configuration.Config.IsDefaultProject)
                     return $"ms-resource:///{Name}";
                 else
-                    return $"ms-resource:///{Configuration.Current.ProjectAssemblyName}/{Name}";
+                    return $"ms-resource:///{Configuration.Config.ProjectAssemblyName}/{Name}";
             }
         }
-        public override string InterfaceNamespace => Configuration.Current.InterfacesNamespace;
-        public override string ClassFullName => $"{Configuration.Current.LocalizedStringsFullName}.{ClassName}";
-        public override string PropertyFullName => $"{Configuration.Current.LocalizedStringsFullName}.{PropertyName}";
+
+        public override string InterfaceNamespace => Configuration.Config.InterfacesNamespace;
+        public override string ClassFullName => $"{Configuration.Config.LocalizedStringsFullName}.{ClassName}";
+        public override string MemberFullName => $"{Configuration.Config.LocalizedStringsFullName}.{MemberName}";
     }
 }

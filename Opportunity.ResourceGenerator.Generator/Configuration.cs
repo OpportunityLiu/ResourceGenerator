@@ -3,15 +3,16 @@ using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Opportunity.ResourceGenerator.Generator
 {
     public class Configuration
     {
-        private Configuration(string projectFilePath)
+        private Configuration(string csprojPath)
         {
-            this.ProjectDirectory = Path.GetDirectoryName(projectFilePath);
-            var project = XDocument.Load(projectFilePath);
+            this.ProjectDirectory = Path.GetDirectoryName(csprojPath);
+            var project = XDocument.Load(csprojPath);
             var ns = project.Descendants(XName.Get("RootNamespace", "http://schemas.microsoft.com/developer/msbuild/2003")).FirstOrDefault();
             var an = project.Descendants(XName.Get("AssemblyName", "http://schemas.microsoft.com/developer/msbuild/2003")).FirstOrDefault();
             this.ProjectDefaultNamespace = ns?.Value ?? "MyProject";
@@ -71,6 +72,8 @@ namespace Opportunity.ResourceGenerator.Generator
             }
         }
 
+        public bool IsFormatStringEnabled { get; set; }
+
         public string LocalizedStringsFullName
             => $"global::{LocalizedStringsNamespace}.{LocalizedStringsClassName}";
         public string InterfaceFullName(string interfaceName, string ins)
@@ -92,11 +95,20 @@ namespace Opportunity.ResourceGenerator.Generator
             return $"global::{InterfacesNamespace}.{string.Join(".", names)}";
         }
 
-        public static Configuration Current { get; private set; }
-
-        public static void SetCurrent(string projectFilePath)
+        internal static void SetCurrent(string csprojPath, string resgenconfigPath)
         {
-            Current = new Configuration(projectFilePath);
+            var r = new Configuration(csprojPath);
+            if (resgenconfigPath != null)
+            {
+                var t = File.ReadAllText(resgenconfigPath);
+                JsonConvert.PopulateObject(t, r);
+                var className = Path.GetFileNameWithoutExtension(resgenconfigPath);
+                className = Helper.Refine(className);
+                r.LocalizedStringsClassName = className;
+            }
+            Config = r;
         }
+
+        public static Configuration Config { get; private set; }
     }
 }

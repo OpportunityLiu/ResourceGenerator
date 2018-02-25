@@ -26,10 +26,12 @@ namespace Opportunity.ResourceGenerator.TestApp
     {
         public MainPage()
         {
+            FormattableString f = $"A = {1}";
             this.InitializeComponent();
             dynamic s0 = Strings.Resource;
             var s1 = s0.GetValue;
             var s2t = s1.GetValue;
+            var s2a = s2t();
             var s2 = s1.GetValue();
             var rd = ResourceLoader.GetForViewIndependentUse();
             var r1 = ResourceLoader.GetForViewIndependentUse("");

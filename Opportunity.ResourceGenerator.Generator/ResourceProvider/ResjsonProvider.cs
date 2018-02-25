@@ -14,15 +14,15 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
     {
         protected override string CanHandleExt => ".resjson";
 
-        protected override void Analyze(string fileName)
+        protected override void Analyze(string fileName, RootNode resourceTree)
         {
             var resourceName = Path.GetFileNameWithoutExtension(fileName);
             var json = File.ReadAllText(fileName);
             var tree = JsonConvert.DeserializeObject<JObject>(json);
-            analyzeObject(new List<string>(), tree);
+            analyzeObject(resourceTree, new List<string>(), tree);
         }
 
-        private void analyzeObject(List<string> path, JObject obj)
+        private void analyzeObject(RootNode resourceTree, List<string> path, JObject obj)
         {
             foreach (var item in obj)
             {
@@ -33,10 +33,10 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
                 switch (item.Value.Type)
                 {
                 case JTokenType.Object:
-                    analyzeObject(path, (JObject)item.Value);
+                    analyzeObject(resourceTree, path, (JObject)item.Value);
                     break;
                 case JTokenType.String:
-                    SetValue(path, item.Value.ToString());
+                    SetValue(resourceTree, path, item.Value.ToString());
                     break;
                 }
                 path.RemoveRange(path.Count - subPath.Length, subPath.Length);

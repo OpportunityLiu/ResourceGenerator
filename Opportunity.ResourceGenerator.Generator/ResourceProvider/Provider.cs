@@ -15,61 +15,49 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
             new ReswProvider()
         };
 
-        private static Dictionary<string, Dictionary<string, object>> result;
-
         public static List<RootNode> Analyze(IEnumerable<string> files)
         {
-            result = new Dictionary<string, Dictionary<string, object>>();
+            var r = new List<RootNode>();
             foreach (var fileName in files)
             {
-                resourceRootName = Path.GetFileNameWithoutExtension(fileName);
+                var resourceRootName = Path.GetFileNameWithoutExtension(fileName);
                 var ext = Path.GetExtension(fileName);
                 foreach (var item in Providers)
                 {
-                    if (string.Equals(item.CanHandleExt, ext, StringComparison.InvariantCultureIgnoreCase))
+                    if (string.Equals(item.CanHandleExt, ext, StringComparison.OrdinalIgnoreCase))
                     {
-                        item.Analyze(fileName);
+                        var tree = r.Find(t => string.Equals(t.Name, resourceRootName, StringComparison.OrdinalIgnoreCase));
+                        if (tree is null)
+                        {
+                            tree = new RootNode(resourceRootName);
+                            r.Add(tree);
+                        }
+                        item.Analyze(fileName, tree);
                         break;
                     }
                 }
             }
-            var r = RootNode.GetTree(result);
-            result = null;
             return r;
         }
 
-        protected abstract void Analyze(string fileName);
+        protected abstract void Analyze(string fileName, RootNode resourceTree);
 
         protected abstract string CanHandleExt { get; }
 
-
-        private static string resourceRootName;
-
-        protected void SetValue(IList<string> path, string value)
+        protected void SetValue(RootNode resourceTree, IList<string> path, string value)
         {
-            result.TryGetValue(resourceRootName, out var o);
-            if (o == null)
-                result[resourceRootName] = o = new Dictionary<string, object>();
-            SetValueCore(o, path, 0, value);
-        }
-
-        private void SetValueCore(Dictionary<string, object> output, IList<string> path, int index, string value)
-        {
-            if (index == path.Count - 1)
-                SetValueCore(output, path[index], value);
-            else
+            var currentNode = (BranchNode)resourceTree;
+            for (var i = 0; i < path.Count - 1; i++)
             {
-                output.TryGetValue(path[index], out var o);
-                var dic = o as Dictionary<string, object>;
-                if (dic == null)
-                    output[path[index]] = dic = new Dictionary<string, object>();
-                SetValueCore(dic, path, index + 1, value);
+                var nodeName = path[i];
+                if (!currentNode.Childern.TryGetValue(nodeName, out var child))
+                {
+                    child = new BranchNode(currentNode, nodeName);
+                }
+                currentNode = (BranchNode)child;
             }
-        }
-
-        private void SetValueCore(Dictionary<string, object> output, string path, string value)
-        {
-            output[path] = value;
+            var leafName = path[path.Count - 1];
+            new LeafNode(currentNode, leafName, value);
         }
     }
 }

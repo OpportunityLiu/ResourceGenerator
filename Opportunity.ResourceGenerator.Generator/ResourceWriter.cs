@@ -6,13 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using static Opportunity.ResourceGenerator.Generator.Configuration;
 
 namespace Opportunity.ResourceGenerator.Generator
 {
     class ResourceWriter : FileWriter
     {
-        public Configuration Config => Configuration.Current;
-
         public ResourceWriter(string path) : base(path)
         {
         }
@@ -45,20 +44,22 @@ namespace Opportunity.ResourceGenerator.Generator
 
         private void Check(Node node)
         {
-            if (!Helper.Keywords.Contains(node.Name) && node.Name != node.PropertyName)
+            if (!Helper.Keywords.Contains(node.Name) && node.Name != node.MemberName)
             {
-                WriteLine($"#warning Resource has been renamed. ResourceName: \"{Helper.AsLiteral(node.Name)}\", PropertyName: \"{Helper.AsLiteral(node.PropertyName)}\"");
+                if (Config.IsFormatStringEnabled && node.Name.StartsWith("$"))
+                    return;
+                WriteLine($"#warning Resource has been renamed. ResourceName: \"{Helper.AsLiteral(node.Name)}\", PropertyName: \"{Helper.AsLiteral(node.MemberName)}\"");
             }
         }
 
-        public void WriteAttributsForInterface(int indent)
+        public void WriteAttributesForInterface(int indent)
         {
             WriteLine(indent, Strings.GeneratedCode);
         }
 
-        public void WriteAttributsForClass(int indent)
+        public void WriteAttributesForClass(int indent)
         {
-            WriteLine(indent, "[global::System.Diagnostics.DebuggerTypeProxyAttribute(typeof(global::Opportunity.ResourceGenerator.DebuggerDisplay))]");
+            WriteLine(indent, Strings.DebuggerTypeProxy);
             if (!Config.DebugGeneratedCode)
                 WriteLine(indent, Strings.DebuggerNonUserCode);
             WriteLine(indent, Strings.GeneratedCode);
@@ -82,55 +83,53 @@ namespace Opportunity.ResourceGenerator.Generator
         {
             foreach (var item in tree)
             {
-                WriteRootInterface(item);
+                WriteInterface(0, item);
             }
         }
 
-        public void WriteInterface(int indent, string inhertFrom, Node node)
+        public void WriteInterface(int indent, BranchNode node)
         {
             WriteLine();
             WriteLine(indent, $"namespace {node.InterfaceNamespace}");
             WriteLine(indent, $"{{");
-            WriteAttributsForInterface(indent + 1);
-            WriteLine(indent, $"    {Config.Modifier} interface {node.InterfaceName} : {inhertFrom}");
+            WriteAttributesForInterface(indent + 1);
+            WriteLine(indent, $"    {Config.Modifier} interface {node.InterfaceName} : {Strings.IResourceProvider}");
             WriteLine(indent, $"    {{");
-            foreach (var item in node.Childern)
+            foreach (var item in node.Childern.Values)
             {
-                if (item.IsLeaf)
-                    WriteInterfaceProperty(indent + 2, item);
-                else
-                    WriteInterfaceIProperty(indent + 2, item);
+                if (item is LeafNode lf)
+                    WriteInterfaceProperty(indent + 2, lf);
+                else if (item is BranchNode br)
+                    WriteInterfaceProperty(indent + 2, br);
             }
             WriteLine(indent, $"    }}");
             WriteLine(indent, $"}}");
-            foreach (var item in node.Childern)
+            foreach (var item in node.Childern.Values)
             {
-                if (!item.IsLeaf)
-                    WriteInnerInterface(indent, item);
+                if (item is BranchNode br)
+                    WriteInterface(indent, br);
             }
         }
 
-        public void WriteRootInterface(RootNode node)
-        {
-            WriteInterface(0, Strings.IResourceProvider, node);
-        }
-
-        public void WriteInnerInterface(int indent, Node node)
-        {
-            WriteInterface(indent, Strings.IResourceProvider, node);
-        }
-
-        public void WriteInterfaceProperty(int indent, Node node)
+        public void WriteInterfaceProperty(int indent, LeafNode node)
         {
             WriteComment(indent, node.Value);
             Check(node);
-            this.WriteLine(indent, $@"{Helper.IPropModifier(node.PropertyName)}string {node.PropertyName} {{ get; }}");
+            var modifier = Helper.IPropModifier(node.MemberName);
+            if (Config.IsFormatStringEnabled && node.Name.StartsWith("$"))
+            {
+                var format = new FormattableResourceString(node.Value);
+                var param = string.Join(", ", format.Arguments.Select(a => "object " + Helper.Refine(a)));
+                this.WriteLine(indent, $@"{modifier}string {node.MemberName}({param});");
+            }
+            else
+                this.WriteLine(indent, $@"{modifier}string {node.MemberName} {{ get; }}");
         }
 
-        public void WriteInterfaceIProperty(int indent, Node node)
+        public void WriteInterfaceProperty(int indent, BranchNode node)
         {
             Check(node);
-            WriteLine(indent, $@"{Helper.IPropModifier(node.PropertyName)}{node.InterfaceFullName} {node.PropertyName} {{ get; }}");
+            WriteLine(indent, $@"{Helper.IPropModifier(node.MemberName)}{node.InterfaceFullName} {node.MemberName} {{ get; }}");
         }
 
         public void WriteResources(IList<RootNode> tree)
@@ -138,7 +137,7 @@ namespace Opportunity.ResourceGenerator.Generator
             var indent = 1;
             WriteLine($"namespace {Config.LocalizedStringsNamespace}");
             WriteLine($"{{");
-            WriteAttributsForClass(indent);
+            WriteAttributesForClass(indent);
             WriteLine(indent, $"{Config.Modifier} static class {Config.LocalizedStringsClassName}");
             WriteLine(indent, $"{{");
             foreach (var item in tree)
@@ -154,61 +153,77 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteLine();
             WriteLine(indent, Strings.DebuggerNeverBrowse);
             WriteLine(indent, $@"private static {node.InterfaceFullName} {node.FieldName};");
-            WriteLine(indent, $@"{Config.Modifier} static {node.InterfaceFullName} {node.PropertyName} ");
+            WriteLine(indent, $@"{Config.Modifier} static {node.InterfaceFullName} {node.MemberName} ");
             WriteLine(indent, $@"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref {node.FieldName}, () => new {node.ClassFullName}());");
             WriteLine();
-            WriteAttributsForClass(indent);
+            WriteAttributesForClass(indent);
             WriteLine(indent, $@"private sealed class {node.ClassName} : {Strings.ResourceProviderBase}, {node.InterfaceFullName}");
             WriteLine(indent, $@"{{");
             WriteLine(indent, $@"    public {node.ClassName}() : base(""{Helper.AsLiteral(node.ResourceName)}/"") {{ }}");
             WriteLine();
-            foreach (var item in node.Childern)
+            foreach (var item in node.Childern.Values)
             {
-                if (!item.IsLeaf)
-                    WriteInnerResource(indent + 1, item);
+                if (item is BranchNode br)
+                    WriteInnerResource(indent + 1, br);
             }
             WriteLine();
-            foreach (var item in node.Childern)
+            foreach (var item in node.Childern.Values)
             {
-                if (item.IsLeaf)
-                    WriteProperty(indent + 1, item);
+                if (item is LeafNode lf)
+                    WriteProperty(indent + 1, lf);
             }
             WriteLine(indent, $@"}}");
         }
 
-        public void WriteInnerResource(int indent, Node node)
+        public void WriteInnerResource(int indent, BranchNode node)
         {
             WriteLine();
             WriteLine(indent, Strings.DebuggerNeverBrowse);
             WriteLine(indent, $@"private {node.InterfaceFullName} {node.FieldName};");
             WriteLine(indent, Strings.ResourcePath(node.ResourceName));
-            WriteLine(indent, $@"{node.InterfaceFullName} {node.Parent.InterfaceFullName}.{node.PropertyName} ");
+            WriteLine(indent, $@"{node.InterfaceFullName} {node.Parent.InterfaceFullName}.{node.MemberName} ");
             WriteLine(indent, $@"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref this.{node.FieldName}, () => new {node.ClassFullName}());");
             WriteLine();
-            WriteAttributsForClass(indent);
+            WriteAttributesForClass(indent);
             WriteLine(indent, $@"private sealed class {node.ClassName} : {Strings.ResourceProviderBase}, {node.InterfaceFullName}");
             WriteLine(indent, $@"{{");
             WriteLine(indent, $@"    public {node.ClassName}() : base(""{Helper.AsLiteral(node.ResourceName)}/"") {{ }}");
-            foreach (var item in node.Childern)
+            foreach (var item in node.Childern.Values)
             {
-                if (!item.IsLeaf)
-                    WriteInnerResource(indent + 1, item);
+                if (item is BranchNode br)
+                    WriteInnerResource(indent + 1, br);
             }
             WriteLine();
-            foreach (var item in node.Childern)
+            foreach (var item in node.Childern.Values)
             {
-                if (item.IsLeaf)
-                    WriteProperty(indent + 1, item);
+                if (item is LeafNode lf)
+                    WriteProperty(indent + 1, lf);
             }
             WriteLine(indent, $@"}}");
         }
 
-        public void WriteProperty(int indent, Node node)
+        public void WriteProperty(int indent, LeafNode node)
         {
             var pathlit = Helper.AsLiteral(node.ResourceName);
-            WriteLine(indent, Strings.ResourcePath(node.ResourceName));
-            WriteLine(indent, $@"string {node.Parent.InterfaceFullName}.{node.PropertyName}");
-            WriteLine(indent + 1, $@"=> {Strings.LocalizedStrings}.GetValue(""{pathlit}"");");
+            if (Config.IsFormatStringEnabled && node.Name.StartsWith("$"))
+            {
+                var tempFormatStringFieldName = Helper.GetRandomName(node.MemberName);
+                this.WriteLine(indent, $@"string {tempFormatStringFieldName};");
+                var format = new FormattableResourceString(node.Value);
+                var param = string.Join(", ", format.Arguments.Select(a => "object " + Helper.Refine(a)));
+                this.WriteLine(indent, $@"string {node.Parent.InterfaceFullName}.{node.MemberName}({param})");
+                this.WriteLine(indent, $@"{{");
+                this.WriteLine(indent, $@"    if ({tempFormatStringFieldName} == null)");
+                this.WriteLine(indent, $@"        {tempFormatStringFieldName} = new {Strings.FormattableResource}({Strings.LocalizedStrings}.GetValue(""{pathlit}"")).FormatString;");
+                this.WriteLine(indent, $@"    return string.Format({tempFormatStringFieldName}, {string.Join(", ", format.OrderedArguments.Select(a => Helper.Refine(a)))});");
+                this.WriteLine(indent, $@"}}");
+            }
+            else
+            {
+                WriteLine(indent, Strings.ResourcePath(node.ResourceName));
+                WriteLine(indent, $@"string {node.Parent.InterfaceFullName}.{node.MemberName}");
+                WriteLine(indent + 1, $@"=> {Strings.LocalizedStrings}.GetValue(""{pathlit}"");");
+            }
         }
     }
 }

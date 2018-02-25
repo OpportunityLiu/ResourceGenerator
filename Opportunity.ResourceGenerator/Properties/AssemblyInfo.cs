@@ -7,7 +7,5 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("Opportunity.ResourceGenerator")]
 [assembly: AssemblyDescription("A tool to generate classes for UWP string resources. ")]
-[assembly: AssemblyProduct("Opportunity.ResourceGenerator")]
-[assembly: AssemblyCopyright("Copyright © Opportunity 2018")]
 [assembly: InternalsVisibleTo("Opportunity.ResourceGenerator.TestApp")]
 [assembly: ComVisible(false)]

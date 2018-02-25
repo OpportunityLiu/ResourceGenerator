@@ -37,6 +37,10 @@
       "type": "string",
       "description": "Path for resource files (*.resw & *.resjson)."
     },
+    "IsFormatStringEnabled": {
+      "type": "boolean",
+      "description": "Regard resource strings whose name starts with '$' as format string."
+    },
     "SourceLanguagePath": {
       "type": "string",
       "description": "Default language of resources, will be detected automatically if unset."

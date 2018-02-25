@@ -12,7 +12,7 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
     {
         protected override string CanHandleExt => ".resw";
 
-        protected override void Analyze(string fileName)
+        protected override void Analyze(string fileName, RootNode resourceTree)
         {
             var document = new XmlDocument();
             document.Load(fileName);
@@ -23,7 +23,7 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
                 if (dataNode != null)
                 {
                     var value = dataNode.GetAttribute("name");
-                    SetValue(value.Split('.', '/'), dataNode["value"].InnerText);
+                    SetValue(resourceTree, value.Split('.', '/'), dataNode["value"].InnerText);
                 }
             }
         }
