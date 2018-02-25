@@ -1,0 +1,8 @@
+﻿{
+  "AppName": "TestName",
+  "ContentTextBox": {
+    "Header": "Header",
+    "Text": "Content"
+  },
+  "$FileNotFound": "Can not find file with name \"{name}\" in \"{path}\""
+}
