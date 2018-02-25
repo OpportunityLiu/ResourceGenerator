@@ -1,8 +1,8 @@
 ﻿{
-  "AppName": "TestName",
   "ContentTextBox": {
     "Header": "Header",
-    "Text": "Content"
+    "Text": "Content",
+    "ToolTipService/ToolTip": "A simple text box."
   },
-  "$FileNotFound": "Can not find file with name \"{name}\" in \"{path}\""
+  "$FileNotFound": "Line {line:g}Can not find file with name \"{name}\" in \"{path}\""
 }
