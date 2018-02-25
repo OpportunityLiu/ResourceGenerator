@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Opportunity.Helpers.Universal;
@@ -11,8 +13,8 @@ namespace Opportunity.ResourceGenerator
     /// <summary>
     /// Base class for generated resource classes.
     /// </summary>
-    [DebuggerDisplay("{ToString(),nq}")]
-    public abstract class ResourceProviderBase : IResourceProvider
+    [DebuggerDisplay("{toDebugString(),nq}")]
+    public abstract class ResourceProviderBase : IResourceProvider, IDynamicMetaObjectProvider
     {
         /// <summary>
         /// Create instance with given resource path.
@@ -32,13 +34,15 @@ namespace Opportunity.ResourceGenerator
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly string path;
 
-        /// <summary>
-        /// Returns resource path of this instance.
-        /// </summary>
-        public override string ToString()
+        private string toDebugString()
         {
             return $"[{this.path.Substring(0, this.path.Length - 1)}]";
         }
+
+        /// <summary>
+        /// Returns resource path of this instance.
+        /// </summary>
+        public override string ToString() => this.path;
 
         /// <summary>
         /// Get the <see cref="GeneratedResourceProvider"/> represents resource path ralative to current <see cref="ResourceProviderBase"/>.
@@ -48,6 +52,7 @@ namespace Opportunity.ResourceGenerator
         /// The <see cref="GeneratedResourceProvider"/> represents resource path ralative to current <see cref="ResourceProviderBase"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="resourceKey"/> is null.</exception>
+        /// <exception cref="ArgumentException">Format of <paramref name="resourceKey"/> is wrong.</exception>
         public GeneratedResourceProvider this[string resourceKey]
         {
             get
@@ -65,12 +70,17 @@ namespace Opportunity.ResourceGenerator
         /// <returns>
         /// The resource string of resource path ralative to current <see cref="ResourceProviderBase"/>.
         /// </returns>
-        /// <exception cref="ArgumentNullException"><paramref name="resourceKey"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="resourceKey"/> is <see langword="null"/>.</exception>
         public string GetValue(string resourceKey)
         {
             if (resourceKey == null)
                 throw new ArgumentNullException(nameof(resourceKey));
             return LocalizedStrings.GetValue(this.path + resourceKey);
+        }
+
+        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter)
+        {
+            return new ResourceDynamicMetaObject(parameter, this);
         }
     }
 }

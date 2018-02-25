@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace Opportunity.ResourceGenerator
         /// <returns>
         /// The <see cref="GeneratedResourceProvider"/> represents resource path ralative to current <see cref="IResourceProvider"/>.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="resourceKey"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Format of <paramref name="resourceKey"/> is wrong.</exception>
         GeneratedResourceProvider this[string resourceKey] { get; }
 
         /// <summary>
@@ -27,6 +30,7 @@ namespace Opportunity.ResourceGenerator
         /// <returns>
         /// The resource string of resource path ralative to current <see cref="IResourceProvider"/>.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="resourceKey"/> is <see langword="null"/>.</exception>
         string GetValue(string resourceKey);
     }
 }

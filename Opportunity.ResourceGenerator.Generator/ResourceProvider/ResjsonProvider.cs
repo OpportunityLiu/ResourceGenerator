@@ -26,6 +26,8 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
         {
             foreach (var item in obj)
             {
+                if (item.Key.StartsWith("_"))
+                    continue; // Resources starts with "_" is comments.
                 var subPath = item.Key.Split('/');
                 path.AddRange(subPath);
                 switch (item.Value.Type)
