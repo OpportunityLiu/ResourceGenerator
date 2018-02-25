@@ -64,7 +64,7 @@ A tool to generate classes for UWP string resources.
 If you edited your resource file (`.resw` & `.resjson`), re-generate resource classes as the last step.
 
 ## Functions
-Takes following `.resjson` file as an example:  
+Takes following `.resjson` file as an example:
 ```js
 //File `Resources.resjosn`:
 {
@@ -78,17 +78,16 @@ Takes following `.resjson` file as an example:
 }
 ```
 
-1.  **Nested resource strings** (`.` in `.resw` file or `/` in `.resjson` file)  
+1.  **Nested resource strings** (`.` in `.resw` file or `/` in `.resjson` file)    
     For example, you can visit the tool tip with expression `Strings.Resources.ContentTextBox.ToolTipService.ToolTip`.
-1.  **Format resource strings** (resource strings whose name starts with a `$`)  
-    To enable this function, you should set `IsFormatStringEnabled` to `true` in `.resgenconfig` file.  
-    You can find a generated function `string Strings.Resources.FileNotFound(object line, object name, object path)` used for format strings.
-1.  **Dynamic visit support**  
+1.  **Format resource strings** (resource strings whose name starts with a `$`)
+    To enable this function, you should set `IsFormatStringEnabled` to `true` in `.resgenconfig` file.  
+    You can find a generated function `string Strings.Resources.FileNotFound(object line, object name, object path)` used for format strings.
+1.  **Dynamic visit support**    
     You should use a pair of parentheses to end visiting with a string result.  
-    Dynamic version of the first example look like following:
+    Dynamic version of the first example look like following:  
     ```cs
     dynamic resources = Strings.Resources;
     string tooltip = (string)resources.ContentTextBox.ToolTipService.ToolTip();
     string tooltip2 = (string)resources.ContentTextBox["ToolTipService"].ToolTip();
     ```
-    
