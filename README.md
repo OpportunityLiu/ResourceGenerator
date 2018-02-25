@@ -34,7 +34,7 @@ A tool to generate classes for UWP string resources.
       // Default value is "<ProjectDefaultNamespace>".
       //"LocalizedStringsNamespace": "MyNamespace",
   
-      // Namespace for resource visitor interfaces.
+      // Namespace for resource visitor interfaces.   
       // Default value is "<ProjectDefaultNamespace>.ResourceInfo".
       //"InterfacesNamespace": "MyNamespace.ResourceInfo",
   
@@ -64,11 +64,9 @@ A tool to generate classes for UWP string resources.
 If you edited your resource file (`.resw` & `.resjson`), re-generate resource classes as the last step.
 
 ## Functions
-
 Takes following `.resjson` file as an example:  
-
-File `Resources.resjosn`:
 ```js
+//File `Resources.resjosn`:
 {
   "AppName": "TestName",
   "ContentTextBox": {
@@ -76,16 +74,17 @@ File `Resources.resjosn`:
     "Text": "Content",
     "ToolTipService/ToolTip": "A simple text box."
   },
-  "$FileNotFound": "Can not find file with name \"{name}\" in \"{path}\""
+  "$FileNotFound": "Line {line:g}: Can not find file with name \"{name}\" in \"{path}\""
 }
 ```
 
-1.  **Nested resource strings** (`.` in `.resw` file or `/` in `.resjson` file)
+1.  **Nested resource strings** (`.` in `.resw` file or `/` in `.resjson` file)  
     For example, you can visit the tool tip with expression `Strings.Resources.ContentTextBox.ToolTipService.ToolTip`.
-1.  **Format resource strings** (resource strings whose name starts with a `$`, should set `IsFormatStringEnabled` to `true` in `.resgenconfig` file)
-    You can find a generated function `string Strings.Resources.FileNotFound(object name, object path)` used for format strings.
-1.  **Dynamic visit support**
-    You should use a pair of parentheses to end visiting with a string result.
+1.  **Format resource strings** (resource strings whose name starts with a `$`)  
+    To enable this function, you should set `IsFormatStringEnabled` to `true` in `.resgenconfig` file.  
+    You can find a generated function `string Strings.Resources.FileNotFound(object line, object name, object path)` used for format strings.
+1.  **Dynamic visit support**  
+    You should use a pair of parentheses to end visiting with a string result.  
     Dynamic version of the first example look like following:
     ```cs
     dynamic resources = Strings.Resources;
