@@ -80,7 +80,7 @@ Takes following `.resjson` file as an example:
 
 1.  **Nested resource strings** (`.` in `.resw` file or `/` in `.resjson` file)    
     For example, you can visit the tool tip with expression `Strings.Resources.ContentTextBox.ToolTipService.ToolTip`.
-1.  **Format resource strings** (resource strings whose name starts with a `$`)
+1.  **Format resource strings** (resource strings whose name starts with a `$`)  
     To enable this function, you should set `IsFormatStringEnabled` to `true` in `.resgenconfig` file.  
     You can find a generated function `string Strings.Resources.FileNotFound(object line, object name, object path)` used for format strings.
 1.  **Dynamic visit support**    
