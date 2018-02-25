@@ -88,6 +88,7 @@ Takes following `.resjson` file as an example:
     Dynamic version of the first example look like following:  
     ```cs
     dynamic resources = Strings.Resources;
-    string tooltip = (string)resources.ContentTextBox.ToolTipService.ToolTip();
+    string tooltip1 = (string)resources.ContentTextBox.ToolTipService.ToolTip();
     string tooltip2 = (string)resources.ContentTextBox["ToolTipService"].ToolTip();
+    string tooltip3 = (string)resources.ContentTextBox["ToolTipService/ToolTip"]();
     ```
