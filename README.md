@@ -22,7 +22,7 @@ A tool to generate classes for UWP string resources.
     After step 2, you'll get a `.resgenconfig` file with following content.  
     ```js
     {
-      "`$schema": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/resgenconfig.json?version=1.3.1",
+      "`$schema": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/resgenconfig.json?version=1.3.2",
       // Path for resource files (*.resw & *.resjson).
       // Default value is "/Strings".
       "ResourcePath": "/Strings",
@@ -47,7 +47,7 @@ A tool to generate classes for UWP string resources.
 
       // Regard resource strings whose name starts with '$' as format string.
       // Default value is false.
-      //"IsFormatStringEnabled": false,
+      //"IsFormatStringEnabled": true,
   
       // Specifies whether the tool generates code that is debuggable.
       "DebugGeneratedCode": false
