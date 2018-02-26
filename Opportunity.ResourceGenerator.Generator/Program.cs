@@ -107,13 +107,14 @@ StackTrace: {ex.StackTrace}", System.Text.Encoding.UTF8);
 
         static void PrintHelp()
         {
-            Console.Write(@"
-Opportunity.ResourceGenerator.Generator
+            Console.Write($@"
+Opportunity.ResourceGenerator.Generator {Helper.ProductVersion}
 ====================================================
 Usage:
 [Project file path] <[resgenconfig file path] <[resgenconfig file path...]>>
 
 [Solution file path]
+
 ");
         }
     }
