@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -9,6 +10,9 @@ namespace Opportunity.ResourceGenerator.Generator
     {
         static void Main(string[] args)
         {
+            var data = new { a = Math.PI, bs = "haha" };
+            new FormattableResourceString("v: {m_value}").Format(1);
+            new FormattableResourceString("{{a{bs}sdds{a,10:g}").Format(data);
             try
             {
                 if (args == null || args.Length == 0)

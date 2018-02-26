@@ -26,6 +26,11 @@ namespace Opportunity.ResourceGenerator.TestApp
     {
         public MainPage()
         {
+            var data = new { a = Math.PI, bs = "haha" };
+            var dic = new Dictionary<string, object> { ["a"] = Math.PI, ["bs"] = "haha" };
+            var aa = new FormattableResourceString("Count: {Count} {_syncRoot} {buckets}").ToFormattableString(dic);
+            var aao = new FormattableResourceString("Count: {Count} {_syncRoot} {buckets}").ToFormattableString((object)dic);
+            var bb = new FormattableResourceString("{$FileNotFound}").ToFormattableString(Strings.Resources);
             dynamic resources = Strings.Resources;
             string tooltip1 = (string)resources.ContentTextBox.ToolTipService.ToolTip();
             string tooltip2 = (string)resources.ContentTextBox["ToolTipService"].ToolTip();
