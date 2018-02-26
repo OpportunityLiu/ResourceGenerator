@@ -26,12 +26,14 @@ namespace Opportunity.ResourceGenerator.TestApp
     {
         public MainPage()
         {
+            string.Format(null, "{0,1,2:d}", 1, 3, 4);
             var data = new { a = Math.PI, bs = "haha" };
             var dic = new Dictionary<string, object> { ["a"] = Math.PI, ["bs"] = "haha" };
             var aa = new FormattableResourceString("Count: {Count} {_syncRoot} {buckets}").ToFormattableString(dic);
             var aao = new FormattableResourceString("Count: {Count} {_syncRoot} {buckets}").ToFormattableString((object)dic);
             var bb = new FormattableResourceString("{$FileNotFound}").ToFormattableString(Strings.Resources);
-            dynamic resources = Strings.Resources;
+            var d = Test.Strings.Resources.FileNotFound().Format(new { line = 12, name = "Test.cs", path = "??" });
+            dynamic resources = Test.Strings.Resources;
             string tooltip1 = (string)resources.ContentTextBox.ToolTipService.ToolTip();
             string tooltip2 = (string)resources.ContentTextBox["ToolTipService"].ToolTip();
             string tooltip3 = (string)resources.ContentTextBox["ToolTipService/ToolTip"]();

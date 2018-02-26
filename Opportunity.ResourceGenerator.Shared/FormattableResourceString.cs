@@ -14,7 +14,7 @@ namespace Opportunity.ResourceGenerator
     /// <summary>
     /// Analyze interpolation string.
     /// </summary>
-    [DebuggerDisplay(@"{FormatString}")]
+    [DebuggerDisplay(@"${DebugDisplay}")]
     public sealed class FormattableResourceString
     {
         private static class DynamicCaller<T>
@@ -188,30 +188,97 @@ namespace Opportunity.ResourceGenerator
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly Argument[] arguments;
-        /// <summary>
-        /// Arguments of the <see cref="FormattableResourceString"/>, ordered by its appearance.
-        /// </summary>
-        public IReadOnlyList<Argument> Arguments => this.arguments;
+        private string DebugDisplay
+        {
+            get
+            {
+                var sb = new StringBuilder(FormatString.Length);
+                var inBrance = false;
+                var currentArg = new StringBuilder(10);
+                for (var i = 0; i < FormatString.Length; i++)
+                {
+                    switch (FormatString[i])
+                    {
+                    case '{':
+                        if (i + 1 < FormatString.Length && FormatString[i + 1] == '{')
+                        {
+                            if (inBrance)
+                                currentArg.Append("{{");
+                            else
+                                sb.Append("{{");
+                            i++;
+                        }
+                        else if (!inBrance)
+                        {
+                            inBrance = true;
+                            sb.Append('{');
+                        }
+                        else
+                        {
+                            return FormatString;
+                        }
+                        break;
+                    case '}':
+                        if (i + 1 < FormatString.Length && FormatString[i + 1] == '}')
+                        {
+                            if (inBrance)
+                                currentArg.Append("}}");
+                            else
+                                sb.Append("}}");
+                            i++;
+                        }
+                        else if (inBrance)
+                        {
+                            inBrance = false;
+                            var arg = currentArg.ToString();
+                            currentArg.Clear();
+                            var argsp = arg.IndexOfAny(new char[] { ':', ',' });
+                            var argFormat = "";
+                            if (argsp > 0)
+                            {
+                                argFormat = arg.Substring(argsp);
+                                arg = arg.Substring(0, argsp);
+                            }
+                            var argIndex = int.Parse(arg);
+                            sb.Append(Arguments.First(a=>a.Index==argIndex).Name).Append(argFormat)
+                                .Append('}');
+                        }
+                        else
+                        {
+                            return FormatString;
+                        }
+                        break;
+                    default:
+                        if (inBrance)
+                            currentArg.Append(FormatString[i]);
+                        else
+                            sb.Append(FormatString[i]);
+                        break;
+                    }
+                }
+                if (inBrance)
+                    return FormatString;
+                return sb.ToString();
+            }
+        }
+
         /// <summary>
         /// Format string used for <see cref="string.Format(string, object[])"/>.
         /// </summary>
         public string FormatString { get; }
 
-        private object[] createArguments(IReadOnlyDictionary<string, object> parameters)
-        {
-            if (this.arguments.Length == 0)
-                return Array.Empty<object>();
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly Argument[] arguments;
+        /// <summary>
+        /// Arguments of the <see cref="FormattableResourceString"/>, ordered by its appearance.
+        /// </summary>
+        public IReadOnlyList<Argument> Arguments => new ReadOnlyCollection<Argument>(this.arguments);
 
-            var args = new object[Arguments.Count];
-            foreach (var item in this.Arguments)
-            {
-                parameters.TryGetValue(item.Name, out args[item.Index]);
-            }
-            return args;
-        }
+        /// <summary>
+        /// Returns <see cref="FormatString"/>.
+        /// </summary>
+        /// <returns>Value of <see cref="FormatString"/>.</returns>
+        public override string ToString() => FormatString;
 
         private object[] createArguments<T>(T parameters)
         {
@@ -220,8 +287,8 @@ namespace Opportunity.ResourceGenerator
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
 
-            var args = new object[Arguments.Count];
-            foreach (var item in this.Arguments)
+            var args = new object[this.arguments.Length];
+            foreach (var item in this.arguments)
             {
                 args[item.Index] = DynamicCaller<T>.Get(parameters, item.Name);
             }

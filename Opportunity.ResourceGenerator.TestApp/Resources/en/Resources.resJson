@@ -4,5 +4,6 @@
     "Text": "Content",
     "ToolTipService/ToolTip": "A simple text box."
   },
-  "$FileNotFound": "Line {line:g}Can not find file with name \"{name}\" in \"{path}\""
+  "$FileNotFound": "Line {line:g}Can not find file with name \"{name}\" in \"{path}\"",
+  "$NoParam": "No param"
 }

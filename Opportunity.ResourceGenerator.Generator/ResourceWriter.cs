@@ -113,7 +113,6 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public void WriteInterfaceProperty(int indent, LeafNode node)
         {
-            WriteComment(indent, node.Value);
             Check(node);
             var modifier = Helper.IPropModifier(node.MemberName);
             if (Config.IsFormatStringEnabled && node.Name.StartsWith("$"))
@@ -121,17 +120,29 @@ namespace Opportunity.ResourceGenerator.Generator
                 var format = new FormattableResourceString(node.Value);
                 var paramNames = format.Arguments.Select(a => Helper.Refine(a.Name)).ToList();
                 var param = string.Join(", ", paramNames.Select(a => "object " + a));
-                this.WriteLine(indent, $@"{modifier}string {node.MemberName}({param});");
+                if (format.Arguments.Count != 0)
+                {
+                    WriteComment(indent, node.Value);
+                    WriteLine(indent, $@"{modifier}{Strings.FormattableResource} {node.MemberName}();");
+                }
+                WriteComment(indent, node.Value);
+                WriteLine(indent, $@"{modifier}string {node.MemberName}({param});");
 
                 var provider = Helper.GetUnusedName(paramNames, Strings.ProviderNames);
                 if (provider != null)
                 {
                     WriteComment(indent, node.Value);
-                    this.WriteLine(indent, $@"{modifier}string {node.MemberName}({Strings.IFormatProvider} {provider}, {param});");
+                    if (format.Arguments.Count != 0)
+                        WriteLine(indent, $@"{modifier}string {node.MemberName}({Strings.IFormatProvider} {provider}, {param});");
+                    else
+                        WriteLine(indent, $@"{modifier}string {node.MemberName}({Strings.IFormatProvider} {provider});");
                 }
             }
             else
+            {
+                WriteComment(indent, node.Value);
                 this.WriteLine(indent, $@"{modifier}string {node.MemberName} {{ get; }}");
+            }
         }
 
         public void WriteInterfaceProperty(int indent, BranchNode node)
@@ -216,28 +227,49 @@ namespace Opportunity.ResourceGenerator.Generator
             if (Config.IsFormatStringEnabled && node.Name.StartsWith("$"))
             {
                 var tempFormatStringFieldName = Helper.GetRandomName(node.MemberName);
-                this.WriteLine(indent, $@"string {tempFormatStringFieldName};");
+                this.WriteLine(indent, $@"{Strings.FormattableResource} {tempFormatStringFieldName};");
                 var format = new FormattableResourceString(node.Value);
                 var paramNames = format.Arguments.Select(a => Helper.Refine(a.Name)).ToList();
                 var param = string.Join(", ", paramNames.Select(a => "object " + a));
                 var args = string.Join(", ", format.Arguments.OrderBy(a => a.Index).Select(a => Helper.Refine(a.Name)));
 
-                WriteLine(indent, Strings.ResourcePath(node.ResourceName));
+                if (format.Arguments.Count != 0)
+                {
+                    WriteLine(indent, Strings.ResourcePath(node.ResourceName));
+                    WriteLine(indent, $@"{Strings.FormattableResource} {node.Parent.InterfaceFullName}.{node.MemberName}()");
+                    WriteLine(indent, $@"{{");
+                    WriteLine(indent, $@"    if ({tempFormatStringFieldName} == null)");
+                    WriteLine(indent, $@"        {tempFormatStringFieldName} = new {Strings.FormattableResource}({Strings.LocalizedStrings}.GetValue(""{pathlit}""));");
+                    WriteLine(indent, $@"    return {tempFormatStringFieldName};");
+                    WriteLine(indent, $@"}}");
+                }
+
+                if (format.Arguments.Count == 0)
+                    WriteLine(indent, Strings.ResourcePath(node.ResourceName));
                 WriteLine(indent, $@"string {node.Parent.InterfaceFullName}.{node.MemberName}({param})");
                 WriteLine(indent, $@"{{");
                 WriteLine(indent, $@"    if ({tempFormatStringFieldName} == null)");
-                WriteLine(indent, $@"        {tempFormatStringFieldName} = new {Strings.FormattableResource}({Strings.LocalizedStrings}.GetValue(""{pathlit}"")).FormatString;");
-                WriteLine(indent, $@"    return string.Format({tempFormatStringFieldName}, {args});");
+                WriteLine(indent, $@"        {tempFormatStringFieldName} = new {Strings.FormattableResource}({Strings.LocalizedStrings}.GetValue(""{pathlit}""));");
+                if (format.Arguments.Count == 0)
+                    WriteLine(indent, $@"    return string.Format({tempFormatStringFieldName}.FormatString);");
+                else
+                    WriteLine(indent, $@"    return string.Format({tempFormatStringFieldName}.FormatString, {args});");
                 WriteLine(indent, $@"}}");
 
                 var provider = Helper.GetUnusedName(paramNames, Strings.ProviderNames);
                 if (provider != null)
                 {
-                    WriteLine(indent, $@"string {node.Parent.InterfaceFullName}.{node.MemberName}({Strings.IFormatProvider} {provider}, {param})");
+                    if (format.Arguments.Count == 0)
+                        WriteLine(indent, $@"string {node.Parent.InterfaceFullName}.{node.MemberName}({Strings.IFormatProvider} {provider})");
+                    else
+                        WriteLine(indent, $@"string {node.Parent.InterfaceFullName}.{node.MemberName}({Strings.IFormatProvider} {provider}, {param})");
                     WriteLine(indent, $@"{{");
                     WriteLine(indent, $@"    if ({tempFormatStringFieldName} == null)");
-                    WriteLine(indent, $@"        {tempFormatStringFieldName} = new {Strings.FormattableResource}({Strings.LocalizedStrings}.GetValue(""{pathlit}"")).FormatString;");
-                    WriteLine(indent, $@"    return string.Format({provider}, {tempFormatStringFieldName}, {args});");
+                    WriteLine(indent, $@"        {tempFormatStringFieldName} = new {Strings.FormattableResource}({Strings.LocalizedStrings}.GetValue(""{pathlit}""));");
+                    if (format.Arguments.Count == 0)
+                        WriteLine(indent, $@"    return string.Format({provider}, {tempFormatStringFieldName}.FormatString);");
+                    else
+                        WriteLine(indent, $@"    return string.Format({provider}, {tempFormatStringFieldName}.FormatString, {args});");
                     WriteLine(indent, $@"}}");
                 }
             }

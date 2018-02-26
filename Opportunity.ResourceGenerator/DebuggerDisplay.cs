@@ -32,26 +32,29 @@ namespace Opportunity.ResourceGenerator
         [DebuggerDisplay("{Value}", Name = "{Name,nq}", Type = "string")]
         private sealed class ResourceValueView : ResourceView
         {
-            public string Value { get; set; }
-
             public ResourcePathAttribute Path => this.ResourcePath;
+            public string Value { get; set; }
         }
 
-        [DebuggerDisplay("{ResourcePath.ToString(),nq}", Name = "{Name,nq}", Type = "{GetDisplayType(),nq}")]
+        [DebuggerDisplay("[{ResourcePath.Path,nq}]", Name = "{Name,nq}", Type = "{DisplayType,nq}")]
         private sealed class ResourcePathView : ResourceView
         {
             [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
             internal object Value;
 
-            internal string GetDisplayType()
+            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+            internal string DisplayType
             {
-                if (this.Value == null)
-                    return "object";
-                var type = this.Value.GetType();
-                var interfaces = type.GetInterfaces();
-                if (interfaces.Length == 0)
-                    return type.ToString();
-                return interfaces.Last().ToString();
+                get
+                {
+                    if (this.Value == null)
+                        return "object";
+                    var type = this.Value.GetType();
+                    var interfaces = type.GetInterfaces();
+                    if (interfaces.Length == 0)
+                        return type.ToString();
+                    return interfaces.Last().ToString();
+                }
             }
         }
 
@@ -61,9 +64,9 @@ namespace Opportunity.ResourceGenerator
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             public string Value { get; set; }
 
-            public FormattableResourceString FormatString { get; set; }
-
             public ResourcePathAttribute Path => this.ResourcePath;
+
+            public FormattableResourceString Format { get; set; }
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -144,7 +147,7 @@ namespace Opportunity.ResourceGenerator
                     {
                         Name = name,
                         Value = value,
-                        FormatString = format,
+                        Format = format,
                         ResourcePath = o.path
                     };
                 });

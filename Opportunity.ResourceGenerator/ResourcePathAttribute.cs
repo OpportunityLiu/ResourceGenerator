@@ -10,7 +10,7 @@ namespace Opportunity.ResourceGenerator
     /// <summary>
     /// Attribute stores path of resources, for debug usage.
     /// </summary>
-    [DebuggerDisplay("{ToString(),nq}")]
+    [DebuggerDisplay("[{Path,nq}]")]
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
     public sealed class ResourcePathAttribute : Attribute
     {
@@ -32,9 +32,6 @@ namespace Opportunity.ResourceGenerator
         /// <summary>
         /// Returns <see cref="Path"/>.
         /// </summary>
-        public override string ToString()
-        {
-            return $"[{Path}]";
-        }
+        public override string ToString() => Path;
     }
 }

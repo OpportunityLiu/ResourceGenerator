@@ -13,7 +13,7 @@ namespace Opportunity.ResourceGenerator
     /// <summary>
     /// Base class for generated resource classes.
     /// </summary>
-    [DebuggerDisplay("{toDebugString(),nq}")]
+    [DebuggerDisplay("{DebugString,nq}")]
     public abstract class ResourceProviderBase : IResourceProvider, IDynamicMetaObjectProvider
     {
         /// <summary>
@@ -34,10 +34,8 @@ namespace Opportunity.ResourceGenerator
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly string path;
 
-        private string toDebugString()
-        {
-            return $"[{this.path.Substring(0, this.path.Length - 1)}]";
-        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private string DebugString => $"[{this.path.Substring(0, this.path.Length - 1)}]";
 
         /// <summary>
         /// Returns resource path of this instance.
