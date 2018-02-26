@@ -18,7 +18,7 @@ namespace Opportunity.ResourceGenerator.Generator
 
         internal static LogLevel Level { get; set; } = LogLevel.Info;
 
-        internal static void Log(LogLevel level, string info)
+        internal static void Log(LogLevel level, int infoLevel, string info)
         {
             if (level < Level)
                 return;
@@ -26,6 +26,7 @@ namespace Opportunity.ResourceGenerator.Generator
                 return;
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write(('[' + level.ToString() + ']').PadRight(10));
+            Console.Write(new string(' ', infoLevel * 2));
             Console.ResetColor();
             var lines = info.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             Console.WriteLine(lines[0]);
@@ -36,9 +37,9 @@ namespace Opportunity.ResourceGenerator.Generator
             }
         }
 
-        internal static void LogVerbose(string info) => Log(LogLevel.Verbose, info);
-        internal static void LogInfo(string info) => Log(LogLevel.Info, info);
-        internal static void LogWarning(string info) => Log(LogLevel.Warning, info);
-        internal static void LogError(string info) => Log(LogLevel.Error, info);
+        internal static void LogVerbose(int infoLevel, string info) => Log(LogLevel.Verbose, infoLevel, info);
+        internal static void LogInfo(int infoLevel, string info) => Log(LogLevel.Info, infoLevel, info);
+        internal static void LogWarning(int infoLevel, string info) => Log(LogLevel.Warning, infoLevel, info);
+        internal static void LogError(int infoLevel, string info) => Log(LogLevel.Error, infoLevel, info);
     }
 }
