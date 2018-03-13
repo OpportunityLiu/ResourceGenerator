@@ -26,7 +26,6 @@ namespace Opportunity.ResourceGenerator.TestApp
     {
         public MainPage()
         {
-            string.Format(null, "{0,1,2:d}", 1, 3, 4);
             var data = new { a = Math.PI, bs = "haha" };
             var dic = new Dictionary<string, object> { ["a"] = Math.PI, ["bs"] = "haha" };
             var aa = new FormattableResourceString("Count: {Count} {_syncRoot} {buckets}").ToFormattableString(dic);

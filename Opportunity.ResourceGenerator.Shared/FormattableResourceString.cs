@@ -17,21 +17,27 @@ namespace Opportunity.ResourceGenerator
     [DebuggerDisplay(@"${DebugDisplay}")]
     public sealed class FormattableResourceString
     {
-        private static class DynamicCaller<T>
+        private class DynamicCaller
         {
-            private readonly static CallSite<Func<CallSite, T, string, object>> indexCache
-                = CallSite<Func<CallSite, T, string, object>>.Create(Binder.GetIndex(CSharpBinderFlags.None, typeof(T), new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType, null), CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType, null) }));
-            private readonly static Dictionary<string, CallSite<Func<CallSite, T, object>>> memberCache
-                = new Dictionary<string, CallSite<Func<CallSite, T, object>>>();
+            private readonly CallSite<Func<CallSite, object, string, object>> indexCache;
+            private readonly Dictionary<string, CallSite<Func<CallSite, object, object>>> memberCache
+                = new Dictionary<string, CallSite<Func<CallSite, object, object>>>();
+            private readonly Type type;
 
-            public static object Get(T param, string name)
+            public DynamicCaller(Type type)
+            {
+                this.type = type;
+                this.indexCache  = CallSite<Func<CallSite, object, string, object>>.Create(Binder.GetIndex(CSharpBinderFlags.None, type, new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null), CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType, null) }));
+            }
+
+            public object Get(object param, string name)
             {
                 try
                 {
-                    return indexCache.Target(indexCache, param, name);
+                    return this.indexCache.Target(this.indexCache, param, name);
                 }
                 catch { }
-                if (memberCache.TryGetValue(name, out var callSite) && callSite != null)
+                if (this.memberCache.TryGetValue(name, out var callSite) && callSite != null)
                 {
                     try
                     {
@@ -41,15 +47,17 @@ namespace Opportunity.ResourceGenerator
                 }
                 try
                 {
-                    callSite = CallSite<Func<CallSite, T, object>>.Create(Binder.GetMember(CSharpBinderFlags.None, name, typeof(T), new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType, null) }));
+                    callSite = CallSite<Func<CallSite, object, object>>.Create(Binder.GetMember(CSharpBinderFlags.None, name, this.type, new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null) }));
                     var r = callSite.Target(callSite, param);
-                    memberCache[name] = callSite;
+                    this.memberCache[name] = callSite;
                     return r;
                 }
                 catch { }
                 return null;
             }
         }
+
+        private static readonly Dictionary<Type, DynamicCaller> callers = new Dictionary<Type, DynamicCaller>();
 
         private static string analyze(string format, IList<string> arguments)
         {
@@ -240,7 +248,7 @@ namespace Opportunity.ResourceGenerator
                                 arg = arg.Substring(0, argsp);
                             }
                             var argIndex = int.Parse(arg);
-                            sb.Append(Arguments.First(a=>a.Index==argIndex).Name).Append(argFormat)
+                            sb.Append(Arguments.First(a => a.Index == argIndex).Name).Append(argFormat)
                                 .Append('}');
                         }
                         else
@@ -280,17 +288,23 @@ namespace Opportunity.ResourceGenerator
         /// <returns>Value of <see cref="FormatString"/>.</returns>
         public override string ToString() => FormatString;
 
-        private object[] createArguments<T>(T parameters)
+        private object[] createArguments(object parameters)
         {
             if (this.arguments.Length == 0)
                 return Array.Empty<object>();
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
 
+            var type = parameters.GetType();
             var args = new object[this.arguments.Length];
+            if (!callers.TryGetValue(type, out var caller))
+            {
+                caller = new DynamicCaller(type);
+                callers[type] = caller;
+            }
             foreach (var item in this.arguments)
             {
-                args[item.Index] = DynamicCaller<T>.Get(parameters, item.Name);
+                args[item.Index] = caller.Get(parameters, item.Name);
             }
             return args;
         }
@@ -302,7 +316,7 @@ namespace Opportunity.ResourceGenerator
         /// <param name="provider">A format provider for formatting.</param>
         /// <returns>A formatted string.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
-        public string Format<T>(IFormatProvider provider, T parameters)
+        public string Format(IFormatProvider provider, object parameters)
             => string.Format(provider, FormatString, createArguments(parameters));
 
         /// <summary>
@@ -311,7 +325,7 @@ namespace Opportunity.ResourceGenerator
         /// <param name="parameters">An object contains parameters.</param>
         /// <returns>A formatted string.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
-        public string Format<T>(T parameters) => Format(null, parameters);
+        public string Format(object parameters) => Format(null, parameters);
 
         /// <summary>
         /// Create <see cref="FormattableString"/> with given parameters.
