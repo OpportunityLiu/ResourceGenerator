@@ -27,7 +27,7 @@ namespace Opportunity.ResourceGenerator
             public DynamicCaller(Type type)
             {
                 this.type = type;
-                this.indexCache  = CallSite<Func<CallSite, object, string, object>>.Create(Binder.GetIndex(CSharpBinderFlags.None, type, new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null), CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType, null) }));
+                this.indexCache = CallSite<Func<CallSite, object, string, object>>.Create(Binder.GetIndex(CSharpBinderFlags.None, type, new[] { CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.None, null), CSharpArgumentInfo.Create(CSharpArgumentInfoFlags.UseCompileTimeType, null) }));
             }
 
             public object Get(object param, string name)
@@ -333,7 +333,7 @@ namespace Opportunity.ResourceGenerator
         /// <param name="parameters">An object contains parameters.</param>
         /// <returns>A <see cref="FormattableString"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
-        public FormattableString ToFormattableString<T>(T parameters)
+        public FormattableString ToFormattableString(object parameters)
             => FormattableStringFactory.Create(FormatString, createArguments(parameters));
     }
 }
