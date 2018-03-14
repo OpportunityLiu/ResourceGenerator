@@ -47,9 +47,9 @@ namespace Opportunity.ResourceGenerator.Generator
                 regex = "//.*?/" + regex;
 
             if (regex.EndsWith("/**"))
-                regex = regex.Substring(0, regex.Length - 3) + "/.*?$";
+                regex = regex.Substring(0, regex.Length - 3) + "/.+?$";
             else if (regex.EndsWith("/"))
-                regex = regex + ".*?$";
+                regex = regex + ".+?$";
             else
                 regex = regex + "$";
 
@@ -69,8 +69,6 @@ namespace Opportunity.ResourceGenerator.Generator
             if (target == null)
                 return false;
             var rName = target.ResourcePath;
-            if (!(target is LeafNode))
-                rName += "/";
             return Regex.IsMatch(rName);
         }
     }
