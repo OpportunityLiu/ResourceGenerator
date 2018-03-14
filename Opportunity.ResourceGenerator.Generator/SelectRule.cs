@@ -37,7 +37,7 @@ namespace Opportunity.ResourceGenerator.Generator
         public SelectRule(string data)
         {
             this.Data = data;
-            var regex = data.Replace('*', '\n');
+            var regex = data.Replace('*', '\0');
 
             if (regex.StartsWith("**/"))
                 regex = "//.*?/" + regex.Substring(3);
@@ -54,8 +54,8 @@ namespace Opportunity.ResourceGenerator.Generator
                 regex = regex + "$";
 
             regex = regex
-                .Replace("/\n\n/", "(/|/.+?/)")
-                .Replace("\n", "[^/]*?");
+                .Replace("/\0\0/", "(/|/.+?/)")
+                .Replace("\0", "[^/]*?");
 
             this.Regex = new Regex(regex);
         }
