@@ -31,35 +31,37 @@ namespace Opportunity.ResourceGenerator.Generator
                 field = def;
         }
 
-        public string[] Exclude { get; set; }
-        public string[] Include { get; set; }
+        public SelectRule[] Exclude { get; set; }
+        public SelectRule[] Include { get; set; }
 
         public bool ShouldSkip(Node node)
         {
             if (node == null)
                 return true;
-            var rName = node.ResourcePath;
-            var r = false;
-            foreach (var item in Exclude ?? Enumerable.Empty<string>())
+            var skip = false;
+            foreach (var item in Exclude ?? Array.Empty<SelectRule>())
             {
-                if (item != null && rName.Contains(item))
+                if (item == null)
+                    continue;
+                if (item.Validate(node))
                 {
-                    r = true;
+                    skip = true;
                     break;
                 }
             }
-            if (r)
+            if (!skip)
+                return false;
+            foreach (var item in Include ?? Array.Empty<SelectRule>())
             {
-                foreach (var item in Include ?? Enumerable.Empty<string>())
+                if (item == null)
+                    continue;
+                if (item.Validate(node))
                 {
-                    if (item != null && rName.Contains(item))
-                    {
-                        r = false;
-                        break;
-                    }
+                    skip = false;
+                    break;
                 }
             }
-            return r;
+            return skip;
         }
 
         public string ProjectDirectory { get; set; }

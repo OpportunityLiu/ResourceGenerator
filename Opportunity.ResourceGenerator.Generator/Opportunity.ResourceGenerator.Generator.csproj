@@ -73,6 +73,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectRule.cs" />
     <Compile Include="Tree\BranchNode.cs" />
     <Compile Include="Tree\LeafNode.cs" />
     <Compile Include="Tree\Node.cs" />

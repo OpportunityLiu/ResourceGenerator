@@ -4,10 +4,8 @@ namespace Opportunity.ResourceGenerator.Generator.Tree
 {
     public class RootNode : BranchNode
     {
-        public RootNode(string name)
-            : base(null, name)
-        {
-        }
+        public RootNode(string resourceName)
+            : base(null, resourceName) { }
 
         public override string ResourcePath
         {
