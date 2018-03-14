@@ -47,22 +47,18 @@
     },
     "Exclude": {
       "type": "array",
-      "allOf": [
-        {
-          "type": "string",
-          "minLength": 1
-        }
-      ],
+      "items": {
+        "type": "string",
+        "default": ""
+      },
       "description": "Excluded resource paths."
     },
     "Include": {
-      "type": "string",
-      "allOf": [
-        {
-          "type": "string",
-          "minLength": 1
-        }
-      ],
+      "type": "array",
+      "items": {
+        "type": "string",
+        "default": ""
+      },
       "description": "Included resource paths, has higher priority than Exclude."
     }
   },
