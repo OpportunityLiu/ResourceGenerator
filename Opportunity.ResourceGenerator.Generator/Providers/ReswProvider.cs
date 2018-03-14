@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Opportunity.ResourceGenerator.Generator.Tree;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
+namespace Opportunity.ResourceGenerator.Generator.Providers
 {
     class ReswProvider : Provider
     {

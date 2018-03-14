@@ -1,4 +1,5 @@
-﻿using Opportunity.ResourceGenerator.Generator.ResourceProvider;
+﻿using Opportunity.ResourceGenerator.Generator.Providers;
+using Opportunity.ResourceGenerator.Generator.Tree;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,11 +45,11 @@ namespace Opportunity.ResourceGenerator.Generator
 
         private void Check(Node node)
         {
-            if (!Helper.Keywords.Contains(node.Name) && node.Name != node.MemberName)
+            if (!Helper.Keywords.Contains(node.ResourceName) && node.ResourceName != node.MemberName)
             {
-                if (Config.IsFormatStringEnabled && node.Name.StartsWith("$"))
+                if (Config.IsFormatStringEnabled && node.ResourceName.StartsWith("$"))
                     return;
-                WriteLine($"#warning Resource has been renamed. ResourceName: \"{Helper.AsLiteral(node.Name)}\", PropertyName: \"{Helper.AsLiteral(node.MemberName)}\"");
+                WriteLine($"#warning Resource has been renamed. ResourceName: \"{Helper.AsLiteral(node.ResourceName)}\", PropertyName: \"{Helper.AsLiteral(node.MemberName)}\"");
             }
         }
 
@@ -83,6 +84,8 @@ namespace Opportunity.ResourceGenerator.Generator
         {
             foreach (var item in tree)
             {
+                if (Config.ShouldSkip(item))
+                    continue;
                 WriteInterface(0, item);
             }
         }
@@ -97,6 +100,8 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteLine(indent, $"    {{");
             foreach (var item in node.Childern.Values)
             {
+                if (Config.ShouldSkip(item))
+                    continue;
                 if (item is LeafNode lf)
                     WriteInterfaceProperty(indent + 2, lf);
                 else if (item is BranchNode br)
@@ -106,6 +111,8 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteLine(indent, $"}}");
             foreach (var item in node.Childern.Values)
             {
+                if (Config.ShouldSkip(item))
+                    continue;
                 if (item is BranchNode br)
                     WriteInterface(indent, br);
             }
@@ -115,7 +122,7 @@ namespace Opportunity.ResourceGenerator.Generator
         {
             Check(node);
             var modifier = Helper.IPropModifier(node.MemberName);
-            if (Config.IsFormatStringEnabled && node.Name.StartsWith("$"))
+            if (Config.IsFormatStringEnabled && node.ResourceName.StartsWith("$"))
             {
                 var format = new FormattableResourceString(node.Value);
                 var paramNames = format.Arguments.Select(a => Helper.Refine(a.Name)).ToList();
@@ -161,6 +168,8 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteLine(indent, $"{{");
             foreach (var item in tree)
             {
+                if (Config.ShouldSkip(item))
+                    continue;
                 WriteRootResource(indent + 1, item);
             }
             WriteLine(indent, $"}}");
@@ -178,16 +187,20 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteAttributesForClass(indent);
             WriteLine(indent, $@"private sealed class {node.ClassName} : {Strings.ResourceProviderBase}, {node.InterfaceFullName}");
             WriteLine(indent, $@"{{");
-            WriteLine(indent, $@"    public {node.ClassName}() : base(""{Helper.AsLiteral(node.ResourceName)}/"") {{ }}");
+            WriteLine(indent, $@"    public {node.ClassName}() : base(""{Helper.AsLiteral(node.ResourcePath)}/"") {{ }}");
             WriteLine();
             foreach (var item in node.Childern.Values)
             {
+                if (Config.ShouldSkip(item))
+                    continue;
                 if (item is BranchNode br)
                     WriteInnerResource(indent + 1, br);
             }
             WriteLine();
             foreach (var item in node.Childern.Values)
             {
+                if (Config.ShouldSkip(item))
+                    continue;
                 if (item is LeafNode lf)
                     WriteProperty(indent + 1, lf);
             }
@@ -199,22 +212,26 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteLine();
             WriteLine(indent, Strings.DebuggerNeverBrowse);
             WriteLine(indent, $@"private {node.InterfaceFullName} {node.FieldName};");
-            WriteLine(indent, Strings.ResourcePath(node.ResourceName));
+            WriteLine(indent, Strings.ResourcePath(node.ResourcePath));
             WriteLine(indent, $@"{node.InterfaceFullName} {node.Parent.InterfaceFullName}.{node.MemberName} ");
             WriteLine(indent, $@"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref this.{node.FieldName}, () => new {node.ClassFullName}());");
             WriteLine();
             WriteAttributesForClass(indent);
             WriteLine(indent, $@"private sealed class {node.ClassName} : {Strings.ResourceProviderBase}, {node.InterfaceFullName}");
             WriteLine(indent, $@"{{");
-            WriteLine(indent, $@"    public {node.ClassName}() : base(""{Helper.AsLiteral(node.ResourceName)}/"") {{ }}");
+            WriteLine(indent, $@"    public {node.ClassName}() : base(""{Helper.AsLiteral(node.ResourcePath)}/"") {{ }}");
             foreach (var item in node.Childern.Values)
             {
+                if (Config.ShouldSkip(item))
+                    continue;
                 if (item is BranchNode br)
                     WriteInnerResource(indent + 1, br);
             }
             WriteLine();
             foreach (var item in node.Childern.Values)
             {
+                if (Config.ShouldSkip(item))
+                    continue;
                 if (item is LeafNode lf)
                     WriteProperty(indent + 1, lf);
             }
@@ -223,8 +240,8 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public void WriteProperty(int indent, LeafNode node)
         {
-            var pathlit = Helper.AsLiteral(node.ResourceName);
-            if (Config.IsFormatStringEnabled && node.Name.StartsWith("$"))
+            var pathlit = Helper.AsLiteral(node.ResourcePath);
+            if (Config.IsFormatStringEnabled && node.ResourceName.StartsWith("$"))
             {
                 var tempFormatStringFieldName = Helper.GetRandomName(node.MemberName);
                 this.WriteLine(indent, $@"{Strings.FormattableResource} {tempFormatStringFieldName};");
@@ -235,7 +252,7 @@ namespace Opportunity.ResourceGenerator.Generator
 
                 if (format.Arguments.Count != 0)
                 {
-                    WriteLine(indent, Strings.ResourcePath(node.ResourceName));
+                    WriteLine(indent, Strings.ResourcePath(node.ResourcePath));
                     WriteLine(indent, $@"{Strings.FormattableResource} {node.Parent.InterfaceFullName}.{node.MemberName}()");
                     WriteLine(indent, $@"{{");
                     WriteLine(indent, $@"    if ({tempFormatStringFieldName} == null)");
@@ -245,7 +262,7 @@ namespace Opportunity.ResourceGenerator.Generator
                 }
 
                 if (format.Arguments.Count == 0)
-                    WriteLine(indent, Strings.ResourcePath(node.ResourceName));
+                    WriteLine(indent, Strings.ResourcePath(node.ResourcePath));
                 WriteLine(indent, $@"string {node.Parent.InterfaceFullName}.{node.MemberName}({param})");
                 WriteLine(indent, $@"{{");
                 WriteLine(indent, $@"    if ({tempFormatStringFieldName} == null)");
@@ -275,7 +292,7 @@ namespace Opportunity.ResourceGenerator.Generator
             }
             else
             {
-                WriteLine(indent, Strings.ResourcePath(node.ResourceName));
+                WriteLine(indent, Strings.ResourcePath(node.ResourcePath));
                 WriteLine(indent, $@"string {node.Parent.InterfaceFullName}.{node.MemberName}");
                 WriteLine(indent + 1, $@"=> {Strings.LocalizedStrings}.GetValue(""{pathlit}"");");
             }

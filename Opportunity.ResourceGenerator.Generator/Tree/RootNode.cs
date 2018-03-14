@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
+namespace Opportunity.ResourceGenerator.Generator.Tree
 {
     public class RootNode : BranchNode
     {
@@ -9,14 +9,14 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
         {
         }
 
-        public override string ResourceName
+        public override string ResourcePath
         {
             get
             {
                 if (Configuration.Config.IsDefaultProject)
-                    return $"ms-resource:///{Name}";
+                    return $"ms-resource:///{ResourceName}";
                 else
-                    return $"ms-resource:///{Configuration.Config.ProjectAssemblyName}/{Name}";
+                    return $"ms-resource:///{Configuration.Config.ProjectAssemblyName}/{ResourceName}";
             }
         }
 

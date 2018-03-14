@@ -44,6 +44,26 @@
     "SourceLanguagePath": {
       "type": "string",
       "description": "Default language of resources, will be detected automatically if unset."
+    },
+    "Exclude": {
+      "type": "array",
+      "allOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ],
+      "description": "Excluded resource paths."
+    },
+    "Include": {
+      "type": "string",
+      "allOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ],
+      "description": "Included resource paths, has higher priority than Exclude."
     }
   },
   "type": "object",

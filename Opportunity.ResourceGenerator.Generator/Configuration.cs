@@ -4,6 +4,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Linq;
 using Newtonsoft.Json;
+using Opportunity.ResourceGenerator.Generator.Tree;
 
 namespace Opportunity.ResourceGenerator.Generator
 {
@@ -28,6 +29,37 @@ namespace Opportunity.ResourceGenerator.Generator
                 field = Helper.Refine(value.Trim(), allowDots);
             else
                 field = def;
+        }
+
+        public string[] Exclude { get; set; }
+        public string[] Include { get; set; }
+
+        public bool ShouldSkip(Node node)
+        {
+            if (node == null)
+                return true;
+            var rName = node.ResourcePath;
+            var r = false;
+            foreach (var item in Exclude ?? Enumerable.Empty<string>())
+            {
+                if (item != null && rName.Contains(item))
+                {
+                    r = true;
+                    break;
+                }
+            }
+            if (r)
+            {
+                foreach (var item in Include ?? Enumerable.Empty<string>())
+                {
+                    if (item != null && rName.Contains(item))
+                    {
+                        r = false;
+                        break;
+                    }
+                }
+            }
+            return r;
         }
 
         public string ProjectDirectory { get; set; }

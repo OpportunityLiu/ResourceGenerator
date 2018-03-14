@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Opportunity.ResourceGenerator.Generator.Tree;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
+namespace Opportunity.ResourceGenerator.Generator.Providers
 {
     class ResjsonProvider : Provider
     {

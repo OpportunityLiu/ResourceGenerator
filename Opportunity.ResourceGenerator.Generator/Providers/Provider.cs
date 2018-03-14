@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Opportunity.ResourceGenerator.Generator.Tree;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
+namespace Opportunity.ResourceGenerator.Generator.Providers
 {
     public abstract class Provider
     {
@@ -26,7 +27,7 @@ namespace Opportunity.ResourceGenerator.Generator.ResourceProvider
                 {
                     if (string.Equals(item.CanHandleExt, ext, StringComparison.OrdinalIgnoreCase))
                     {
-                        var tree = r.Find(t => string.Equals(t.Name, resourceRootName, StringComparison.OrdinalIgnoreCase));
+                        var tree = r.Find(t => string.Equals(t.ResourceName, resourceRootName, StringComparison.OrdinalIgnoreCase));
                         if (tree is null)
                         {
                             tree = new RootNode(resourceRootName);

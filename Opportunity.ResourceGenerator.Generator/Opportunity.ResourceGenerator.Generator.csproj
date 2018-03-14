@@ -73,13 +73,13 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourceProvider\BranchNode.cs" />
-    <Compile Include="ResourceProvider\LeafNode.cs" />
-    <Compile Include="ResourceProvider\Node.cs" />
-    <Compile Include="ResourceProvider\Provider.cs" />
-    <Compile Include="ResourceProvider\ResjsonProvider.cs" />
-    <Compile Include="ResourceProvider\ReswProvider.cs" />
-    <Compile Include="ResourceProvider\RootNode.cs" />
+    <Compile Include="Tree\BranchNode.cs" />
+    <Compile Include="Tree\LeafNode.cs" />
+    <Compile Include="Tree\Node.cs" />
+    <Compile Include="Providers\Provider.cs" />
+    <Compile Include="Providers\ResjsonProvider.cs" />
+    <Compile Include="Providers\ReswProvider.cs" />
+    <Compile Include="Tree\RootNode.cs" />
     <Compile Include="ResourceWriter.cs" />
     <Compile Include="Strings.cs" />
   </ItemGroup>
