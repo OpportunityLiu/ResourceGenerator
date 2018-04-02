@@ -63,7 +63,7 @@ A tool to generate classes for UWP string resources.
 
 If you edited your resource file (`.resw` & `.resjson`), re-generate resource classes as the last step.
 
-## Functions
+## Features
 Takes following `.resjson` file as an example:
 ```js
 //File `Resources.resjosn`:
