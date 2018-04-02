@@ -139,7 +139,7 @@ namespace Opportunity.ResourceGenerator
         /// <summary>
         /// Argument in <see cref="FormattableResourceString"/>
         /// </summary>
-        [DebuggerDisplay(@"[{Index}] = {Name}")]
+        [DebuggerDisplay(@"\{{Index}\} = {Name}")]
         public readonly struct Argument
         {
             internal Argument(string name, int index)

@@ -11,7 +11,7 @@ namespace Opportunity.ResourceGenerator
     /// <summary>
     /// Represent a resource path.
     /// </summary>
-    [DebuggerDisplay("[{Key,nq}] = {Value}")]
+    [DebuggerDisplay(@"\{{Key,nq}\} = {Value}")]
     public readonly struct GeneratedResourceProvider : IResourceProvider,
         IComparable, IComparable<GeneratedResourceProvider>, IEquatable<GeneratedResourceProvider>,
         IDynamicMetaObjectProvider

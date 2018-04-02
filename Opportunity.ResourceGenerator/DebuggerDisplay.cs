@@ -29,14 +29,14 @@ namespace Opportunity.ResourceGenerator
             internal string Name { get; set; }
         }
 
-        [DebuggerDisplay("{Value}", Name = "{Name,nq}", Type = "string")]
+        [DebuggerDisplay("{Value}", Name = "{Name,nq}", Type = "Resource String")]
         private sealed class ResourceValueView : ResourceView
         {
-            public ResourcePathAttribute Path => this.ResourcePath;
+            public Uri Path => new Uri(this.ResourcePath.ToString());
             public string Value { get; set; }
         }
 
-        [DebuggerDisplay("[{ResourcePath.Path,nq}]", Name = "{Name,nq}", Type = "{DisplayType,nq}")]
+        [DebuggerDisplay(@"\{{ResourcePath.Path,nq}\}", Name = "{Name,nq}", Type = "{DisplayType,nq}")]
         private sealed class ResourcePathView : ResourceView
         {
             [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
@@ -58,13 +58,13 @@ namespace Opportunity.ResourceGenerator
             }
         }
 
-        [DebuggerDisplay("${Value}", Name = "{Name,nq}", Type = "FormatMethod")]
+        [DebuggerDisplay("${Value}", Name = "{Name,nq}", Type = "Format Method")]
         private sealed class ResourceFormatMethodView : ResourceView
         {
             [DebuggerBrowsable(DebuggerBrowsableState.Never)]
             public string Value { get; set; }
 
-            public ResourcePathAttribute Path => this.ResourcePath;
+            public Uri Path => new Uri(this.ResourcePath.ToString());
 
             public FormattableResourceString Format { get; set; }
         }

@@ -33,6 +33,7 @@ namespace Opportunity.ResourceGenerator.TestApp
             var bb = new FormattableResourceString("{$FileNotFound}").ToFormattableString(Strings.Resources);
             var d = Test.Strings.Resources.FileNotFound().Format(new { line = 12, name = "Test.cs", path = "??" });
             dynamic resources = Test.Strings.Resources;
+            Test.Strings.Resources.FileNotFound(1, 2, 3);
             string tooltip1 = (string)resources.ContentTextBox.ToolTipService.ToolTip();
             string tooltip2 = (string)resources.ContentTextBox["ToolTipService"].ToolTip();
             string tooltip3 = (string)resources.ContentTextBox["ToolTipService/ToolTip"]();

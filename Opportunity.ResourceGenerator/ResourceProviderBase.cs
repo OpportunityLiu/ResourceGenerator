@@ -35,7 +35,7 @@ namespace Opportunity.ResourceGenerator
         private readonly string path;
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private string DebugString => $"[{this.path.Substring(0, this.path.Length - 1)}]";
+        private string DebugString => $"{{{this.path.Substring(0, this.path.Length - 1)}}}";
 
         /// <summary>
         /// Returns resource path of this instance.
