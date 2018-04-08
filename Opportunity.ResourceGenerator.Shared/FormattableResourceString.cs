@@ -8,6 +8,7 @@ using System.Text;
 using System.Dynamic;
 using System.Linq.Expressions;
 using Microsoft.CSharp.RuntimeBinder;
+using System.Collections;
 
 namespace Opportunity.ResourceGenerator
 {
@@ -15,7 +16,7 @@ namespace Opportunity.ResourceGenerator
     /// Analyze interpolation string.
     /// </summary>
     [DebuggerDisplay(@"${DebugDisplay}")]
-    public sealed class FormattableResourceString
+    public class FormattableResourceString
     {
         private class DynamicCaller
         {
@@ -288,6 +289,14 @@ namespace Opportunity.ResourceGenerator
         /// <returns>Value of <see cref="FormatString"/>.</returns>
         public override string ToString() => FormatString;
 
+        private void createArguments(IDictionary parameters, object[] args)
+        {
+            foreach (var item in this.arguments)
+            {
+                args[item.Index] = parameters[item.Name];
+            }
+        }
+
         private object[] createArguments(object parameters)
         {
             if (this.arguments.Length == 0)
@@ -295,15 +304,32 @@ namespace Opportunity.ResourceGenerator
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
 
-            var type = parameters.GetType();
             var args = new object[this.arguments.Length];
-            if (!callers.TryGetValue(type, out var caller))
+
+            if (parameters is IDictionary dic)
             {
-                caller = new DynamicCaller(type);
-                callers[type] = caller;
+                try
+                {
+                    createArguments(dic, args);
+                }
+                catch { }
             }
+
+            var type = parameters.GetType();
+            var caller = default(DynamicCaller);
+
             foreach (var item in this.arguments)
             {
+                if (args[item.Index] != null)
+                    continue;
+                if (caller is null)
+                {
+                    if (!callers.TryGetValue(type, out caller))
+                    {
+                        caller = new DynamicCaller(type);
+                        callers[type] = caller;
+                    }
+                }
                 args[item.Index] = caller.Get(parameters, item.Name);
             }
             return args;
@@ -316,7 +342,7 @@ namespace Opportunity.ResourceGenerator
         /// <param name="provider">A format provider for formatting.</param>
         /// <returns>A formatted string.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="parameters"/> is <see langword="null"/>.</exception>
-        public string Format(IFormatProvider provider, object parameters)
+        public virtual string Format(IFormatProvider provider, object parameters)
             => string.Format(provider, FormatString, createArguments(parameters));
 
         /// <summary>

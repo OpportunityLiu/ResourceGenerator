@@ -268,9 +268,9 @@ namespace Opportunity.ResourceGenerator.Generator
                 WriteLine(indent, $@"    if ({tempFormatStringFieldName} == null)");
                 WriteLine(indent, $@"        {tempFormatStringFieldName} = new {Strings.FormattableResource}({Strings.LocalizedStrings}.GetValue(""{pathlit}""));");
                 if (format.Arguments.Count == 0)
-                    WriteLine(indent, $@"    return string.Format({tempFormatStringFieldName}.FormatString);");
+                    WriteLine(indent, $@"    return {Config.FormatStringFunction}({tempFormatStringFieldName}.FormatString);");
                 else
-                    WriteLine(indent, $@"    return string.Format({tempFormatStringFieldName}.FormatString, {args});");
+                    WriteLine(indent, $@"    return {Config.FormatStringFunction}({tempFormatStringFieldName}.FormatString, {args});");
                 WriteLine(indent, $@"}}");
 
                 var provider = Helper.GetUnusedName(paramNames, Strings.ProviderNames);
@@ -284,9 +284,9 @@ namespace Opportunity.ResourceGenerator.Generator
                     WriteLine(indent, $@"    if ({tempFormatStringFieldName} == null)");
                     WriteLine(indent, $@"        {tempFormatStringFieldName} = new {Strings.FormattableResource}({Strings.LocalizedStrings}.GetValue(""{pathlit}""));");
                     if (format.Arguments.Count == 0)
-                        WriteLine(indent, $@"    return string.Format({provider}, {tempFormatStringFieldName}.FormatString);");
+                        WriteLine(indent, $@"    return {Config.FormatStringFunction}({provider}, {tempFormatStringFieldName}.FormatString);");
                     else
-                        WriteLine(indent, $@"    return string.Format({provider}, {tempFormatStringFieldName}.FormatString, {args});");
+                        WriteLine(indent, $@"    return {Config.FormatStringFunction}({provider}, {tempFormatStringFieldName}.FormatString, {args});");
                     WriteLine(indent, $@"}}");
                 }
             }

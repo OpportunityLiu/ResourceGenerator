@@ -108,6 +108,9 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public bool IsFormatStringEnabled { get; set; }
 
+        private string formatStringFunction = "string.Format";
+        public string FormatStringFunction { get => this.formatStringFunction; set => this.formatStringFunction = string.IsNullOrWhiteSpace(value) ? "string.Format" : value.Trim(); }
+
         public string LocalizedStringsFullName
             => $"global::{LocalizedStringsNamespace}.{LocalizedStringsClassName}";
         public string InterfaceFullName(string interfaceName, string ins)

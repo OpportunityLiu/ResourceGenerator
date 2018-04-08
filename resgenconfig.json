@@ -41,6 +41,11 @@
       "type": "boolean",
       "description": "Regard resource strings whose name starts with '$' as format string."
     },
+    "FormatStringFunction": {
+      "type": "string",
+      "default": "string.Format",
+      "description": "Format function used for format strings, must be replaceble with string.Format."
+    },
     "SourceLanguagePath": {
       "type": "string",
       "description": "Default language of resources, will be detected automatically if unset."

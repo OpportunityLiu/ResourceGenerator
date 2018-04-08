@@ -74,7 +74,7 @@ function ToolPath {
 function GetFile {
     return @"
 {
-  "`$schema": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/resgenconfig.json?version=1.3.4",
+  "`$schema": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/resgenconfig.json?version=1.3.7",
   // Path for resource files (*.resw & *.resjson).
   // Default value is "/Strings".
   "ResourcePath": "/Strings",
@@ -100,6 +100,9 @@ function GetFile {
   // Regard resource strings whose name starts with '$' as format string.
   // Default value is false.
   //"IsFormatStringEnabled": true,
+
+  // Format function used for format strings, must be replaceble with string.Format.
+  //"FormatStringFunction": "string.Format",
 
   // Excluded resource paths.
   //"Exclude": [],
