@@ -3,7 +3,7 @@
     ModuleToProcess = 'ResourceGenerator.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.0.0'
+    ModuleVersion = '1.3.9'
 
     # ID used to uniquely identify this module
     GUID = 'b077c510-1f00-4a11-bc10-c39ce26b605d'

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Resources;
+using Windows.ApplicationModel.Resources.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -26,6 +27,8 @@ namespace Opportunity.ResourceGenerator.TestApp
     {
         public MainPage()
         {
+            var r = ResourceLoader.GetForCurrentView();
+            var dd = r.GetStringForUri(new Uri("ms-resource:ContentTextBox/ToolTipService/ToolTip"));
             var data = new { a = Math.PI, bs = "haha" };
             var dic = new Dictionary<string, double> { ["Count"] = Math.PI, ["v"] = 12 };
             var aa = new FormattableResourceString("Count: {Count} {_syncRoot} {buckets}").ToFormattableString(dic);

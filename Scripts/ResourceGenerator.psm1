@@ -74,7 +74,7 @@ function ToolPath {
 function GetFile {
     return @"
 {
-  "`$schema": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/resgenconfig.json?version=1.3.7",
+  "`$schema": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/resgenconfig.json?version=1.3.9",
   // Path for resource files (*.resw & *.resjson).
   // Default value is "/Strings".
   "ResourcePath": "/Strings",
