@@ -166,6 +166,13 @@ namespace Opportunity.ResourceGenerator.Generator
             WriteAttributesForClass(indent);
             WriteLine(indent, $"{Config.Modifier} static class {Config.LocalizedStringsClassName}");
             WriteLine(indent, $"{{");
+            WriteLine(indent, $"    private static T {Config.InitializerName}<T>(ref T value) where T : class, new()");
+            WriteLine(indent, $"    {{");
+            WriteLine(indent, $"        if (value == null)");
+            WriteLine(indent, $"            value = new T();");
+            WriteLine(indent, $"        return value;");
+            WriteLine(indent, $"    }}");
+
             foreach (var item in tree)
             {
                 if (Config.ShouldSkip(item))
@@ -180,9 +187,9 @@ namespace Opportunity.ResourceGenerator.Generator
         {
             WriteLine();
             WriteLine(indent, Strings.DebuggerNeverBrowse);
-            WriteLine(indent, $@"private static {node.InterfaceFullName} {node.FieldName};");
+            WriteLine(indent, $@"private static {node.ClassFullName} {node.FieldName};");
             WriteLine(indent, $@"{Config.Modifier} static {node.InterfaceFullName} {node.MemberName} ");
-            WriteLine(indent, $@"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref {node.FieldName}, () => new {node.ClassFullName}());");
+            WriteLine(indent, $@"    => {Config.InitializerFullName}(ref {node.FieldName});");
             WriteLine();
             WriteAttributesForClass(indent);
             WriteLine(indent, $@"private sealed class {node.ClassName} : {Strings.ResourceProviderBase}, {node.InterfaceFullName}");
@@ -211,10 +218,10 @@ namespace Opportunity.ResourceGenerator.Generator
         {
             WriteLine();
             WriteLine(indent, Strings.DebuggerNeverBrowse);
-            WriteLine(indent, $@"private {node.InterfaceFullName} {node.FieldName};");
+            WriteLine(indent, $@"private static {node.ClassFullName} {node.FieldName};");
             WriteLine(indent, Strings.ResourcePath(node.ResourcePath));
             WriteLine(indent, $@"{node.InterfaceFullName} {node.Parent.InterfaceFullName}.{node.MemberName} ");
-            WriteLine(indent, $@"    => global::System.Threading.LazyInitializer.EnsureInitialized(ref this.{node.FieldName}, () => new {node.ClassFullName}());");
+            WriteLine(indent, $@"    => {Config.InitializerFullName}(ref {node.FieldName});");
             WriteLine();
             WriteAttributesForClass(indent);
             WriteLine(indent, $@"private sealed class {node.ClassName} : {Strings.ResourceProviderBase}, {node.InterfaceFullName}");
@@ -244,7 +251,7 @@ namespace Opportunity.ResourceGenerator.Generator
             if (Config.IsFormatStringEnabled && node.ResourceName.StartsWith("$"))
             {
                 var tempFormatStringFieldName = Helper.GetRandomName(node.MemberName);
-                this.WriteLine(indent, $@"{Strings.FormattableResource} {tempFormatStringFieldName};");
+                this.WriteLine(indent, $@"static {Strings.FormattableResource} {tempFormatStringFieldName};");
                 var format = new FormattableResourceString(node.Value);
                 var paramNames = format.Arguments.Select(a => Helper.Refine(a.Name)).ToList();
                 var param = string.Join(", ", paramNames.Select(a => "object " + a));

@@ -12,7 +12,7 @@
   //"\t": "TabTest",
   "test/test": "path of test/test without object",
   "Reset": "Speicial name Reset",
-  "*": "Speicial name *",
+  "**": "Speicial name **",
   "MemberwiseClone": "Speicial name MemberwiseClone",
   "ReferenceEquals": "Speicial name ReferenceEquals",
   "GetType": "Speicial name GetType",

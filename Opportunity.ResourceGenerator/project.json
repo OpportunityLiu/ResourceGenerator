@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "Opportunity.Helpers.Universal": "1.3.12"
+    "Opportunity.Helpers.Universal": "1.3.14"
   },
   "frameworks": {
     "uap10.0.10586": {}

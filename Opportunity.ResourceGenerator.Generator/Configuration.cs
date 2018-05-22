@@ -23,6 +23,9 @@ namespace Opportunity.ResourceGenerator.Generator
             this.LocalizedStringsClassName = null;
         }
 
+        public string InitializerName { get; } = Helper.GetRandomName("InitializeResourceClass");
+        public string InitializerFullName => $"{LocalizedStringsFullName}.{InitializerName}";
+
         private void setIdentity(ref string field, string value, string def, bool allowDots)
         {
             if (!string.IsNullOrWhiteSpace(value))
