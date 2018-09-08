@@ -6,39 +6,40 @@ using System.Linq;
 
 namespace Opportunity.ResourceGenerator.Generator
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static int Main(string[] args)
         {
             try
             {
                 if (args == null || args.Length == 0)
                 {
                     PrintHelp();
-                    return;
+                    return 0;
                 }
                 var root = args.First();
                 switch (Path.GetExtension(root))
                 {
                 case ".sln":
                     HandleSolution(root);
-                    break;
+                    return 0;
                 case ".csproj":
                     var config = args.Skip(1).ToArray();
                     HandleProject(root, config);
-                    break;
+                    return 0;
                 default:
                     Logger.LogWarning(0, "Unsupported parameter. Run without parameters to get help.");
-                    break;
+                    return 1;
                 }
             }
             catch (Exception ex)
             {
                 Logger.LogError(0, ex.Message);
+                return -1;
             }
         }
 
-        static void HandleSolution(string slnPath)
+        private static void HandleSolution(string slnPath)
         {
             slnPath = Path.GetFullPath(slnPath);
             Logger.LogInfo(0, $"Handling solution \"{Path.GetFileNameWithoutExtension(slnPath)}\"");
@@ -61,7 +62,7 @@ namespace Opportunity.ResourceGenerator.Generator
             }
         }
 
-        static void HandleProject(string csprojPath, string[] resgenconfigPaths)
+        private static void HandleProject(string csprojPath, string[] resgenconfigPaths)
         {
             csprojPath = Path.GetFullPath(csprojPath);
             Logger.LogInfo(1, $"Handling project \"{Path.GetFileNameWithoutExtension(csprojPath)}\"");
@@ -86,7 +87,7 @@ namespace Opportunity.ResourceGenerator.Generator
             }
         }
 
-        static void HandleConfig(string csprojPath, string resgenconfigPath)
+        private static void HandleConfig(string csprojPath, string resgenconfigPath)
         {
             resgenconfigPath = Path.GetFullPath(resgenconfigPath);
             if (Path.GetExtension(resgenconfigPath) != ".resgenconfig")
@@ -121,7 +122,7 @@ StackTrace: {ex.StackTrace}", System.Text.Encoding.UTF8);
             }
         }
 
-        static void PrintHelp()
+        private static void PrintHelp()
         {
             Console.Write($@"
 Opportunity.ResourceGenerator.Generator {Helper.ProductVersion}

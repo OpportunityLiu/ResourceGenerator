@@ -37,13 +37,18 @@ function Convert-Resource {
         $tool = ToolPath
         $configFiles = GetConfigFiles($dteProject)
         $toolArgs = $dteProject.FullName;
-        Write-Host "============= Project" $Project "============="
+        Write-Host "============= Project $Project ============="
         if (!$configFiles) {
             Write-Host "No config files found, skipped."
             Write-Host
             return
         }
-        Start-Process -FilePath $tool -ArgumentList ($toolArgs + " " + ( $configFiles -join " ")) -WindowStyle Hidden -Wait
+        $p = Start-Process -FilePath $tool -ArgumentList "`"$toolArgs`"" -WindowStyle Hidden -Wait -PassThru
+        if($p.ExitCode -ne 0){
+            Write-Warning "Failed to generate resources for this project (ExitCode $($p.ExitCode))" 
+            Write-Host 
+            return
+        }
         $i = 1
         $configFiles | ForEach-Object {
             $file = ClassFileName($_)
