@@ -13,7 +13,7 @@ namespace Opportunity.ResourceGenerator
     /// <summary>
     /// Debug view for generated classes.
     /// </summary>
-    public class DebuggerDisplay
+    internal sealed class DebuggerDisplay
     {
         /// <summary>
         /// Key-value pair of resources.
@@ -70,7 +70,7 @@ namespace Opportunity.ResourceGenerator
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IResourceProvider provider;
+        private readonly IResourceProvider provider;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ResourceView[] items;
 
@@ -82,7 +82,7 @@ namespace Opportunity.ResourceGenerator
         {
             get
             {
-                if (this.items == null)
+                if (this.items is null)
                     init();
                 return this.items;
             }

@@ -7,13 +7,16 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Opportunity.Helpers.Universal;
+using Opportunity.ResourceGenerator;
+
+[assembly: DebuggerTypeProxyAttribute(typeof(DebuggerDisplay), Target = typeof(ResourceProviderBase))]
+[assembly: DebuggerDisplay("{DebugString,nq}", Target = typeof(ResourceProviderBase))]
 
 namespace Opportunity.ResourceGenerator
 {
     /// <summary>
     /// Base class for generated resource classes.
     /// </summary>
-    [DebuggerDisplay("{DebugString,nq}")]
     public abstract class ResourceProviderBase : IResourceProvider, IDynamicMetaObjectProvider
     {
         /// <summary>

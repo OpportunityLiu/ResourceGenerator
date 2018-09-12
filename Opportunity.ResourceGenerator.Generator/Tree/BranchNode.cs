@@ -12,7 +12,7 @@ namespace Opportunity.ResourceGenerator.Generator.Tree
             : base(parent, name)
         {
             if (MemberName.StartsWith("@"))
-                this.InterfaceName = $"I{ResourceName}";
+                this.InterfaceName = $"I{MemberName.Substring(1)}";
             else
                 this.InterfaceName = $"I{MemberName}";
             this.ClassName = Helper.Refine(Helper.GetRandomName(ResourceName));

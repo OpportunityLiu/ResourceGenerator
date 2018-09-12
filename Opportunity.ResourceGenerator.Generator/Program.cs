@@ -12,7 +12,7 @@ namespace Opportunity.ResourceGenerator.Generator
         {
             try
             {
-                if (args == null || args.Length == 0)
+                if (args.IsNullOrEmpty())
                 {
                     PrintHelp();
                     return 0;
