@@ -5,7 +5,9 @@ namespace Opportunity.ResourceGenerator.Generator.Tree
     public class RootNode : BranchNode
     {
         public RootNode(string resourceName)
-            : base(null, resourceName) { }
+            : base(null, resourceName)
+        {
+        }
 
         public override string ResourcePath
         {
@@ -19,7 +21,5 @@ namespace Opportunity.ResourceGenerator.Generator.Tree
         }
 
         public override string InterfaceNamespace => Configuration.Config.InterfacesNamespace;
-        public override string ClassFullName => $"{Configuration.Config.LocalizedStringsFullName}.{ClassName}";
-        public override string MemberFullName => $"{Configuration.Config.LocalizedStringsFullName}.{MemberName}";
     }
 }

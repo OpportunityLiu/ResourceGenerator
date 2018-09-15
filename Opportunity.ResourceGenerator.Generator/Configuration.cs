@@ -1,30 +1,55 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Opportunity.ResourceGenerator.Generator.Tree;
+using System;
+using System.CodeDom;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using System.Linq;
-using Newtonsoft.Json;
-using Opportunity.ResourceGenerator.Generator.Tree;
 
 namespace Opportunity.ResourceGenerator.Generator
 {
     public class Configuration
     {
-        private Configuration(string csprojPath)
+        private Configuration(string projPath)
         {
-            this.ProjectDirectory = Path.GetDirectoryName(csprojPath);
-            var project = XDocument.Load(csprojPath);
+            this.ProjectPath = Path.GetFullPath(projPath);
+            this.ProjectDirectory = Path.GetDirectoryName(this.ProjectPath);
+            var project = XDocument.Load(this.ProjectPath);
             var ns = project.Descendants(XName.Get("RootNamespace", "http://schemas.microsoft.com/developer/msbuild/2003")).FirstOrDefault();
             var an = project.Descendants(XName.Get("AssemblyName", "http://schemas.microsoft.com/developer/msbuild/2003")).FirstOrDefault();
-            this.ProjectDefaultNamespace = ns?.Value ?? "MyProject";
-            this.ProjectAssemblyName = an?.Value ?? "MyAssembly";
+            this.ProjectDefaultNamespace = ns?.Value ?? Path.GetFileNameWithoutExtension(this.ProjectPath);
+            this.ProjectAssemblyName = an?.Value ?? Path.GetFileNameWithoutExtension(this.ProjectPath);
             this.InterfacesNamespace = null;
             this.LocalizedStringsNamespace = null;
             this.LocalizedStringsClassName = null;
         }
 
+        private void init()
+        {
+            if (SourceLanguagePath.IsNullOrEmpty())
+            {
+                try
+                {
+                    SourceLanguagePath = Directory.EnumerateDirectories(Path.Combine(ProjectDirectory, ResourcePath)).First();
+                }
+                catch (Exception) { }
+            }
+            FormatStringFunction = FormatStringFunction.CoalesceNullOrWhiteSpace("string.Format").Trim();
+
+            {
+                var projext = Path.GetExtension(ProjectPath);
+                if (projext.StartsWith(".vb"))
+                    FileType = "vb";
+                else if (projext.StartsWith(".cs"))
+                    FileType = "cs";
+            }
+        }
+
         public string InitializerName { get; } = Helper.GetRandomName("InitializeResourceClass");
         public string InitializerFullName => $"{LocalizedStringsFullName}.{InitializerName}";
+
+        public string FileType { get; private set; }
 
         private void setIdentity(ref string field, string value, string def, bool allowDots)
         {
@@ -67,9 +92,10 @@ namespace Opportunity.ResourceGenerator.Generator
             return skip;
         }
 
-        public string ProjectDirectory { get; set; }
-        public string ProjectDefaultNamespace { get; set; }
-        public string ProjectAssemblyName { get; set; }
+        public string ProjectDirectory { get; }
+        public string ProjectPath { get; }
+        public string ProjectDefaultNamespace { get; }
+        public string ProjectAssemblyName { get; }
 
         public bool DebugGeneratedCode { get; set; }
         private string rpath = "Strings";
@@ -111,28 +137,46 @@ namespace Opportunity.ResourceGenerator.Generator
 
         public bool IsFormatStringEnabled { get; set; }
 
-        private string formatStringFunction = "string.Format";
-        public string FormatStringFunction { get => this.formatStringFunction; set => this.formatStringFunction = string.IsNullOrWhiteSpace(value) ? "string.Format" : value.Trim(); }
+        public string FormatStringFunction { get; set; }
+
+        public CodeMethodInvokeExpression FormatString(CodeExpression format, CodeExpression formatprovider, CodeExpression[] args)
+        {
+            var method = default(CodeMethodReferenceExpression);
+            do
+            {
+                if (FormatStringFunction == "string.Format")
+                {
+                    method = new CodeMethodReferenceExpression(new CodeTypeReferenceExpression(Statics.String), nameof(string.Format));
+                    break;
+                }
+                var doi = FormatStringFunction.LastIndexOf('.');
+                if (doi <= 0)
+                {
+                    method = new CodeMethodReferenceExpression(null, FormatStringFunction);
+                    break;
+                }
+
+                var type = new CodeTypeReferenceExpression(new CodeTypeReference(FormatStringFunction.Substring(0, doi), CodeTypeReferenceOptions.GlobalReference));
+                var methodname = FormatStringFunction.Substring(doi + 1);
+
+                method = new CodeMethodReferenceExpression(type, methodname);
+            } while (false);
+            var call = new CodeMethodInvokeExpression(method);
+            call.Parameters.Add(format);
+            if (formatprovider != null)
+                call.Parameters.Add(formatprovider);
+            call.Parameters.AddRange(args);
+            return call;
+        }
 
         public string LocalizedStringsFullName
-            => $"global::{LocalizedStringsNamespace}.{LocalizedStringsClassName}";
+            => $"{LocalizedStringsNamespace}.{LocalizedStringsClassName}";
         public string InterfaceFullName(string interfaceName, string ins)
         {
             if (string.IsNullOrEmpty(ins))
-                return $"global::{InterfacesNamespace}.{interfaceName}";
-            else if (ins.StartsWith("global::"))
-                return $"{ins}.{interfaceName}";
+                return $"{InterfacesNamespace}.{interfaceName}";
             else
-                return $"global::{ins}.{interfaceName}";
-        }
-        public string InterfaceFullName(string propertyName)
-        {
-            if (!propertyName.StartsWith(LocalizedStringsFullName + "."))
-                throw new Exception();
-            propertyName = propertyName.Substring(LocalizedStringsFullName.Length + 1);
-            var names = propertyName.Split('.');
-            names[names.Length - 1] = "I" + names[names.Length - 1];
-            return $"global::{InterfacesNamespace}.{string.Join(".", names)}";
+                return $"{ins}.{interfaceName}";
         }
 
         internal static void SetCurrent(string csprojPath, string resgenconfigPath)
@@ -146,6 +190,7 @@ namespace Opportunity.ResourceGenerator.Generator
                 className = Helper.Refine(className);
                 r.LocalizedStringsClassName = className;
             }
+            r.init();
             Config = r;
         }
 

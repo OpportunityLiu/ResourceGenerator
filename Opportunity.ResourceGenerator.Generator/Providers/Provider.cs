@@ -51,7 +51,7 @@ namespace Opportunity.ResourceGenerator.Generator.Providers
             for (var i = 0; i < path.Count - 1; i++)
             {
                 var nodeName = path[i];
-                if (!currentNode.Childern.TryGetValue(nodeName, out var child))
+                if (!(currentNode.Childern.Find(c => c.ResourceName == nodeName) is Node child))
                 {
                     child = new BranchNode(currentNode, nodeName);
                 }

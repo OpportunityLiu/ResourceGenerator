@@ -24,6 +24,7 @@ namespace Opportunity.ResourceGenerator.Generator
                     HandleSolution(root);
                     return 0;
                 case ".csproj":
+                case ".vbproj":
                     var config = args.Skip(1).ToArray();
                     HandleProject(root, config);
                     return 0;
@@ -45,7 +46,7 @@ namespace Opportunity.ResourceGenerator.Generator
             Logger.LogInfo(0, $"Handling solution \"{Path.GetFileNameWithoutExtension(slnPath)}\"");
             try
             {
-                var projs = Directory.GetFiles(Path.GetDirectoryName(slnPath), "*.csproj", SearchOption.AllDirectories);
+                var projs = Directory.GetFiles(Path.GetDirectoryName(slnPath), "*.*proj", SearchOption.AllDirectories);
                 if (projs.Length == 0)
                 {
                     Logger.LogInfo(1, "No csharp project found in solution.");
@@ -62,13 +63,13 @@ namespace Opportunity.ResourceGenerator.Generator
             }
         }
 
-        private static void HandleProject(string csprojPath, string[] resgenconfigPaths)
+        private static void HandleProject(string projPath, string[] resgenconfigPaths)
         {
-            csprojPath = Path.GetFullPath(csprojPath);
-            Logger.LogInfo(1, $"Handling project \"{Path.GetFileNameWithoutExtension(csprojPath)}\"");
+            projPath = Path.GetFullPath(projPath);
+            Logger.LogInfo(1, $"Handling project \"{Path.GetFileNameWithoutExtension(projPath)}\"");
             try
             {
-                Configuration.SetCurrent(csprojPath, null);
+                Configuration.SetCurrent(projPath, null);
                 if (resgenconfigPaths == null || resgenconfigPaths.Length == 0)
                     resgenconfigPaths = Directory.GetFiles(Configuration.Config.ProjectDirectory, "*.resgenconfig", SearchOption.AllDirectories);
                 if (resgenconfigPaths.Length == 0)
@@ -78,7 +79,7 @@ namespace Opportunity.ResourceGenerator.Generator
                 }
                 foreach (var item in resgenconfigPaths)
                 {
-                    HandleConfig(csprojPath, item);
+                    HandleConfig(projPath, item);
                 }
             }
             catch (Exception ex)
@@ -87,7 +88,7 @@ namespace Opportunity.ResourceGenerator.Generator
             }
         }
 
-        private static void HandleConfig(string csprojPath, string resgenconfigPath)
+        private static void HandleConfig(string projPath, string resgenconfigPath)
         {
             resgenconfigPath = Path.GetFullPath(resgenconfigPath);
             if (Path.GetExtension(resgenconfigPath) != ".resgenconfig")
@@ -96,14 +97,16 @@ namespace Opportunity.ResourceGenerator.Generator
                 return;
             }
             Logger.LogInfo(2, $"Handling config \"{resgenconfigPath.Substring(Configuration.Config.ProjectDirectory.Length)}\"");
-            var className = Path.GetFileNameWithoutExtension(resgenconfigPath);
-            var generatedFileName = Path.Combine(Path.GetDirectoryName(resgenconfigPath), $"{className}.g.cs");
+            var generatedFileName = "";
             try
             {
-                Configuration.SetCurrent(csprojPath, resgenconfigPath);
-                using (var writer = new ResourceWriter(generatedFileName))
+                Configuration.SetCurrent(projPath, resgenconfigPath);
+                var className = Path.GetFileNameWithoutExtension(resgenconfigPath);
+                generatedFileName = Path.Combine(Path.GetDirectoryName(resgenconfigPath), $"{className}.g.{Configuration.Config.FileType}");
+                using (var writer = new StreamWriter(generatedFileName))
                 {
-                    writer.Execute();
+                    var s = new CodeGen.Generator(Configuration.Config);
+                    s.Write(writer);
                 }
             }
             catch (Exception ex)

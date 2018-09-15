@@ -51,9 +51,9 @@ function Convert-Resource {
         }
         $i = 1
         $configFiles | ForEach-Object {
-            $file = ClassFileName($_)
+            $file = GetCodeFile $_
             Write-Host $i ">" $_ 
-            Write-Host $i ">" "`t=>" $file
+            Write-Host $i ">" "`t=>" $file.FullName
             $dteProject.ProjectItems.AddFromFile($file) | Out-Null
             $i = $i + 1
         }
@@ -67,9 +67,11 @@ function Convert-Resource {
     }
 }
 
-function ClassFileName($configFileName) {
+function GetCodeFile($configFileName) {
     $className = [System.IO.Path]::GetFileNameWithoutExtension($configFileName)
-    return [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($configFileName), $className + ".g.cs");
+    $path = Join-Path (Split-Path $configFileName -Parent) $className
+    $file = Get-Item "$path.g.*"
+    return $file[0]
 }
 
 function ToolPath {
@@ -79,7 +81,7 @@ function ToolPath {
 function GetFile {
     return @"
 {
-  "`$schema": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/resgenconfig.json?version=1.3.9",
+  "`$schema": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/resgenconfig.json?version=1.4.0",
   // Path for resource files (*.resw & *.resjson).
   // Default value is "/Strings".
   "ResourcePath": "/Strings",

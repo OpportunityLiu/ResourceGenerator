@@ -107,8 +107,8 @@ namespace Opportunity.ResourceGenerator
                 .ThenBy(o => o.path.Path)
                 .Select(o =>
                 {
-                    var name = o.prop.Name;
-                    var dot = name.LastIndexOf('.');
+                    var name = o.path.Path;
+                    var dot = name.LastIndexOf('/');
                     if (dot != -1)
                         name = name.Substring(dot + 1);
                     var value = o.prop.GetValue(this.provider);
