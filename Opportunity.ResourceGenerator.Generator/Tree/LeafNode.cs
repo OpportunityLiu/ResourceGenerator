@@ -12,8 +12,19 @@ namespace Opportunity.ResourceGenerator.Generator.Tree
             : base(parent, name)
         {
             this.Value = value;
+            MemberName = base.MemberName;
+
+            if (Configuration.Config.IsFormatStringEnabled && ResourceName.StartsWith("$"))
+            {
+                this.MemberName = Helper.Refine(ResourceName.Substring(1));
+                this.FormatStringValue = new FormattableResourceString(value);
+            }
         }
 
         public string Value { get; }
+
+        public override string MemberName { get; }
+
+        public FormattableResourceString FormatStringValue { get; }
     }
 }

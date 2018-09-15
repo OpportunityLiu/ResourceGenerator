@@ -5,13 +5,15 @@ using System.Dynamic;
 using System.Linq.Expressions;
 using System.Reflection;
 using Opportunity.Helpers.Universal;
+using Opportunity.ResourceGenerator;
+
+[assembly: DebuggerDisplay(@"[{Key,nq}]: {Value}", Target = typeof(GeneratedResourceProvider))]
 
 namespace Opportunity.ResourceGenerator
 {
     /// <summary>
     /// Represent a resource path.
     /// </summary>
-    [DebuggerDisplay(@"\{{Key,nq}\} = {Value}")]
     public readonly struct GeneratedResourceProvider : IResourceProvider,
         IComparable, IComparable<GeneratedResourceProvider>, IEquatable<GeneratedResourceProvider>,
         IDynamicMetaObjectProvider

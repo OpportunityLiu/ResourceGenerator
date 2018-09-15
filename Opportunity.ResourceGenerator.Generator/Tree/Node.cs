@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.CodeDom;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Opportunity.ResourceGenerator.Generator.Tree
@@ -8,21 +10,17 @@ namespace Opportunity.ResourceGenerator.Generator.Tree
     {
         protected Node(BranchNode parent, string resourceName)
         {
-            this.Parent = parent;
-            this.ResourceName = resourceName;
-            if (Configuration.Config.IsFormatStringEnabled)
-            {
-                if (resourceName.StartsWith("$") && this.IsLeaf)
-                    this.MemberName = Helper.Refine(resourceName.Substring(1));
-                else
-                    this.MemberName = Helper.Refine(resourceName);
-            }
-            else
-                this.MemberName = Helper.Refine(resourceName);
             if (parent != null)
             {
-                parent.Childern.Add(resourceName, this);
+                if (!parent.ChildrenResourceNames.Add(resourceName))
+                    throw new InvalidOperationException($"Dupicated resource name `{resourceName}`");
+                parent.Childern.Add(this);
             }
+
+            this.Parent = parent;
+            this.ResourceName = resourceName;
+
+            this.MemberName = Helper.Refine(resourceName);
         }
 
         public BranchNode Parent { get; }
@@ -35,7 +33,6 @@ namespace Opportunity.ResourceGenerator.Generator.Tree
         public string ResourceName { get; }
         public virtual string ResourcePath => Helper.CombineResourcePath(Parent?.ResourcePath, ResourceName);
 
-        public string MemberName { get; }
-        public virtual string MemberFullName => $"{Parent.ClassFullName}.{MemberName}";
+        public virtual string MemberName { get; }
     }
 }

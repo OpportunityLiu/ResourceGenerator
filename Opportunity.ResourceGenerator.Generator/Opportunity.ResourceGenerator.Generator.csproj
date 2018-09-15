@@ -53,9 +53,6 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -67,8 +64,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeGen\Generator.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="FileWriter.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
@@ -81,12 +78,10 @@
     <Compile Include="Providers\ResjsonProvider.cs" />
     <Compile Include="Providers\ReswProvider.cs" />
     <Compile Include="Tree\RootNode.cs" />
-    <Compile Include="ResourceWriter.cs" />
     <Compile Include="Strings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -100,6 +95,18 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Opportunity.Helpers">
+      <Version>1.3.16</Version>
+    </PackageReference>
+    <PackageReference Include="System.CodeDom">
+      <Version>4.5.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="..\Opportunity.ResourceGenerator.Shared\Opportunity.ResourceGenerator.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
