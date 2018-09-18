@@ -22,25 +22,25 @@ A tool to generate classes for UWP string resources.
     After step 2, you'll get a `.resgenconfig` file with following content.  
     ```js
     {
-      "`$schema": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/resgenconfig.json?version=1.3.2",
+      "`$schema": "https://raw.githubusercontent.com/OpportunityLiu/ResourceGenerator/master/resgenconfig.json?version=1.4.0",
       // Path for resource files (*.resw & *.resjson).
       // Default value is "/Strings".
       "ResourcePath": "/Strings",
-  
+
       // Default language of resources, will be detected automatically if unset.
       //"SourceLanguagePath": "en-Us",
-  
+
       // Namespace for resource visitor class.
       // Default value is "<ProjectDefaultNamespace>".
       //"LocalizedStringsNamespace": "MyNamespace",
-  
-      // Namespace for resource visitor interfaces.   
+
+      // Namespace for resource visitor interfaces.
       // Default value is "<ProjectDefaultNamespace>.ResourceInfo".
       //"InterfacesNamespace": "MyNamespace.ResourceInfo",
-  
+
       // Modifier for resource visitor class and interfaces.
       "Modifier": "internal",
-  
+
       // Specifies whether this project is the default project or not.
       // Determines if it is necessary to contains project name in the resource path.
       "IsDefaultProject": true,
@@ -48,7 +48,16 @@ A tool to generate classes for UWP string resources.
       // Regard resource strings whose name starts with '$' as format string.
       // Default value is false.
       //"IsFormatStringEnabled": true,
-  
+
+      // Format function used for format strings, must be replaceble with string.Format.
+      //"FormatStringFunction": "string.Format",
+
+      // Excluded resource paths.
+      //"Exclude": [],
+
+      // Included resource paths, has higher priority than Exclude.
+      //"Include": [],
+
       // Specifies whether the tool generates code that is debuggable.
       "DebugGeneratedCode": false
     }
