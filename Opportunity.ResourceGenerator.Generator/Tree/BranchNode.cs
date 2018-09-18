@@ -7,9 +7,6 @@ using System.Threading.Tasks;
 
 namespace Opportunity.ResourceGenerator.Generator.Tree
 {
-    namespace a
-    {
-    }
     public class BranchNode : Node
     {
         public BranchNode(BranchNode parent, string name)
