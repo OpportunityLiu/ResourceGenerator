@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Microsoft.CSharp.RuntimeBinder;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Dynamic;
-using System.Linq.Expressions;
-using Microsoft.CSharp.RuntimeBinder;
-using System.Collections;
 
 namespace Opportunity.ResourceGenerator
 {
@@ -289,31 +289,61 @@ namespace Opportunity.ResourceGenerator
         /// <returns>Value of <see cref="FormatString"/>.</returns>
         public override string ToString() => FormatString;
 
-        private void createArguments(IDictionary parameters, object[] args)
+        private int createArguments(IDictionary parameters, object[] args)
         {
+            var i = 0;
             foreach (var item in this.arguments)
             {
-                args[item.Index] = parameters[item.Name];
+                try
+                {
+                    var arg = parameters[item.Name];
+                    if (arg is null)
+                        continue;
+                    args[item.Index] = arg;
+                    i++;
+                }
+                catch { }
             }
+            return i;
+        }
+
+        private bool createArguments(IList parameters, object[] args)
+        {
+            if (parameters.Count != args.Length)
+                return false;
+            var i = 0;
+            foreach (var item in this.arguments)
+            {
+                args[item.Index] = parameters[i];
+                i++;
+            }
+            return true;
         }
 
         private object[] createArguments(object parameters)
         {
             if (this.arguments.Length == 0)
                 return Array.Empty<object>();
-            if (parameters == null)
+            if (parameters is null)
                 throw new ArgumentNullException(nameof(parameters));
+            return GetParameters(parameters);
+        }
 
+        /// <summary>
+        /// Get parameters for string formatting.
+        /// </summary>
+        /// <param name="parameters"><see cref="object"/> contains parameters.</param>
+        /// <returns>Parameters for string formatting.</returns>
+        /// <remarks>This method is used in <see cref="Format(IFormatProvider, object)"/>, <see cref="ToFormattableString(object)"/>.</remarks>
+        protected virtual object[] GetParameters(object parameters)
+        {
             var args = new object[this.arguments.Length];
 
-            if (parameters is IDictionary dic)
-            {
-                try
-                {
-                    createArguments(dic, args);
-                }
-                catch { }
-            }
+            if (parameters is IList arr && createArguments(arr, args))
+                return args;
+
+            if (parameters is IDictionary dic && createArguments(dic, args) == args.Length)
+                return args;
 
             var type = parameters.GetType();
             var caller = default(DynamicCaller);
